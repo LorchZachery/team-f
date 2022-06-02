@@ -21,6 +21,10 @@ public class MovePlayer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     { 
+        Vector3 tmp =  movePoint.transform.position;
+        tmp.x = Mathf.Round(tmp.x);
+        tmp.y = Mathf.Round(tmp.y);
+        movePoint.transform.position = tmp; 
         movePoint.parent =null;
         
     }
