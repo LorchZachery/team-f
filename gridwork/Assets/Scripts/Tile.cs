@@ -4,7 +4,7 @@ using UnityEngine;
  
 public class Tile : MonoBehaviour {
     
-    [SerializeField] private Color _baseColor, _offsetColor,_wallColor;
+    [SerializeField] private Color _baseColor, _offsetColor,_wallColor, _boundColor;
     
     [SerializeField] private SpriteRenderer _renderer;
    
@@ -24,6 +24,9 @@ public class Tile : MonoBehaviour {
        
     }
  
+    public void makeBound(){
+        _renderer.color = _boundColor;
+    }
      void OnMouseEnter() {
         _highlight.SetActive(true);
        

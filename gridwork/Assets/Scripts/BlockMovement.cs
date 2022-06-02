@@ -16,7 +16,7 @@ public class BlockMovement : MonoBehaviour
     void Start()
     {
         lastPostion = gameObject.transform.position;
-        Debug.Log(lastPostion);
+        
     }
 
     // Update is called once per frame
@@ -34,26 +34,38 @@ public class BlockMovement : MonoBehaviour
 
         if(lastPostion != round){
             Vector3 targetPos = lastPostion;
-            if(lastPostion[0] > gameObject.transform.position.x){
-                if(lastPostion[0] - 1f > 0){
-                    targetPos[0] = lastPostion[0] - 1f;
+            
+            float xmovement = Mathf.Abs(lastPostion[0] - gameObject.transform.position.x);
+            float ymovement = Mathf.Abs(lastPostion[1] - gameObject.transform.position.y);
+            if(xmovement > ymovement){
+                if(lastPostion[0] > gameObject.transform.position.x){
+                    if(lastPostion[0] - 1f >= 0){
+                        targetPos[0] = lastPostion[0] - 1f;
+                        }
+                    }
+                
+                else if(lastPostion[0] < gameObject.transform.position.x){
+                    if(lastPostion[0] + 1f < grid.width){
+                        targetPos[0] = lastPostion[0] + 1f;
+                    }
                 }
             }
-            else if(lastPostion[1] > gameObject.transform.position.y){
-                if(lastPostion[1] - 1f > 0){
-                    targetPos[1] = lastPostion[1] - 1f;
+            else if(ymovement > xmovement){
+                if(lastPostion[1] > gameObject.transform.position.y){
+                    if(lastPostion[1] - 1f >= 0){
+                        targetPos[1] = lastPostion[1] - 1f;
+                    }
+                }
+            
+                else if(lastPostion[1] < gameObject.transform.position.y){
+                    if(lastPostion[1] + 1f < grid.height){
+                        targetPos[1] = lastPostion[1] + 1f;
+                    }
                 }
             }
-            else if(lastPostion[0] < gameObject.transform.position.x){
-                if(lastPostion[0] + 1f < grid.width){
-                    targetPos[0] = lastPostion[0] + 1f;
-                }
-            }
-            else if(lastPostion[1] < gameObject.transform.position.y){
-                 if(lastPostion[1] + 1f < grid.height){
-                    targetPos[1] = lastPostion[1] + 1f;
-                 }
-            }
+
+           
+            
 
             
             

@@ -184,7 +184,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _baseColor: {r: 0.14158058, g: 0.7735849, b: 0.16282879, a: 1}
   _offsetColor: {r: 0.28515488, g: 0.5660378, b: 0.2970711, a: 1}
-  _wallColor: {r: 0, g: 0, b: 0, a: 1}
+  _wallColor: {r: 0.13207549, g: 0.12011394, b: 0.12011394, a: 1}
+  _boundColor: {r: 0, g: 0, b: 0, a: 1}
   _renderer: {fileID: 4918914540108185159}
   _highlight: {fileID: 160965401263653049}
   isWall: 0

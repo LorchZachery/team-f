@@ -28,7 +28,7 @@ public class Merge : MonoBehaviour
     void Update()
     {
         if(current_collision != null && this.gameObject != null && current_collision.gameObject != this.gameObject){
-        Debug.Log($"collison x,y: {current_collision.transform.position.x} , {current_collision.transform.position.y} this x,y: {this.gameObject.transform.position.x} , {this.gameObject.transform.position.y}");
+        /*Debug.Log($"collison x,y: {current_collision.transform.position.x} , {current_collision.transform.position.y} this x,y: {this.gameObject.transform.position.x} , {this.gameObject.transform.position.y}");*/
 
             if((Mathf.Abs((current_collision.transform.position.x)  - (this.gameObject.transform.position.x)) < 1.5f && Mathf.Abs((current_collision.transform.position.y) - (this.gameObject.transform.position.y)) < 0.5f) ||
             (Mathf.Abs((current_collision.transform.position.y)  - (this.gameObject.transform.position.y)) < 1.5f && Mathf.Abs((current_collision.transform.position.x) - (this.gameObject.transform.position.x)) < 0.5f)
@@ -43,8 +43,7 @@ public class Merge : MonoBehaviour
            GameObject[] movePoints = GameObject.FindGameObjectsWithTag("Move Point");
             
             //if (collision.gameObject.GetComponent<SpriteRenderer>().color == GetComponent<SpriteRenderer>().color)
-            Debug.Log("txt1 " + mytext.text);
-            Debug.Log("txt2 " + mytext2.text);
+            
             if (mytext.text != null && mytext2.text != null && mytext.text.Equals(mytext2.text) && current_collision != null)
             {
                
