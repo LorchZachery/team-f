@@ -18,11 +18,12 @@ public class TimerScript : MonoBehaviour
     {
         if (time < 62){
             time += Time.deltaTime;
+            updateTimer(time);
+
         }
         else {
-            // Text = Out of Time
+            windowText.text = "Times Up!";
         }
-        updateTimer(time);
     }
     void updateTimer(float currentTime)
     {
