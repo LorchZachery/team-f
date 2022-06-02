@@ -6,6 +6,7 @@ TagManager:
   tags:
   - New Block
   - MergeBlock
+  - Move Point
   layers:
   - Default
   - TransparentFX

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class GridManager : MonoBehaviour
 {
@@ -10,10 +11,11 @@ public class GridManager : MonoBehaviour
   
   [SerializeField] private Transform _cam;
 
-  [SerializeField] GameObject _blockPrefab; 
+  [SerializeField] GameObject _blockPrefab;
+
 
   [SerializeField] GameObject _playerPrefab;
-
+  [SerializeField] GameObject _newBlock;
   private Dictionary<Vector2, Tile > _tiles; 
 
 
@@ -66,8 +68,26 @@ public class GridManager : MonoBehaviour
 
   void GenerateBlocks(){
     
-      var spawnedBlock = Instantiate(_blockPrefab, new Vector3(1,1), Quaternion.identity);
-      spawnedBlock.name = "Block";
+
+      GameObject spawnedBlock = Instantiate(_blockPrefab, new Vector3(1,1), Quaternion.identity) as GameObject;
+      spawnedBlock.name = "Block2";
+      spawnedBlock.AddComponent<Merge>();
+      Merge script  = spawnedBlock.GetComponent<Merge>();
+     
+      script.MergedObject = _newBlock;
+      
+      GameObject spawnedBlock4 = Instantiate(_blockPrefab, new Vector3(6,6), Quaternion.identity) as GameObject;
+            
+      spawnedBlock4.name = "Block4";
+      GameObject textObj = spawnedBlock4.transform.GetChild(0).gameObject;
+      TextMeshPro mytext = textObj.GetComponent<TextMeshPro>();
+      spawnedBlock4.AddComponent<Merge>();
+      Merge script2  = spawnedBlock4.GetComponent<Merge>();
+     
+      script2.MergedObject =  _newBlock;
+      mytext.text = "4";
+     
+
   }
 
   void placePlayer(){

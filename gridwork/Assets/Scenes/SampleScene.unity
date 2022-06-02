@@ -266,5 +266,13 @@ PrefabInstance:
       propertyPath: _cam
       value: 
       objectReference: {fileID: 519420032}
+    - target: {fileID: 1399217833760295957, guid: 1d6ca3aec5401c940b685b3c27b95948, type: 3}
+      propertyPath: _blockPrefab2
+      value: 
+      objectReference: {fileID: 2177832239868625443, guid: d46503a604fc91947ad416c64fdb8834, type: 3}
+    - target: {fileID: 1399217833760295957, guid: 1d6ca3aec5401c940b685b3c27b95948, type: 3}
+      propertyPath: _blockPrefab4
+      value: 
+      objectReference: {fileID: 2177832239868625443, guid: 0ba0582ff04b0464b84a41fb3979344e, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1d6ca3aec5401c940b685b3c27b95948, type: 3}
