@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4918914540108185159}
   - component: {fileID: 590095004443594021}
   - component: {fileID: -7938417460300476672}
+  - component: {fileID: 3769859889160766671}
   m_Layer: 0
   m_Name: Block
   m_TagString: MergeBlock
@@ -137,6 +138,19 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &3769859889160766671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2177832239868625443}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e53005750ac45a940b9b98102388b5c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridManager: {fileID: 1399217833760295956, guid: 1d6ca3aec5401c940b685b3c27b95948, type: 3}
 --- !u!1001 &5401247020391384735
 PrefabInstance:
   m_ObjectHideFlags: 0
