@@ -121,7 +121,7 @@ public class GridManager : MonoBehaviour
   void GenerateBlocks(){
     
     List<Tuple<Vector3,string>> blocks = new List<Tuple<Vector3, string>> { new Tuple<Vector3, String> (new Vector3(6,6),"2"),
-    new Tuple<Vector3, String> (new Vector3(6,4),"4"),new Tuple<Vector3, String> (new Vector3(4,5),"2"), new Tuple<Vector3, String> (new Vector3(7,6),"2")};
+    new Tuple<Vector3, String> (new Vector3(6,4),"4"),new Tuple<Vector3, String> (new Vector3(2,5),"2"), new Tuple<Vector3, String> (new Vector3(7,6),"2")};
 
     foreach( Tuple<Vector3,string> pair in blocks ){
          BlockMaker(pair.Item1,pair.Item2);

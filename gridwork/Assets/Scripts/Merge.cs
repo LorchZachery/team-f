@@ -27,7 +27,7 @@ public class Merge : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(current_collision != null && this.gameObject != null && current_collision.gameObject != this.gameObject){
+        if(current_collision != null && current_collision.gameObject != this.gameObject ){
         /*Debug.Log($"collison x,y: {current_collision.transform.position.x} , {current_collision.transform.position.y} this x,y: {this.gameObject.transform.position.x} , {this.gameObject.transform.position.y}");*/
 
             if((Mathf.Abs((current_collision.transform.position.x)  - (this.gameObject.transform.position.x)) < 1.5f && Mathf.Abs((current_collision.transform.position.y) - (this.gameObject.transform.position.y)) < 0.5f) ||
@@ -40,34 +40,40 @@ public class Merge : MonoBehaviour
             textobj2 = gameObject.transform.GetChild(0).gameObject;
             mytext2 = textobj2.GetComponent<TextMeshPro>();
 
-           GameObject[] movePoints = GameObject.FindGameObjectsWithTag("Move Point");
+           
             
             //if (collision.gameObject.GetComponent<SpriteRenderer>().color == GetComponent<SpriteRenderer>().color)
             
             if (mytext.text != null && mytext2.text != null && mytext.text.Equals(mytext2.text) && current_collision != null)
             {
                
-                Debug.Log($"SENDING MESSAGE FROM {gameObject.name} With the ID number of {current_collision.gameObject.GetComponent<MovePlayer>().GetInstanceID()} and object for {ID}");
+               // Debug.Log($"SENDING MESSAGE FROM {gameObject.name} With the ID number of {current_collision.gameObject.GetComponent<MovePlayer>().GetInstanceID()} and object for {ID}");
                 //Debug.Log($"Text of {gameObject.name}");
-                foreach (GameObject movePoint in movePoints){
-                     Destroy(movePoint);
-                }
-                GameObject O = Instantiate(MergedObject, transform.position, Quaternion.identity) as GameObject;
-                textobj3 = O.transform.GetChild(0).gameObject;
-                mytext3 = textobj3.GetComponent<TextMeshPro>();
-                mytext3.text = (Int32.Parse(mytext.text) + Int32.Parse(mytext2.text)).ToString();
-                
-                
-                //mytext.text = (Int32.Parse(mytext.text) + Int32.Parse(mytext2.text)).ToString();
-                Debug.Log($"Sum after merging blocks: {Int32.Parse(mytext.text) + Int32.Parse(mytext2.text)}");
+                if(current_collision.gameObject.CompareTag("Player Tag")){
+                    GameObject O = current_collision.gameObject;
+                    textobj3 = O.transform.GetChild(0).gameObject;
+                    mytext3 = textobj3.GetComponent<TextMeshPro>();
+                    mytext3.text = (Int32.Parse(mytext.text) + Int32.Parse(mytext2.text)).ToString();
+                    Debug.Log($"Sum after merging blocks: {Int32.Parse(mytext.text) + Int32.Parse(mytext2.text)}");
                  
                 
-                Destroy(current_collision.gameObject);
+               
                 
-                Debug.Log("Desotry " + gameObject.name );
-                Destroy(gameObject);
-                
-                
+                    Debug.Log("Desotry " + gameObject.name );
+                    Destroy(gameObject);
+                }
+                else if(!this.gameObject.CompareTag("Player Tag")){
+                    if(this.gameObject.GetInstanceID() > current_collision.gameObject.GetInstanceID()){
+                        GameObject O = current_collision.gameObject;
+                        textobj3 = O.transform.GetChild(0).gameObject;
+                        mytext3 = textobj3.GetComponent<TextMeshPro>();
+                        mytext3.text = (Int32.Parse(mytext.text) + Int32.Parse(mytext2.text)).ToString();
+                        Debug.Log($"Sum after merging blocks: {Int32.Parse(mytext.text) + Int32.Parse(mytext2.text)}");
+
+                        Debug.Log("Desotry " + gameObject.name );
+                        Destroy(gameObject);
+                    }
+                }
                 
                 
             }
@@ -80,7 +86,7 @@ public class Merge : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         
-        if(collision.gameObject.CompareTag("MergeBlock") || collision.gameObject.CompareTag("New Block"))
+        if(collision.gameObject.CompareTag("MergeBlock") || collision.gameObject.CompareTag("New Block") || collision.gameObject.CompareTag("Player Tag"))
         {   
             /*if(!this.gameObject.CompareTag("MergeBlock")){*/
             current_collision = collision;
