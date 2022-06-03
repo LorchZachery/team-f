@@ -17,6 +17,8 @@ public class GridManager : MonoBehaviour
     float scale;
 
     public GameObject tile;
+    public GameObject player;
+    public GameObject obstacle;
 
     public Transform camera;
 
@@ -72,6 +74,9 @@ public class GridManager : MonoBehaviour
         //GenerateBlock(8, 7);
 
         DrawGridLines();
+
+        GeneratePlayer();
+        GenerateObstacle();
     }
 
     // Update is called once per frame
@@ -80,6 +85,23 @@ public class GridManager : MonoBehaviour
     }
 
     
+
+    void GeneratePlayer()
+    {
+        GameObject t = Instantiate(player, GetCameraCoordinates((int) gridLength-2, (int)gridLength-2), Quaternion.identity);
+        t.transform.localScale = new Vector3(scale * 0.9f, scale * 0.9f, 1);
+        t.AddComponent<MovePlayer>();
+    }
+
+    void GenerateObstacle()
+    {
+        GameObject t = Instantiate(obstacle, GetCameraCoordinates(1, 1), Quaternion.identity);
+        t.transform.localScale = new Vector3(scale * 0.9f, scale * 0.9f, 1);
+
+        GameObject t1 = Instantiate(obstacle, GetCameraCoordinates(2, 2), Quaternion.identity);
+        t1.transform.localScale = new Vector3(scale * 0.9f, scale * 0.9f, 1);
+    }
+
 
     void GenerateWalls()
     {
@@ -175,5 +197,13 @@ public class GridManager : MonoBehaviour
         float cartesianX = ((y + 1) - (gridLength + 1) / 2) * scale;
         float cartesianY = (-(x + 1) + (gridLength + 1) / 2) * scale;
         return new Vector3(cartesianX + (0.5f*scale), cartesianY - (0.5f*scale), z);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.CompareTag("obstacle"))
+        {
+            Destroy(collision.gameObject);
+        }
     }
 }
