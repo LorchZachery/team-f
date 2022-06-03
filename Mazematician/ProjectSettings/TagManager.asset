@@ -8,6 +8,12 @@ TagManager:
   - TextTag
   - TextTag2
   - New Circle
+  - Undefined
+  - obstacle
+  - Player Tag
+  - New Block
+  - Move Point
+  - block
   layers:
   - Default
   - TransparentFX

@@ -1,0 +1,66 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using TMPro;
+
+/*
+ * This class deals with below logics:
+ * 1. Player movement
+ * 2. Updating text on player
+ * 3. Collision detections and handling accourding to game plan.
+ */
+
+public class PlayerController : MonoBehaviour
+{
+    public int score;
+    float x;
+    float y;
+    int ballSpeed = 7;
+    public TMP_Text scoreText;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        UpdateText();
+    }
+
+    // Update is called once per frame
+
+    void Update()
+    {
+        x = Input.GetAxisRaw("Horizontal");
+        y = Input.GetAxisRaw("Vertical");
+        int isDiagonal = x * y != 0 ? 0 : 1;
+        GetComponent<Rigidbody2D>().velocity = new Vector2(x * ballSpeed * isDiagonal, y * ballSpeed * isDiagonal);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        /*
+         * If Colliding object is block, and has same points as player,
+         * then add the points to player's score, destroy the block, and update the text.
+         */
+        if (collision.gameObject.CompareTag("block")) 
+        {
+            var script = collision.gameObject.GetComponent<BlockController>();
+            if (score == script.points)
+            {
+                score += script.points;
+                Destroy(collision.gameObject);
+                UpdateText();
+            }
+        }
+    }
+
+    public void SetScore(int score)
+    {
+        this.score = score;
+        UpdateText();
+        Debug.Log("Score updated");
+    }
+
+    void UpdateText()
+    {
+        scoreText.text = score.ToString();
+    }
+}
