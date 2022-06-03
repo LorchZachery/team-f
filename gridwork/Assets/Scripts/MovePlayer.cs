@@ -34,7 +34,7 @@ public class MovePlayer : MonoBehaviour
     {
        transform.position = Vector3.MoveTowards(transform.position, movePoint.position, moveSpeed * Time.deltaTime);
        
-       if(Vector3.Distance(transform.position, movePoint.position) <= .05f)
+       if(Vector3.Distance(transform.position, movePoint.position) <= 0f)
        {
            if(Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f){
             if(movePoint.position[0] + Input.GetAxisRaw("Horizontal") < grid.width && movePoint.position[0] + Input.GetAxisRaw("Horizontal") >= 0){

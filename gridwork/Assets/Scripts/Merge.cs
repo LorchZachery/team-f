@@ -44,9 +44,9 @@ public class Merge : MonoBehaviour
             
             //if (collision.gameObject.GetComponent<SpriteRenderer>().color == GetComponent<SpriteRenderer>().color)
             
-            if (mytext.text != null && mytext2.text != null && mytext.text.Equals(mytext2.text) && current_collision != null)
+            if (mytext.text != null && mytext2.text != null && current_collision != null)
             {
-               
+               if( mytext.text.Equals(mytext2.text)){
                // Debug.Log($"SENDING MESSAGE FROM {gameObject.name} With the ID number of {current_collision.gameObject.GetComponent<MovePlayer>().GetInstanceID()} and object for {ID}");
                 //Debug.Log($"Text of {gameObject.name}");
                 if(current_collision.gameObject.CompareTag("Player Tag")){
@@ -77,7 +77,8 @@ public class Merge : MonoBehaviour
                 
                 
             }
-        }
+                }
+            }
         }
         current_collision = null;
        
