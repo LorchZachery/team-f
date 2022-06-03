@@ -154,7 +154,7 @@ public class GridManager : MonoBehaviour
   }
 
   void placeObstacle() {
-    var  platformObstacle = Instantiate(_platformObstaclePrefab, new Vector3(2,2), Quaternion.identity);
+    var  platformObstacle = Instantiate(_platformObstaclePrefab, new Vector3(0,0), Quaternion.identity);
     platformObstacle.name = "PlatformObstacle";
   }
 
