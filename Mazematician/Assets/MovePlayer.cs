@@ -14,7 +14,7 @@ public class MovePlayer : MonoBehaviour
 
 
     //transform.position += new Vector3(x, y, 0) * isDiagonal* Time.deltaTime;
-    // Start is called before the first frame update
+    // Start is called before the first frame update test
     void Start()
     {
         ID = GetInstanceID();
