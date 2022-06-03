@@ -19,6 +19,8 @@ public class GridManager : MonoBehaviour
   [SerializeField] GameObject _newBlock;
   private Dictionary<Vector2, Tile > _tiles; 
 
+  [SerializeField] GameObject _platformObstaclePrefab;
+
 
  /* [SerializeField] private Wall _wallPrefab;*/
  
@@ -28,6 +30,7 @@ public class GridManager : MonoBehaviour
    GenerateWalls();
    GenerateBlocks();
    placePlayer();
+   placeObstacle();
  }
     
     
@@ -148,6 +151,11 @@ public class GridManager : MonoBehaviour
   void placePlayer(){
     var player = Instantiate(_playerPrefab, new Vector3(5,5), Quaternion.identity);
     player.name = "Player";
+  }
+
+  void placeObstacle() {
+    var  platformObstacle = Instantiate(_platformObstaclePrefab, new Vector3(2,2), Quaternion.identity);
+    platformObstacle.name = "PlatformObstacle";
   }
 
   public Tile GetTileAtPosition(Vector2 pos){
