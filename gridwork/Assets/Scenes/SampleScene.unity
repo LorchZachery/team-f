@@ -267,6 +267,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 519420032}
     - target: {fileID: 1399217833760295957, guid: 1d6ca3aec5401c940b685b3c27b95948, type: 3}
+      propertyPath: width
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399217833760295957, guid: 1d6ca3aec5401c940b685b3c27b95948, type: 3}
+      propertyPath: height
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399217833760295957, guid: 1d6ca3aec5401c940b685b3c27b95948, type: 3}
       propertyPath: _blockPrefab2
       value: 
       objectReference: {fileID: 2177832239868625443, guid: d46503a604fc91947ad416c64fdb8834, type: 3}
