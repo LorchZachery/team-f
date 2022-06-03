@@ -4,10 +4,9 @@
 TagManager:
   serializedVersion: 2
   tags:
+  - New Block
   - MergeBlock
-  - TextTag
-  - TextTag2
-  - New Circle
+  - Move Point
   layers:
   - Default
   - TransparentFX
@@ -16,8 +15,8 @@ TagManager:
   - Water
   - UI
   - 
-  - 
-  - 
+  - Grid
+  - StopsMovement
   - 
   - 
   - 
