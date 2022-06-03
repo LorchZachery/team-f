@@ -132,13 +132,14 @@ public class GridManager : MonoBehaviour
   }
 
   public void BlockMaker(Vector3 pos, string value){
-    GameObject spawnedBlock4 = Instantiate(_blockPrefab, pos, Quaternion.identity) as GameObject;
+    
+    GameObject spawnedBlock = Instantiate(_blockPrefab, pos, Quaternion.identity) as GameObject;
             
-     
-      GameObject textObj = spawnedBlock4.transform.GetChild(0).gameObject;
+    
+      GameObject textObj = spawnedBlock.transform.GetChild(0).gameObject;
       TextMeshPro mytext = textObj.GetComponent<TextMeshPro>();
-      spawnedBlock4.AddComponent<Merge>();
-      Merge script2  = spawnedBlock4.GetComponent<Merge>();
+      spawnedBlock.AddComponent<Merge>();
+      Merge script2  = spawnedBlock.GetComponent<Merge>();
      
       script2.MergedObject =  _newBlock;
       mytext.text = value;

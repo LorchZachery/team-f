@@ -29,8 +29,8 @@ public class BlockMovement : MonoBehaviour
         );
         lastPostion = new Vector3( Mathf.Round(lastPostion[0]),Mathf.Round(lastPostion[1]),Mathf.Round(lastPostion[2]));
 
-        Debug.Log("last " + lastPostion);
-        Debug.Log("curr roun " + round);
+        /*Debug.Log("last " + lastPostion);
+        Debug.Log("curr roun " + round);*/
 
         if(lastPostion != round){
             Vector3 targetPos = lastPostion;

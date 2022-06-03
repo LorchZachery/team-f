@@ -39,6 +39,7 @@ public class MovePlayer : MonoBehaviour
            if(Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f){
             if(movePoint.position[0] + Input.GetAxisRaw("Horizontal") < grid.width && movePoint.position[0] + Input.GetAxisRaw("Horizontal") >= 0){
                 if(!Physics2D.OverlapCircle(movePoint.position + new Vector3(Input.GetAxisRaw("Horizontal"),0f,0f), .2f, whatStopsMovement)){
+                    
                      movePoint.position += new Vector3(Input.GetAxisRaw("Horizontal"),0f,0f);
                
                 }

@@ -59,7 +59,7 @@ public class Merge : MonoBehaviour
                 
                
                 
-                    Debug.Log("Desotry " + gameObject.name );
+                    
                     Destroy(gameObject);
                 }
                 else if(!this.gameObject.CompareTag("Player Tag")){
@@ -70,12 +70,35 @@ public class Merge : MonoBehaviour
                         mytext3.text = (Int32.Parse(mytext.text) + Int32.Parse(mytext2.text)).ToString();
                         Debug.Log($"Sum after merging blocks: {Int32.Parse(mytext.text) + Int32.Parse(mytext2.text)}");
 
-                        Debug.Log("Desotry " + gameObject.name );
+                       
                         Destroy(gameObject);
                     }
                 }
                 
                 
+            }else{
+                if(current_collision.gameObject.CompareTag("Player Tag")){
+                    Debug.Log("collions is player\n");
+                    GameObject player = current_collision.gameObject;
+                    Vector3 targetpos = new Vector3(
+                        Mathf.Round(player.transform.position.x),
+                        Mathf.Round(player.transform.position.y),
+                        Mathf.Round(player.transform.position.z)
+                    );
+                    Debug.Log($"old transform {player.transform.position}");
+                    player.transform.position = targetpos;
+                    Debug.Log($"new transform {targetpos}");
+                    
+                }
+                if(this.gameObject.CompareTag("Player Tag")){
+                    Debug.Log("object is player\n");
+                    Vector3 targetpos = new Vector3(
+                        Mathf.Round(gameObject.transform.position.x),
+                        Mathf.Round(gameObject.transform.position.y),
+                        Mathf.Round(gameObject.transform.position.z)
+                    );
+                    gameObject.transform.position = targetpos;
+                }
             }
                 }
             }
@@ -90,6 +113,7 @@ public class Merge : MonoBehaviour
         if(collision.gameObject.CompareTag("MergeBlock") || collision.gameObject.CompareTag("New Block") || collision.gameObject.CompareTag("Player Tag"))
         {   
             /*if(!this.gameObject.CompareTag("MergeBlock")){*/
+            
             current_collision = collision;
              
             
