@@ -545,5 +545,9 @@ PrefabInstance:
       propertyPath: _blockPrefab4
       value: 
       objectReference: {fileID: 2177832239868625443, guid: 0ba0582ff04b0464b84a41fb3979344e, type: 3}
+    - target: {fileID: 1399217833760295957, guid: 1d6ca3aec5401c940b685b3c27b95948, type: 3}
+      propertyPath: _platformObstaclePrefab
+      value: 
+      objectReference: {fileID: 7918523571526566828, guid: 0ef57fa5c7d834c8fb258ac26a3dbe49, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1d6ca3aec5401c940b685b3c27b95948, type: 3}

@@ -154,8 +154,14 @@ public class GridManager : MonoBehaviour
   }
 
   void placeObstacle() {
-    var  platformObstacle = Instantiate(_platformObstaclePrefab, new Vector3(0,0), Quaternion.identity);
+    var platformObstacle = Instantiate(_platformObstaclePrefab, new Vector3(5,1), Quaternion.identity);
     platformObstacle.name = "PlatformObstacle";
+
+    // int StopsMovement = LayerMask.NameToLayer("StopsMovement");
+    // platformObstacle.gameObject.layer = StopsMovement;
+    // Rigidbody2D rigid = platformObstacle.gameObject.AddComponent<Rigidbody2D>();
+    // rigid.bodyType = RigidbodyType2D.Static;
+    // PolygonCollider2D collider = platformObstacle.gameObject.AddComponent<PolygonCollider2D>();
   }
 
   public Tile GetTileAtPosition(Vector2 pos){
