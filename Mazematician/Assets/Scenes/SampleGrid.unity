@@ -155,6 +155,8 @@ MonoBehaviour:
   tile: {fileID: 2483983227542680485, guid: ed7b1c1c964724d7183b701b9faedfc0, type: 3}
   player: {fileID: 2483983227542680485, guid: 9e9aea2a167394a11a5da1040029dcd8, type: 3}
   block: {fileID: 2483983227542680485, guid: dc5534340b8d6492d8d4f4d5d63a4441, type: 3}
+  obstacle: {fileID: 2483983227542680485, guid: df4afda6eb5b14640b44c34ad3ff168d, type: 3}
+  winBlock: {fileID: 2483983227542680485, guid: 6bb51171fc4084713befef5614528d83, type: 3}
 --- !u!4 &79570880
 Transform:
   m_ObjectHideFlags: 0

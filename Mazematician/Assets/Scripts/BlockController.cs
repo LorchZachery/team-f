@@ -38,25 +38,28 @@ public class BlockController : MonoBehaviour
                 Destroy(collision.gameObject);
                 UpdateText();
             }
+            /*
+            * Code to prevent diagonal movement
+            */
+
+            
         }
 
-        /*
-         * Code to prevent diagonal movement
-         */
-
-        Vector2 direction = collision.gameObject.GetComponent<Rigidbody2D>().velocity.normalized;
-        float x = direction.x;
-        float y = direction.y;
-        if(Mathf.Abs(x) > Mathf.Abs(y))
-        {
-            int dir = x > 0 ? 1 : -1;
-            collision.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(1 * dir, 0);
-        }
-        else if(Mathf.Abs(x) < Mathf.Abs(y))
-        {
-            int dir = y > 0 ? 1 : -1;
-            collision.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 1 * dir);
-        }
+        
+        //Vector2 direction = rigidbody.velocity.normalized;
+        //float x = direction.x;
+        //float y = direction.y;
+        //if(Mathf.Abs(x) > Mathf.Abs(y))
+        //{
+        //    int dir = x > 0 ? 1 : -1;
+        //    rigidbody.velocity = new Vector2(1 * dir, 0);
+        //}
+        //else if(Mathf.Abs(x) < Mathf.Abs(y))
+        //{
+        //    int dir = y > 0 ? 1 : -1;
+        //    rigidbody.velocity = new Vector2(0, 1 * dir);
+        //}
+        
     }
 
     public void SetPoints(int points)
@@ -69,5 +72,23 @@ public class BlockController : MonoBehaviour
     void UpdateText()
     {
         pointsText.text = points.ToString();
+    }
+
+    private Vector2 getDirection(Vector2 velocity)
+    {
+        float x = velocity.x;
+        float y = velocity.y;
+        if (Mathf.Abs(x) > Mathf.Abs(y))
+        {
+            int dir = x > 0 ? 1 : -1;
+            return new Vector2(1*dir, 0);
+        }
+        else if (Mathf.Abs(x) < Mathf.Abs(y))
+        {
+            int dir = y > 0 ? 1 : -1;
+            return new Vector2(0, 1*dir);
+        }
+
+        return new Vector2(0, 0);
     }
 }

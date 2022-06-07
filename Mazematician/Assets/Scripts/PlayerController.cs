@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        UpdateText();
+        UpdateText(this.score.ToString());
     }
 
     // Update is called once per frame
@@ -47,20 +47,30 @@ public class PlayerController : MonoBehaviour
             {
                 score += script.points;
                 Destroy(collision.gameObject);
-                UpdateText();
+                UpdateText(this.score.ToString());
             }
         }
     }
 
+
+
     public void SetScore(int score)
     {
         this.score = score;
-        UpdateText();
+        UpdateText(this.score.ToString());
         Debug.Log("Score updated");
     }
 
-    void UpdateText()
+    void UpdateText(string message)
     {
-        scoreText.text = score.ToString();
+        scoreText.text = message;
     }
+
+    public void NotifyPlayerWin()
+    {
+        this.score = 2;
+        UpdateText("Player won");
+    }
+
+
 }

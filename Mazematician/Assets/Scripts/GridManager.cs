@@ -19,6 +19,8 @@ public class GridManager : MonoBehaviour
     public GameObject tile;
     public GameObject player;
     public GameObject block;
+    public GameObject obstacle;
+    public GameObject winBlock;
 
     void Start()
     {
@@ -31,45 +33,45 @@ public class GridManager : MonoBehaviour
         scale = Mathf.Min(screenWidth, screenHeight) / gridLength;
 
         GenerateWalls();
-        //GenerateBlock(1, 2);
-        //GenerateBlock(1, 4);
-        //GenerateBlock(1, 6);
-        //GenerateBlock(1, 8);
+        //GenerateTile(1, 2);
+        //GenerateTile(1, 4);
+        //GenerateTile(1, 6);
+        //GenerateTile(1, 8);
 
-        //GenerateBlock(2, 1);
-        //GenerateBlock(2, 3);
-        GenerateBlock(2, 5);
-        GenerateBlock(2, 7);
+        //GenerateTile(2, 1);
+        //GenerateTile(2, 3);
+        GenerateTile(2, 5);
+        GenerateTile(2, 7);
 
-        GenerateBlock(3, 2);
-        //GenerateBlock(3, 4);
-        //GenerateBlock(3, 6);
-        //GenerateBlock(3, 8);
+        GenerateTile(3, 2);
+        //GenerateTile(3, 4);
+        //GenerateTile(3, 6);
+        //GenerateTile(3, 8);
 
-        //GenerateBlock(4, 1);
-        //GenerateBlock(4, 3);
-        GenerateBlock(4, 5);
-        //GenerateBlock(4, 7);
+        //GenerateTile(4, 1);
+        //GenerateTile(4, 3);
+        GenerateTile(4, 5);
+        //GenerateTile(4, 7);
 
-        GenerateBlock(5, 2);
-        GenerateBlock(5, 4);
-        GenerateBlock(5, 6);
-        //GenerateBlock(5, 8);
+        GenerateTile(5, 2);
+        GenerateTile(5, 4);
+        GenerateTile(5, 6);
+        //GenerateTile(5, 8);
 
-        //GenerateBlock(6, 1);
-        //GenerateBlock(6, 3);
-        //GenerateBlock(6, 5);
-        //GenerateBlock(6, 7);
+        //GenerateTile(6, 1);
+        //GenerateTile(6, 3);
+        //GenerateTile(6, 5);
+        //GenerateTile(6, 7);
 
-        GenerateBlock(7, 2);
-        //GenerateBlock(7, 4);
-        //GenerateBlock(7, 6);
-        //GenerateBlock(7, 8);
+        GenerateTile(7, 2);
+        //GenerateTile(7, 4);
+        //GenerateTile(7, 6);
+        //GenerateTile(7, 8);
 
-        //GenerateBlock(8, 1);
-        //GenerateBlock(8, 3);
-        //GenerateBlock(8, 5);
-        //GenerateBlock(8, 7);
+        //GenerateTile(8, 1);
+        //GenerateTile(8, 3);
+        //GenerateTile(8, 5);
+        //GenerateTile(8, 7);
 
         DrawGridLines();
 
@@ -83,6 +85,9 @@ public class GridManager : MonoBehaviour
         GenerateBlock(7, 3, 2);
         GenerateBlock(7, 4, 2); 
         GenerateBlock(7, 6, 2);
+        PlaceObstacle(9, 8);
+        PlaceWinBlock(1, 10);
+
 
     }
 
@@ -116,18 +121,18 @@ public class GridManager : MonoBehaviour
         for (int i = 0; i < gridLength; i++)
         {
             //top : x = 0, y = i
-            GenerateBlock(0, i);
+            GenerateTile(0, i);
 
             //bottom: x = 9, y = i
-            GenerateBlock((int)gridLength - 1, i);
+            GenerateTile((int)gridLength - 1, i);
         }
 
         for(int i = 1; i < gridLength - 1; i++)
         {
             //left x = i, y = 0
-            GenerateBlock(i, 0);
+            GenerateTile(i, 0);
             //right x = i, y = 9
-            GenerateBlock(i, (int)gridLength - 1);
+            GenerateTile(i, (int)gridLength - 1);
         }
     }
 
@@ -142,10 +147,22 @@ public class GridManager : MonoBehaviour
         
     }
 
+    void PlaceObstacle(int x, int y)
+    {
+        GameObject t = Instantiate(obstacle, GetCameraCoordinates(x, y), Quaternion.identity);
+        t.transform.localScale = new Vector3(scale, scale, 1);
+    }
+
+    void PlaceWinBlock(int x, int y)
+    {
+        GameObject t = Instantiate(winBlock, GetCameraCoordinates(x, y), Quaternion.identity);
+        t.transform.localScale = new Vector3(scale, scale, 1);
+    }
+
     /*
      * Generate grid based on coordinates
      */
-    void GenerateBlock(int x, int y)
+    void GenerateTile(int x, int y)
     {
         GameObject t = Instantiate(tile, GetCameraCoordinates(x, y), Quaternion.identity);
         t.transform.localScale = new Vector3(scale, scale, 1);
