@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: c731acba3a67f414ca38ffe4052faf90
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - textobj: {instanceID: 0}
+  - mytext: {instanceID: 0}
+  - textobj2: {instanceID: 0}
+  - mytext2: {instanceID: 0}
+  - textobj3: {instanceID: 0}
+  - mytext3: {instanceID: 0}
+  - MergedObject: {instanceID: 0}
+  - camera: {instanceID: 0}
+  - targetObject: {fileID: 554748297577648723, guid: 32b682c35f96e4e7585c3874be801ee2, type: 3}
+  - gameObject2: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

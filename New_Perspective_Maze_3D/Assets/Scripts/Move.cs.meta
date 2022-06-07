@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: c052d4c64b4c74b32a986fd7d04f7abd
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - textobj: {instanceID: 0}
+  - mytext: {instanceID: 0}
+  - textobj2: {instanceID: 0}
+  - mytext2: {instanceID: 0}
+  - textobj3: {instanceID: 0}
+  - mytext3: {instanceID: 0}
+  - MergedObject: {fileID: 2299027206988127575, guid: 32b682c35f96e4e7585c3874be801ee2, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
