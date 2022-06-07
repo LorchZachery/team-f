@@ -360,7 +360,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1330031751433646667}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1399217833760295957, guid: 1d6ca3aec5401c940b685b3c27b95948, type: 3}
+        m_TargetAssemblyTypeName: GridManager, Assembly-CSharp
+        m_MethodName: RestartButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &7364377357782477648
 GameObject:
   m_ObjectHideFlags: 0

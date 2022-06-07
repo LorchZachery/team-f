@@ -31,6 +31,7 @@ public class MovePlayer : MonoBehaviour
         tmp.y = Mathf.Round(tmp.y);
         movePoint.transform.position = tmp; 
         movePoint.parent =null;
+        // Text object that keeps track of player score
         textobj = gameObject.transform.GetChild(0).gameObject;
         mytext = textobj.GetComponent<TextMeshPro>();
         Debug.Log("INITIAL PLAYER SCORE " + mytext.text );
@@ -62,6 +63,7 @@ public class MovePlayer : MonoBehaviour
             }
         }
 
+        // Calls this when final score is reached
         if (mytext.text == "32" && !isGameOver) {
             isGameOver = true;
             Debug.Log("END GAME PLAYER SCORE " + mytext.text );

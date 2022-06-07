@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GridManager : MonoBehaviour
 {
@@ -22,6 +24,8 @@ public class GridManager : MonoBehaviour
   [SerializeField] GameObject _platformObstaclePrefab;
 
   [SerializeField] GameObject _gameOverScreenPrefab;
+  GameObject gameOverScreen;
+  GameObject player;
 
  /* [SerializeField] private Wall _wallPrefab;*/
  
@@ -51,8 +55,7 @@ public class GridManager : MonoBehaviour
 
 		}
 	}
-
-   _cam.transform.position = new Vector3((float)width/2 - 0.5f, (float)height/2 - 0.5f,-10);
+  _cam.transform.position = new Vector3((float)width/2 - 0.5f, (float)height/2 - 0.5f,-10);
   }
 
   void GenerateBounds(){
@@ -131,7 +134,7 @@ public class GridManager : MonoBehaviour
     foreach( Tuple<Vector3,string> pair in blocks ){
          BlockMaker(pair.Item1,pair.Item2);
     }
-    
+  
      
 
   }
@@ -151,7 +154,7 @@ public class GridManager : MonoBehaviour
   }
 
   void placePlayer(){
-    var player = Instantiate(_playerPrefab, new Vector3(5,5), Quaternion.identity);
+    player = Instantiate(_playerPrefab, new Vector3(5,5), Quaternion.identity);
     player.name = "Player";
   }
 
@@ -173,10 +176,44 @@ public class GridManager : MonoBehaviour
     return null; 
   }
 
+  // Function that triggers game over screen
   public void gameOver(int score) {
     Debug.Log("BACK IN GRID MANAGER");
-    var gameOverScreen = Instantiate(_gameOverScreenPrefab, new Vector3(3.5f,3.5f), Quaternion.identity);
+    gameOverScreen = Instantiate(_gameOverScreenPrefab, new Vector3(3.5f,3.5f), Quaternion.identity);
     gameOverScreen.name = "GameOverScreen";
+  }
+
+  // Function that restarts game
+  public void RestartButton() {
+    // Deletes all game objects other than camera
+    GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
+    Debug.Log("LENGTH OF ALL OBJECTS LIST " + allObjects.Length);
+    foreach(GameObject go in allObjects) {
+      if(!go.GetComponent<Camera>() && !go.GetComponent<Button>())
+       Destroy(go); 
+    }
+
+    // Generating Grid again without adjusting camera
+    _tiles = new Dictionary<Vector2, Tile>();
+    for (int x =0; x < width; x++){
+      for(int y = 0; y < height; y++){
+        var spawnedTile = Instantiate(_tilePrefab, new Vector3(x, y), Quaternion.identity);
+        spawnedTile.name = $"Tile {x} {y}";
+
+        var isOffset = (x % 2 == 0 && y%2 != 0) || (x %2 != 0 && y %2 ==0 );
+        
+        spawnedTile.Init(isOffset);
+        
+        _tiles[new Vector2(x,y)] = spawnedTile;
+
+      }
+    }
+    // Re-generating rest of grid
+    GenerateBounds();
+    GenerateWalls();
+    GenerateBlocks();
+    placePlayer();
+    placeObstacle();
   }
    
 }
