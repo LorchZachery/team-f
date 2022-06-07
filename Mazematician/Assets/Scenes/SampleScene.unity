@@ -294,7 +294,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -545,6 +545,10 @@ PrefabInstance:
       propertyPath: _blockPrefab4
       value: 
       objectReference: {fileID: 2177832239868625443, guid: 0ba0582ff04b0464b84a41fb3979344e, type: 3}
+    - target: {fileID: 1399217833760295957, guid: 1d6ca3aec5401c940b685b3c27b95948, type: 3}
+      propertyPath: _gameOverScreenPrefab
+      value: 
+      objectReference: {fileID: 2734648780154625489, guid: 13b12a37500de42deb6000ca5c892e14, type: 3}
     - target: {fileID: 1399217833760295957, guid: 1d6ca3aec5401c940b685b3c27b95948, type: 3}
       propertyPath: _platformObstaclePrefab
       value: 

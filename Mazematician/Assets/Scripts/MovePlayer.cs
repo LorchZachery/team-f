@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System;
 
 public class MovePlayer : MonoBehaviour
 {
@@ -12,6 +13,10 @@ public class MovePlayer : MonoBehaviour
    
    [SerializeField] GameObject gridManager;
     GridManager grid;
+
+    public GameObject textobj;
+    public TextMeshPro mytext;
+    bool isGameOver = false;
     
     void Awake()
     {
@@ -26,32 +31,41 @@ public class MovePlayer : MonoBehaviour
         tmp.y = Mathf.Round(tmp.y);
         movePoint.transform.position = tmp; 
         movePoint.parent =null;
+        textobj = gameObject.transform.GetChild(0).gameObject;
+        mytext = textobj.GetComponent<TextMeshPro>();
+        Debug.Log("INITIAL PLAYER SCORE " + mytext.text );
         
     }
 
     // Update is called once per frame
     void Update()
     {
-       transform.position = Vector3.MoveTowards(transform.position, movePoint.position, moveSpeed * Time.deltaTime);
-       
-       if(Vector3.Distance(transform.position, movePoint.position) <= 0f)
-       {
-           if(Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f){
+        transform.position = Vector3.MoveTowards(transform.position, movePoint.position, moveSpeed * Time.deltaTime);
+        
+        if(Vector3.Distance(transform.position, movePoint.position) <= 0f)
+        {
+            if(Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f){
             if(movePoint.position[0] + Input.GetAxisRaw("Horizontal") < grid.width && movePoint.position[0] + Input.GetAxisRaw("Horizontal") >= 0){
                 if(!Physics2D.OverlapCircle(movePoint.position + new Vector3(Input.GetAxisRaw("Horizontal"),0f,0f), .2f, whatStopsMovement)){
-                     movePoint.position += new Vector3(Input.GetAxisRaw("Horizontal"),0f,0f);
-               
+                        movePoint.position += new Vector3(Input.GetAxisRaw("Horizontal"),0f,0f);
+                
                 }
             }
-           }
-           else if(Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f){
+            }
+            else if(Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f){
             if(movePoint.position[1] + Input.GetAxisRaw("Vertical") < grid.height && movePoint.position[1] + Input.GetAxisRaw("Vertical") >= 0){
 
-               if(!Physics2D.OverlapCircle(movePoint.position +new Vector3(0f,Input.GetAxisRaw("Vertical"),0f), .2f, whatStopsMovement)){
+                if(!Physics2D.OverlapCircle(movePoint.position +new Vector3(0f,Input.GetAxisRaw("Vertical"),0f), .2f, whatStopsMovement)){
                     movePoint.position += new Vector3(0f,Input.GetAxisRaw("Vertical"),0f);
-               }
-             }
+                }
+                }
             }
-       }
+        }
+
+        if (mytext.text == "32" && !isGameOver) {
+            isGameOver = true;
+            Debug.Log("END GAME PLAYER SCORE " + mytext.text );
+            grid.gameOver(Int32.Parse(mytext.text));
+        }
     }
 }

@@ -21,6 +21,7 @@ public class GridManager : MonoBehaviour
 
   [SerializeField] GameObject _platformObstaclePrefab;
 
+  [SerializeField] GameObject _gameOverScreenPrefab;
 
  /* [SerializeField] private Wall _wallPrefab;*/
  
@@ -124,7 +125,8 @@ public class GridManager : MonoBehaviour
   void GenerateBlocks(){
     
     List<Tuple<Vector3,string>> blocks = new List<Tuple<Vector3, string>> { new Tuple<Vector3, String> (new Vector3(6,6),"2"),
-    new Tuple<Vector3, String> (new Vector3(6,4),"4"),new Tuple<Vector3, String> (new Vector3(2,5),"2"), new Tuple<Vector3, String> (new Vector3(7,6),"2")};
+    new Tuple<Vector3, String> (new Vector3(6,4),"4"),new Tuple<Vector3, String> (new Vector3(2,5),"2"), new Tuple<Vector3, String> (new Vector3(7,6),"2"),
+    new Tuple<Vector3, String> (new Vector3(1,7),"8"), new Tuple<Vector3, String> (new Vector3(4,6),"16")};
 
     foreach( Tuple<Vector3,string> pair in blocks ){
          BlockMaker(pair.Item1,pair.Item2);
@@ -169,6 +171,12 @@ public class GridManager : MonoBehaviour
       return tile;
     }
     return null; 
+  }
+
+  public void gameOver(int score) {
+    Debug.Log("BACK IN GRID MANAGER");
+    var gameOverScreen = Instantiate(_gameOverScreenPrefab, new Vector3(3.5f,3.5f), Quaternion.identity);
+    gameOverScreen.name = "GameOverScreen";
   }
    
 }

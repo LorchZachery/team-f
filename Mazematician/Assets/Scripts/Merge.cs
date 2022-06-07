@@ -55,11 +55,7 @@ public class Merge : MonoBehaviour
                     mytext3 = textobj3.GetComponent<TextMeshPro>();
                     mytext3.text = (Int32.Parse(mytext.text) + Int32.Parse(mytext2.text)).ToString();
                     Debug.Log($"Sum after merging blocks: {Int32.Parse(mytext.text) + Int32.Parse(mytext2.text)}");
-                 
-                
-               
-                
-                    Debug.Log("Desotry " + gameObject.name );
+                    Debug.Log("Destroy " + gameObject.name );
                     Destroy(gameObject);
                 }
                 else if(!this.gameObject.CompareTag("Player Tag")){
@@ -70,7 +66,7 @@ public class Merge : MonoBehaviour
                         mytext3.text = (Int32.Parse(mytext.text) + Int32.Parse(mytext2.text)).ToString();
                         Debug.Log($"Sum after merging blocks: {Int32.Parse(mytext.text) + Int32.Parse(mytext2.text)}");
 
-                        Debug.Log("Desotry " + gameObject.name );
+                        Debug.Log("Destroy " + gameObject.name );
                         Destroy(gameObject);
                     }
                 }
