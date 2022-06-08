@@ -47,33 +47,42 @@ public class Merge : MonoBehaviour
             if (mytext.text != null && mytext2.text != null && current_collision != null)
             {
                if( mytext.text.Equals(mytext2.text)){
-               // Debug.Log($"SENDING MESSAGE FROM {gameObject.name} With the ID number of {current_collision.gameObject.GetComponent<MovePlayer>().GetInstanceID()} and object for {ID}");
-                //Debug.Log($"Text of {gameObject.name}");
-                if(current_collision.gameObject.CompareTag("Player Tag")){
-                    GameObject O = current_collision.gameObject;
-                    textobj3 = O.transform.GetChild(0).gameObject;
-                    mytext3 = textobj3.GetComponent<TextMeshPro>();
-                    mytext3.text = (Int32.Parse(mytext.text) + Int32.Parse(mytext2.text)).ToString();
-                    Debug.Log($"Sum after merging blocks: {Int32.Parse(mytext.text) + Int32.Parse(mytext2.text)}");
-                    Debug.Log("Destroy " + gameObject.name );
-                    Destroy(gameObject);
-                }
-                else if(!this.gameObject.CompareTag("Player Tag")){
-                    if(this.gameObject.GetInstanceID() > current_collision.gameObject.GetInstanceID()){
+                    // Debug.Log($"SENDING MESSAGE FROM {gameObject.name} With the ID number of {current_collision.gameObject.GetComponent<MovePlayer>().GetInstanceID()} and object for {ID}");
+                    //Debug.Log($"Text of {gameObject.name}");
+                    if(current_collision.gameObject.CompareTag("Player Tag")){
                         GameObject O = current_collision.gameObject;
                         textobj3 = O.transform.GetChild(0).gameObject;
                         mytext3 = textobj3.GetComponent<TextMeshPro>();
                         mytext3.text = (Int32.Parse(mytext.text) + Int32.Parse(mytext2.text)).ToString();
                         Debug.Log($"Sum after merging blocks: {Int32.Parse(mytext.text) + Int32.Parse(mytext2.text)}");
-
                         Debug.Log("Destroy " + gameObject.name );
                         Destroy(gameObject);
                     }
+                    else if(!this.gameObject.CompareTag("Player Tag")){
+                        if(this.gameObject.GetInstanceID() > current_collision.gameObject.GetInstanceID()){
+                            GameObject O = current_collision.gameObject;
+                            textobj3 = O.transform.GetChild(0).gameObject;
+                            mytext3 = textobj3.GetComponent<TextMeshPro>();
+                            mytext3.text = (Int32.Parse(mytext.text) + Int32.Parse(mytext2.text)).ToString();
+                            Debug.Log($"Sum after merging blocks: {Int32.Parse(mytext.text) + Int32.Parse(mytext2.text)}");
+                            Debug.Log("Destroy " + gameObject.name);
+                            Destroy(gameObject);
+                        }
+                    }
+                
+                
+                } else if (mytext2.text.Substring(0,1).Equals("/")) {
+                    Debug.Log("COLLIDED WITH OBSTACLE");
+                    GameObject O = current_collision.gameObject;
+                    textobj3 = O.transform.GetChild(0).gameObject;
+                    mytext3 = textobj3.GetComponent<TextMeshPro>();
+                    int divider = Int32.Parse(mytext2.text.Substring(1,1));
+                    Debug.Log("DIVIDER " + divider);
+
+                    mytext3.text = (Int32.Parse(mytext.text) / divider).ToString();
+                    Destroy(gameObject);
                 }
-                
-                
             }
-                }
             }
         }
         current_collision = null;
