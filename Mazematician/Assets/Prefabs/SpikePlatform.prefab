@@ -145,6 +145,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SpikePlatform
       objectReference: {fileID: 0}
+    - target: {fileID: 7591324638490399868, guid: 6688746c232c64055bcdbc4c6243f0ec, type: 3}
+      propertyPath: m_TagString
+      value: platform
+      objectReference: {fileID: 0}
     - target: {fileID: 7591324638490399870, guid: 6688746c232c64055bcdbc4c6243f0ec, type: 3}
       propertyPath: m_RootOrder
       value: 0

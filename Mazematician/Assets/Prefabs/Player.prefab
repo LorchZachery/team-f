@@ -311,3 +311,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   score: 0
   scoreText: {fileID: 646721742207440632}
+  gridManager: {fileID: 0}
+  gameOverScreen: {fileID: 6998429772160650064, guid: e2350c809a65541588fb96b6ab568533, type: 3}

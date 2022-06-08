@@ -23,6 +23,7 @@ public class GridManager : MonoBehaviour
     public GameObject winBlock;
     public GameObject platformObstacle;
     public GameObject spikeObstacle;
+    public GameObject gameOverScreen;
 
     void Start()
     {
@@ -201,6 +202,11 @@ public class GridManager : MonoBehaviour
         float cartesianX = ((y + 1) - (gridLength + 1) / 2) * scale;
         float cartesianY = (-(x + 1) + (gridLength + 1) / 2) * scale;
         return new Vector3(cartesianX + (0.5f * scale), cartesianY - (0.5f * scale), z);
+    }
+
+    public void ShowGameOver()
+    {
+        GameObject t = Instantiate(gameOverScreen, GetCameraCoordinates(0, 0), Quaternion.identity);
     }
 
 

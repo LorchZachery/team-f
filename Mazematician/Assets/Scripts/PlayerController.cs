@@ -17,6 +17,14 @@ public class PlayerController : MonoBehaviour
     float y;
     int ballSpeed = 7;
     public TMP_Text scoreText;
+    [SerializeField] GameObject gridManager;
+    GridManager grid;
+    public GameObject gameOverScreen;
+
+    // void Awake()
+    // {
+    //     grid = gridManager.GetComponent<GridManager>();
+    // }
 
     // Start is called before the first frame update
     void Start()
@@ -40,7 +48,7 @@ public class PlayerController : MonoBehaviour
          * If Colliding object is block, and has same points as player,
          * then add the points to player's score, destroy the block, and update the text.
          */
-        if (collision.gameObject.CompareTag("block")) 
+        if (collision.gameObject.CompareTag("block"))
         {
             var script = collision.gameObject.GetComponent<BlockController>();
             if (score == script.points)
@@ -49,6 +57,11 @@ public class PlayerController : MonoBehaviour
                 Destroy(collision.gameObject);
                 UpdateText(this.score.ToString());
             }
+        }
+        else if (collision.gameObject.CompareTag("platform"))
+        {
+            var script = collision.gameObject.GetComponent<Rotation>();
+            ShowGameOver();
         }
     }
 
@@ -70,6 +83,11 @@ public class PlayerController : MonoBehaviour
     {
         this.score = 2;
         UpdateText("Player won");
+    }
+
+    public void ShowGameOver()
+    {
+        GameObject t = Instantiate(gameOverScreen, new Vector3(0, 0), Quaternion.identity);
     }
 
 
