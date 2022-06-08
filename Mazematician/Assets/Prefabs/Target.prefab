@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 1447104748632009288}
   m_Layer: 0
   m_Name: Target
-  m_TagString: obstacle
+  m_TagString: target
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

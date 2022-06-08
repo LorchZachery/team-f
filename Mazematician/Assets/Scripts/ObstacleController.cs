@@ -18,7 +18,7 @@ public class ObstacleController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.CompareTag("Player"))
+        if(collision.gameObject.CompareTag("player"))
         {
             var script = collision.gameObject.GetComponent<PlayerController>();
             if(script.score > 2)

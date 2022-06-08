@@ -21,6 +21,7 @@ public class GridManager : MonoBehaviour
     public GameObject block;
     public GameObject obstacle;
     public GameObject winBlock;
+    public GameObject myCamera;
 
     void Start()
     {
@@ -87,16 +88,49 @@ public class GridManager : MonoBehaviour
         GenerateBlock(7, 6, 2);
         PlaceObstacle(9, 8);
         PlaceWinBlock(1, 10);
-
-
+        ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            Vector3 currentTransform = myCamera.transform.eulerAngles;
+            //myCamera.transform.eulerAngles = new Vector3(0f, 0f, 360 + currentTransform.z - 90);
+            Camera.main.transform.Rotate(0, 0, -90f, Space.World);
+            TransformGameObjects(GameObject.FindGameObjectsWithTag("block"), -90f);
+            TransformGameObjects(GameObject.FindGameObjectsWithTag("obstacle"), -90f);
+            TransformGameObjects(GameObject.FindGameObjectsWithTag("player"), -90f);
+            TransformGameObjects(GameObject.FindGameObjectsWithTag("target"), -90f);
+
+            ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
+
+        }
     }
 
-    
+    void TransformGameObjects(GameObject[] gameObjects, float z)
+    {
+        foreach(GameObject gameObject in gameObjects)
+        {
+            Vector3 currentTransform = gameObject.transform.eulerAngles;
+            //gameObject.transform.Rotate(myCamera.transform.up, 0, Space.World);
+            Vector3 rotationVector = new Vector3(0, 0, currentTransform.z + z);
+            gameObject.transform.rotation = Quaternion.Euler(rotationVector); ;
+        }
+    }
+
+    void ApplyGravity(GameObject[] gameObjects)
+    {
+        Debug.Log(gameObjects[0].transform.eulerAngles.ToString());
+        foreach (GameObject gameObject in gameObjects)
+        {
+            ConstantForce2D constantForce = gameObject.GetComponent<ConstantForce2D>();
+            Vector2 direction = Camera.main.transform.up * -1;
+            constantForce.force = direction * 50f;
+        }
+        //Debug.Log(gameObjects[0].transform.x);
+    }
 
     void GeneratePlayer()
     {
@@ -182,6 +216,5 @@ public class GridManager : MonoBehaviour
         float cartesianY = (-(x + 1) + (gridLength + 1) / 2) * scale;
         return new Vector3(cartesianX + (0.5f*scale), cartesianY - (0.5f*scale), z);
     }
-
     
 }
