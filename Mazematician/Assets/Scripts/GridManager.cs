@@ -165,10 +165,9 @@ public class GridManager : MonoBehaviour
   void placeObstacle() {
     var platformObstacle = Instantiate(_platformObstaclePrefab, new Vector3(5,1), Quaternion.identity);
     platformObstacle.name = "PlatformObstacle";
-
     var spikeObstacle1 = Instantiate(_spikePrefab, new Vector3(2,0), Quaternion.identity);
-    var spikeObstacle2 = Instantiate(_spikePrefab, new Vector3(3,0), Quaternion.identity);
     spikeObstacle1.name = "SpikeObstacle1";
+    var spikeObstacle2 = Instantiate(_spikePrefab, new Vector3(3,0), Quaternion.identity);
     spikeObstacle2.name = "SpikeObstacle2";
 
     int StopsMovement = LayerMask.NameToLayer("StopsMovement");
@@ -197,6 +196,7 @@ public class GridManager : MonoBehaviour
 
   // Function that triggers game over screen
   public void gameOver(int score) {
+    GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
     Debug.Log("BACK IN GRID MANAGER");
     gameOverScreen = Instantiate(_gameOverScreenPrefab, new Vector3(3.5f,3.5f), Quaternion.identity);
     gameOverScreen.name = "GameOverScreen";
