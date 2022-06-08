@@ -24,6 +24,8 @@ public class GridManager : MonoBehaviour
   [SerializeField] GameObject _platformObstaclePrefab;
 
   [SerializeField] GameObject _gameOverScreenPrefab;
+
+  [SerializeField] GameObject _spikePrefab;
   GameObject gameOverScreen;
   GameObject player;
 
@@ -164,11 +166,26 @@ public class GridManager : MonoBehaviour
     var platformObstacle = Instantiate(_platformObstaclePrefab, new Vector3(5,1), Quaternion.identity);
     platformObstacle.name = "PlatformObstacle";
 
-    // int StopsMovement = LayerMask.NameToLayer("StopsMovement");
-    // platformObstacle.gameObject.layer = StopsMovement;
-    // Rigidbody2D rigid = platformObstacle.gameObject.AddComponent<Rigidbody2D>();
-    // rigid.bodyType = RigidbodyType2D.Static;
-    // PolygonCollider2D collider = platformObstacle.gameObject.AddComponent<PolygonCollider2D>();
+    var spikeObstacle1 = Instantiate(_spikePrefab, new Vector3(2,0), Quaternion.identity);
+    var spikeObstacle2 = Instantiate(_spikePrefab, new Vector3(3,0), Quaternion.identity);
+    spikeObstacle1.name = "SpikeObstacle1";
+    spikeObstacle2.name = "SpikeObstacle2";
+
+    int StopsMovement = LayerMask.NameToLayer("StopsMovement");
+    platformObstacle.gameObject.layer = StopsMovement;
+    Rigidbody2D rigid = platformObstacle.gameObject.AddComponent<Rigidbody2D>();
+    rigid.bodyType = RigidbodyType2D.Static;
+    PolygonCollider2D collider = platformObstacle.gameObject.AddComponent<PolygonCollider2D>();
+
+    spikeObstacle1.gameObject.layer = StopsMovement;
+    Rigidbody2D rigid1 = spikeObstacle1.gameObject.AddComponent<Rigidbody2D>();
+    rigid1.bodyType = RigidbodyType2D.Static;
+    PolygonCollider2D collider1 = spikeObstacle1.gameObject.AddComponent<PolygonCollider2D>();
+
+    spikeObstacle2.gameObject.layer = StopsMovement;
+    Rigidbody2D rigid2 = spikeObstacle2.gameObject.AddComponent<Rigidbody2D>();
+    rigid2.bodyType = RigidbodyType2D.Static;
+    PolygonCollider2D collider2 = spikeObstacle2.gameObject.AddComponent<PolygonCollider2D>();
   }
 
   public Tile GetTileAtPosition(Vector2 pos){

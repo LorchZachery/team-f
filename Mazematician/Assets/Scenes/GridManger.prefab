@@ -53,3 +53,4 @@ MonoBehaviour:
   _newBlock: {fileID: 2177832239868625443, guid: 7d3a37e4b23578b44a7840a223750df8, type: 3}
   _platformObstaclePrefab: {fileID: 7918523571526566828, guid: 0ef57fa5c7d834c8fb258ac26a3dbe49, type: 3}
   _gameOverScreenPrefab: {fileID: 8884162421930665307, guid: 13b12a37500de42deb6000ca5c892e14, type: 3}
+  _spikePrefab: {fileID: 3739421058286654346, guid: 491a3d6136ec54eaa9912ec71ba8f587, type: 3}
