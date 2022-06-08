@@ -14,6 +14,7 @@ TagManager:
   - New Block
   - Move Point
   - block
+  - platform
   layers:
   - Default
   - TransparentFX

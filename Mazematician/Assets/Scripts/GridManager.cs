@@ -21,6 +21,8 @@ public class GridManager : MonoBehaviour
     public GameObject block;
     public GameObject obstacle;
     public GameObject winBlock;
+    public GameObject platformObstacle;
+    public GameObject spikeObstacle;
 
     void Start()
     {
@@ -83,10 +85,11 @@ public class GridManager : MonoBehaviour
         GenerateBlock(5, 5, 16);
         GenerateBlock(6, 1, 4);
         GenerateBlock(7, 3, 2);
-        GenerateBlock(7, 4, 2); 
+        GenerateBlock(7, 4, 2);
         GenerateBlock(7, 6, 2);
         PlaceObstacle(9, 8);
         PlaceWinBlock(1, 10);
+        PlacePlatformObstacle(6, 9);
 
 
     }
@@ -96,11 +99,11 @@ public class GridManager : MonoBehaviour
     {
     }
 
-    
+
 
     void GeneratePlayer()
     {
-        GameObject t = Instantiate(player, GetCameraCoordinates((int) gridLength-2, (int)gridLength-2), Quaternion.identity);
+        GameObject t = Instantiate(player, GetCameraCoordinates((int)gridLength - 2, (int)gridLength - 2), Quaternion.identity);
         t.transform.localScale = new Vector3(scale * 0.9f, scale * 0.9f, 1);
         var script = t.GetComponent<PlayerController>();
         script.SetScore(2);
@@ -127,7 +130,7 @@ public class GridManager : MonoBehaviour
             GenerateTile((int)gridLength - 1, i);
         }
 
-        for(int i = 1; i < gridLength - 1; i++)
+        for (int i = 1; i < gridLength - 1; i++)
         {
             //left x = i, y = 0
             GenerateTile(i, 0);
@@ -139,18 +142,30 @@ public class GridManager : MonoBehaviour
 
     void DrawGridLines()
     {
-        for(int i = 0; i < gridLength - 1; i++)
+        for (int i = 0; i < gridLength - 1; i++)
         {
             Debug.DrawLine(GetCameraCoordinates(i, 0, 2), GetCameraCoordinates(i, (int)gridLength - 2, 2), Color.green, 1000f);
-            Debug.DrawLine(GetCameraCoordinates(0, i, 2), GetCameraCoordinates((int) gridLength - 2, i, 2), Color.green, 1000f);
+            Debug.DrawLine(GetCameraCoordinates(0, i, 2), GetCameraCoordinates((int)gridLength - 2, i, 2), Color.green, 1000f);
         }
-        
+
     }
 
     void PlaceObstacle(int x, int y)
     {
         GameObject t = Instantiate(obstacle, GetCameraCoordinates(x, y), Quaternion.identity);
         t.transform.localScale = new Vector3(scale, scale, 1);
+    }
+
+    void PlacePlatformObstacle(int x, int y)
+    {
+        GameObject t = Instantiate(platformObstacle, GetCameraCoordinates(x, y), Quaternion.identity);
+        // t.transform.localScale = new Vector3(scale * 2f, scale * 0.5f, 1);
+    }
+
+    void PlaceSpikeObstacle(int x, int y)
+    {
+        GameObject t = Instantiate(spikeObstacle, GetCameraCoordinates(x, y), Quaternion.identity);
+        t.transform.localScale = new Vector3(scale * 0.30f, scale * 0.30f, 1);
     }
 
     void PlaceWinBlock(int x, int y)
@@ -180,8 +195,8 @@ public class GridManager : MonoBehaviour
     {
         float cartesianX = ((y + 1) - (gridLength + 1) / 2) * scale;
         float cartesianY = (-(x + 1) + (gridLength + 1) / 2) * scale;
-        return new Vector3(cartesianX + (0.5f*scale), cartesianY - (0.5f*scale), z);
+        return new Vector3(cartesianX + (0.5f * scale), cartesianY - (0.5f * scale), z);
     }
 
-    
+
 }
