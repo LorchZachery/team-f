@@ -75,6 +75,11 @@ public class GridManager : MonoBehaviour
         //GenerateTile(8, 5);
         //GenerateTile(8, 7);
 
+        GenerateTile(9, 6);
+        GenerateTile(9, 8);
+        GenerateTile(10, 6);
+        GenerateTile(10, 8);
+
         DrawGridLines();
 
         GeneratePlayer();
@@ -86,10 +91,10 @@ public class GridManager : MonoBehaviour
         GenerateBlock(6, 1, 4);
         GenerateBlock(7, 3, 2);
         GenerateBlock(7, 4, 2);
-        GenerateBlock(7, 6, 2);
-        PlaceObstacle(9, 8);
+        GenerateBlock(10, 7, 2);
+        PlaceObstacle(1, 1);
         PlaceWinBlock(1, 10);
-        PlacePlatformObstacle(6, 9);
+        PlacePlatformObstacle(8, 7);
 
 
     }
