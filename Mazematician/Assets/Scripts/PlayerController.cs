@@ -17,14 +17,6 @@ public class PlayerController : MonoBehaviour
     float y;
     int ballSpeed = 7;
     public TMP_Text scoreText;
-    [SerializeField] GameObject gridManager;
-    GridManager grid;
-    public GameObject gameOverScreen;
-
-    // void Awake()
-    // {
-    //     grid = gridManager.GetComponent<GridManager>();
-    // }
 
     // Start is called before the first frame update
     void Start()
@@ -58,11 +50,6 @@ public class PlayerController : MonoBehaviour
                 UpdateText(this.score.ToString());
             }
         }
-        else if (collision.gameObject.CompareTag("platform"))
-        {
-            var script = collision.gameObject.GetComponent<Rotation>();
-            ShowGameOver();
-        }
     }
 
 
@@ -84,11 +71,4 @@ public class PlayerController : MonoBehaviour
         this.score = 2;
         UpdateText("Player won");
     }
-
-    public void ShowGameOver()
-    {
-        GameObject t = Instantiate(gameOverScreen, new Vector3(0, 0), Quaternion.identity);
-    }
-
-
 }

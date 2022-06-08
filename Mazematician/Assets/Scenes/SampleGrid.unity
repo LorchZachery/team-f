@@ -159,7 +159,6 @@ MonoBehaviour:
   winBlock: {fileID: 2483983227542680485, guid: 6bb51171fc4084713befef5614528d83, type: 3}
   platformObstacle: {fileID: 1666629696285109604, guid: 612b132d8857540d5975b46e033f0cad, type: 3}
   spikeObstacle: {fileID: 5949400425951839518, guid: 1cdbf96b94f954adbae2f5ae00b00349, type: 3}
-  gameOverScreen: {fileID: 6998429772160650064, guid: e2350c809a65541588fb96b6ab568533, type: 3}
 --- !u!4 &79570880
 Transform:
   m_ObjectHideFlags: 0
