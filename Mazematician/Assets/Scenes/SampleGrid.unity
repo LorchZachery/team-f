@@ -157,7 +157,7 @@ MonoBehaviour:
   block: {fileID: 2483983227542680485, guid: dc5534340b8d6492d8d4f4d5d63a4441, type: 3}
   obstacle: {fileID: 2483983227542680485, guid: df4afda6eb5b14640b44c34ad3ff168d, type: 3}
   winBlock: {fileID: 2483983227542680485, guid: 6bb51171fc4084713befef5614528d83, type: 3}
-  platformObstacle: {fileID: 1666629696285109604, guid: 612b132d8857540d5975b46e033f0cad, type: 3}
+  platformObstacle: {fileID: 2927829571682668071, guid: 3c606bbb02d784689b305601a99fbd0b, type: 3}
   spikeObstacle: {fileID: 5949400425951839518, guid: 1cdbf96b94f954adbae2f5ae00b00349, type: 3}
 --- !u!4 &79570880
 Transform:
@@ -172,7 +172,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &138263140
 GameObject:
@@ -256,7 +256,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &415319002
 GameObject:
@@ -418,7 +418,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

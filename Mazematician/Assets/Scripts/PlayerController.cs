@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 /*
  * This class deals with below logics:
@@ -49,6 +50,10 @@ public class PlayerController : MonoBehaviour
                 Destroy(collision.gameObject);
                 UpdateText(this.score.ToString());
             }
+        }
+        else if (collision.gameObject.CompareTag("spikeObstacle"))
+        {
+            SceneManager.LoadScene("GameOver");
         }
     }
 

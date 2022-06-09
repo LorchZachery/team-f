@@ -15,6 +15,7 @@ TagManager:
   - Move Point
   - block
   - platform
+  - spikeObstacle
   layers:
   - Default
   - TransparentFX

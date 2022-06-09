@@ -94,7 +94,7 @@ public class GridManager : MonoBehaviour
         GenerateBlock(10, 7, 2);
         PlaceObstacle(1, 1);
         PlaceWinBlock(1, 10);
-        PlacePlatformObstacle(8, 7);
+        PlacePlatformObstacle(8, 8);
 
 
     }
@@ -170,7 +170,7 @@ public class GridManager : MonoBehaviour
     void PlaceSpikeObstacle(int x, int y)
     {
         GameObject t = Instantiate(spikeObstacle, GetCameraCoordinates(x, y), Quaternion.identity);
-        t.transform.localScale = new Vector3(scale * 0.30f, scale * 0.30f, 1);
+        // t.transform.localScale = new Vector3(scale * 0.30f, scale * 0.30f, 1);
     }
 
     void PlaceWinBlock(int x, int y)
