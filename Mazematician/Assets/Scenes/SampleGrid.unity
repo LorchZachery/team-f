@@ -158,7 +158,7 @@ MonoBehaviour:
   obstacle: {fileID: 2483983227542680485, guid: df4afda6eb5b14640b44c34ad3ff168d, type: 3}
   winBlock: {fileID: 2483983227542680485, guid: 6bb51171fc4084713befef5614528d83, type: 3}
   platformObstacle: {fileID: 2927829571682668071, guid: 3c606bbb02d784689b305601a99fbd0b, type: 3}
-  spikeObstacle: {fileID: 5949400425951839518, guid: 1cdbf96b94f954adbae2f5ae00b00349, type: 3}
+  spikeObstacle: {fileID: 2927829571682668071, guid: 3c606bbb02d784689b305601a99fbd0b, type: 3}
 --- !u!4 &79570880
 Transform:
   m_ObjectHideFlags: 0

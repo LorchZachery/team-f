@@ -21,7 +21,6 @@ public class GridManager : MonoBehaviour
     public GameObject block;
     public GameObject obstacle;
     public GameObject winBlock;
-    public GameObject platformObstacle;
     public GameObject spikeObstacle;
 
     void Start()
@@ -92,9 +91,10 @@ public class GridManager : MonoBehaviour
         GenerateBlock(7, 3, 2);
         GenerateBlock(7, 4, 2);
         GenerateBlock(10, 7, 2);
-        PlaceObstacle(1, 1);
+        PlaceObstacle(1, 1, 0.5f);
+        PlaceObstacle(10, 1, 0.25f);
         PlaceWinBlock(1, 10);
-        PlacePlatformObstacle(8, 8);
+        PlaceSpikeObstacle(8, 8);
 
 
     }
@@ -155,16 +155,13 @@ public class GridManager : MonoBehaviour
 
     }
 
-    void PlaceObstacle(int x, int y)
+    void PlaceObstacle(int x, int y, float penalty)
     {
         GameObject t = Instantiate(obstacle, GetCameraCoordinates(x, y), Quaternion.identity);
         t.transform.localScale = new Vector3(scale, scale, 1);
-    }
 
-    void PlacePlatformObstacle(int x, int y)
-    {
-        GameObject t = Instantiate(platformObstacle, GetCameraCoordinates(x, y), Quaternion.identity);
-        // t.transform.localScale = new Vector3(scale * 2f, scale * 0.5f, 1);
+        var script = t.GetComponent<ObstacleController>();
+        script.SetPenalty(penalty);
     }
 
     void PlaceSpikeObstacle(int x, int y)
