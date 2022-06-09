@@ -3,18 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using TMPro;
 
-public class GameOverScreen : MonoBehaviour
+public class MainMenu : MonoBehaviour
 {
 
-    public void RestartButton()
+    public void PlayButton()
     {
         SceneManager.LoadScene("SampleGrid");
     }
 
-    public void MainMenuButton()
-    {
-        SceneManager.LoadScene("MainMenu");
-    }
 }

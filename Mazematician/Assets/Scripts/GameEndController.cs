@@ -24,12 +24,12 @@ public class GameEndController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            // var script = collision.gameObject.GetComponent<PlayerController>();
-            // if (script.score == targetScore)
-            // {
-            //     script.NotifyPlayerWin();
-            // }
-            SceneManager.LoadScene("GameOverWon");
+            var script = collision.gameObject.GetComponent<PlayerController>();
+            if (script.score == targetScore)
+            {
+                // script.NotifyPlayerWin();
+                SceneManager.LoadScene("GameOverWon");
+            }
         }
     }
 }
