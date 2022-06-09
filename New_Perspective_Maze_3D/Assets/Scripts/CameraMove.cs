@@ -22,7 +22,7 @@ public class CameraMove : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        Debug.Log("Target Object: " + targetObject);
+        //Debug.Log("Target Object: " + targetObject);
         //if (targetObject == null)
         //{
         //    GameObject something = (GameObject)Instantiate(gameObject2, transform);

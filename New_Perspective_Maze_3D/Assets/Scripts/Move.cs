@@ -35,15 +35,15 @@ public class Move : MonoBehaviour
         timerIsRunning = true;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        //horizontalInput = Input.GetAxisRaw("Horizontal");
-        //verticalInput = Input.GetAxisRaw("Vertical");
-        //currentPosition = transform.position;
-        //checkLogs(currentPosition, _lastPosition);
-        //_lastPosition = transform.position;
-    }
+    //// Update is called once per frame
+    //void Update()
+    //{
+    //    //horizontalInput = Input.GetAxisRaw("Horizontal");
+    //    //verticalInput = Input.GetAxisRaw("Vertical");
+    //    //currentPosition = transform.position;
+    //    //checkLogs(currentPosition, _lastPosition);
+    //    //_lastPosition = transform.position;
+    //}
 
     void DisplayTime(float timeToDisplay)
     {

@@ -22,6 +22,7 @@ public class BallRenderer : MonoBehaviour
     public GameObject MergedObject;
     public CameraMove camera;
     public String winningTotal;
+    public List<GameObject> gameObjList;
     
     // Start is called before the first frame update
     void Start()
@@ -77,20 +78,19 @@ public class BallRenderer : MonoBehaviour
                 mytext3.text = (Int32.Parse(mytext.text) + Int32.Parse(mytext2.text)).ToString();
                 mytext4.text = mytext3.text;
 
-                
-                
                 //Destroy(collision.gameObject);
                 Destroy(gameObject);
-
-                if (collision.gameObject.tag == "Player")
-                {
-                    if (mytext4.text == winningTotal)
-                    {
-                        SceneManager.LoadScene(2);
-                        return;
-                    }
-                }
                 
+
+                //if (collision.gameObject.tag == "Player")
+                //{
+                //    if (mytext4.text == winningTotal)
+                //    {
+                //        SceneManager.LoadScene(2);
+                //        return;
+                //    }
+                //}
+
             }
         }
         //horizontalInput = Input.GetAxis("Horizontal");

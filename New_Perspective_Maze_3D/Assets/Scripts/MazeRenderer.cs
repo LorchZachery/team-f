@@ -4,20 +4,12 @@ using UnityEngine;
 using TMPro;
 using System.Linq;
 using System;
+using UnityEngine.SceneManagement;
 
 public class MazeRenderer : MonoBehaviour
 {
 
-    [SerializeField]
-    [Range(1,50)]
-    private int width = 5;
-
-    [SerializeField]
-    [Range(1, 50)]
-    private int height = 5;
-
-    [SerializeField]
-    private float size = 1f;
+    
 
     [SerializeField]
     private Transform wallPrefab = null;
@@ -27,6 +19,15 @@ public class MazeRenderer : MonoBehaviour
 
     [SerializeField]
     private GameObject player = null;
+
+    [SerializeField]
+    private int width = 5;
+
+    [SerializeField]
+    private int height = 5;
+
+    [SerializeField]
+    private float size = 1f;
 
 
     public GameObject textobj;
@@ -40,9 +41,15 @@ public class MazeRenderer : MonoBehaviour
     public GameObject MergedObject;
     private float rotY;
     private float time = 0;
+    private float endPointTime = 60;
     private int[] numbers = { 8, 2, 2, 4, 8, 2, 4, 4, 8};
     private List<GameObject> gameObjList;
     private bool canRandomize = false;
+    public TextMeshPro timeText;
+    private GameObject textGameObject;
+    public GameObject go1, go2;
+    public TextMeshPro tmpro1, tmpro2;
+    public int count = 0;
 
 
     // Start is called before the first frame update
@@ -71,11 +78,6 @@ public class MazeRenderer : MonoBehaviour
             a[rnd] = temp;
         }
 
-        // Print
-        for (int i = 0; i < a.Length; i++)
-        {
-            Debug.Log(a[i]);
-        }
 
         return a;
     }
@@ -93,7 +95,7 @@ public class MazeRenderer : MonoBehaviour
             }
         
     }
-    private void PositionBalls(WallState[,] maze)
+    private void PositionBalls(DirectionOfWall[,] maze)
     {
         GameObject ball = (GameObject)Instantiate(Resources.Load("ball"));
         
@@ -111,6 +113,8 @@ public class MazeRenderer : MonoBehaviour
         for (int i = 0; i < 9; i++)
         {
             GameObject player = (GameObject)Instantiate(ball, transform);
+           
+            
             //Rigidbody rb = player.AddComponent<Rigidbody>();
             //rb.mass = 0.5f;
             MergedObject = player;
@@ -126,9 +130,10 @@ public class MazeRenderer : MonoBehaviour
                 Debug.Log("Success for: " + mytext3.text);
             }
             MergedObject.transform.position = new Vector3(-width / 2 + x_list[i], 0, -height / 2 + y_list[i]);
+            
         }
 
-        Debug.Log("time in positionball:" + time);
+        //Debug.Log("time in positionball:" + time);
 
         
 
@@ -185,19 +190,36 @@ public class MazeRenderer : MonoBehaviour
 
     }
 
-    private void RenderFloor(WallState[,] maze)
+    private void RenderFloor(DirectionOfWall[,] maze)
     {
         GameObject tileBase = (GameObject)Instantiate(Resources.Load("Cube"));
+        GameObject endPoint = (GameObject)Instantiate(Resources.Load("EndPoint"));
         for (int i = 0; i < width; ++i)
         {
             for (int j = 0; j < height; ++j)
             {
                 GameObject tile = (GameObject)Instantiate(tileBase, transform);
-                tile.transform.position = new Vector3(-width / 2 + i, 0, -height / 2 + j); 
+                tile.transform.position = new Vector3(-width / 2 + i, 0, -height / 2 + j);
+                //i == 8 and j == 1 is the initial position of the player
+                // || i==4 && j==5 || i == 5 && j == 5 || i == 5  && j == 4 || i == 4 && j == 4
+                if (i == 0 && j == 9 || i == 1 && j == 9 || i == 0 && j == 8|| i == 9 && j == 9 || i == 0 && j == 0 || i == 9 && j == 1 || i == 9 && j == 0 || i == 9 && j == 8 || i == 0 && j == 1 || i == 1 && j == 0 || i == 8 && j == 0 || i==8 && j==9 )
+                {
+                    Debug.Log("Success: " + i + " " + j);
+                    Destroy(tile);
+                    GameObject endPointObject = (GameObject)Instantiate(endPoint, transform);
+                    endPointObject.transform.position = new Vector3(-width / 2 + i, 0, -height / 2 + j);
+                }
+                
+                //if (i == 0 && j == 0)
+                //{
+                //    Debug.Log("Success: " + i + " " + j);
+                //}
             }
         }
+        Destroy(tileBase);
+        Destroy(endPoint);
     }
-    private void Draw(WallState[,] maze)
+    private void Draw(DirectionOfWall[,] maze)
     {
 
         var floor = Instantiate(floorPrefab, transform);
@@ -209,14 +231,14 @@ public class MazeRenderer : MonoBehaviour
                 var cell = maze[i, j];
                 var position = new Vector3(-width / 2 + i, 0, -height / 2 + j);
 
-                if (cell.HasFlag(WallState.UP))
+                if (cell.HasFlag(DirectionOfWall.topDirection))
                 {
                     var topWall = Instantiate(wallPrefab, transform) as Transform;
                     topWall.position = position + new Vector3(0, 0, size/2);
                     topWall.localScale = new Vector3(size, topWall.localScale.y, topWall.localScale.z);
                 }
 
-                if (cell.HasFlag(WallState.LEFT))
+                if (cell.HasFlag(DirectionOfWall.leftDirection))
                 {
                     var leftWall = Instantiate(wallPrefab, transform) as Transform;
                     leftWall.position = position + new Vector3(-size / 2, 0, 0);
@@ -226,7 +248,7 @@ public class MazeRenderer : MonoBehaviour
 
                 if (i == width - 1)
                 {
-                    if (cell.HasFlag(WallState.RIGHT))
+                    if (cell.HasFlag(DirectionOfWall.rightDirection))
                     {
                         var rightWall = Instantiate(wallPrefab, transform) as Transform;
                         rightWall.position = position + new Vector3(size / 2, 0, 0);
@@ -237,7 +259,7 @@ public class MazeRenderer : MonoBehaviour
 
                 if (j == 0)
                 {
-                    if (cell.HasFlag(WallState.DOWN))
+                    if (cell.HasFlag(DirectionOfWall.bottomDirection))
                     {
                         var bottomWall = Instantiate(wallPrefab, transform) as Transform;
                         bottomWall.position = position + new Vector3(0, 0, -size / 2);
@@ -251,60 +273,132 @@ public class MazeRenderer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        textGameObject = GameObject.FindGameObjectWithTag("RotateText");
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        go1 = player.transform.GetChild(0).gameObject;
+        tmpro1 = go1.GetComponent<TextMeshPro>();
+        go2 = player.transform.GetChild(1).gameObject;
+        tmpro2 = go2.GetComponent<TextMeshPro>();
+        TextMeshPro textField = textGameObject.GetComponent<TextMeshPro>();
+        if (tmpro1.text == "16")
+        {
+            for (int i = 0; i < 9; i++)
+            {
+                if (gameObjList[i] != null)
+                {
+                    Debug.Log("Counting: " + count + "game objects of index : " + i);
+                    Destroy(gameObjList[i]);
+                }
+                //textobj3 = gameObjList[i].transform.GetChild(0).gameObject;
+                //mytext3 = textobj3.GetComponent<TextMeshPro>();
+                //mytext3.text = numbers[i].ToString();
+            }
+            //SceneManager.LoadScene(2);
+            //return;
+        }
         if (time <= 90)
         {
             time += Time.deltaTime;
         }
-        if (time >= 10 && time < 15)
+        if (time >=5 && time < 10)
+        { 
+            float countDownTime = 11.0f - time;
+            textField.text = "Rotates in: " + (int)countDownTime;
+            Debug.Log(textField.text);
+        }
+        if (time >= 10 && time < 20)
         {
+            textField.text = " ";
+            rotY += -Time.deltaTime * 9.0f;
+            transform.rotation = Quaternion.Euler(0, rotY, 0);
+            //RandomizeBallNumbers(numbers, gameObjList);
+            //return;
+        }
+        if(time >= 30 && time < 35)
+        {
+            float countDownTime = 36.0f - time;
+            textField.text = "Rotates in: " + (int)countDownTime;
+            Debug.Log(textField.text);
+        }
+        if (time >= 35 && time < 40)
+        {
+            textField.text = " ";
             rotY += -Time.deltaTime * 18.0f;
             transform.rotation = Quaternion.Euler(0, rotY, 0);
             //RandomizeBallNumbers(numbers, gameObjList);
             //return;
         }
-        if (time >= 20 && time < 15)
+        if(time >= 50 && time < 55)
         {
+            float countDownTime = 56.0f - time;
+            textField.text = "Rotates in: " + (int)countDownTime;
+            Debug.Log(textField.text);
+        }
+        if (time >= 55 && time < 65)
+        {
+            textField.text = " ";
+            rotY += -Time.deltaTime * 9.0f;
+            transform.rotation = Quaternion.Euler(0, rotY, 0);
+            //RandomizeBallNumbers(numbers, gameObjList);
+            //return;
+        }
+        if(time >= 70 && time < 75)
+        {
+            float countDownTime = 76.0f - time;
+            textField.text = "Rotates in: " + (int)countDownTime;
+            Debug.Log(textField.text);
+        }
+        if (time >= 75 && time < 80)
+        {
+            textField.text = " ";
             rotY += -Time.deltaTime * 18.0f;
             transform.rotation = Quaternion.Euler(0, rotY, 0);
             //RandomizeBallNumbers(numbers, gameObjList);
             //return;
         }
-        if (time >= 30 && time < 35)
-        {
-            rotY += -Time.deltaTime * 18.0f;
-            transform.rotation = Quaternion.Euler(0, rotY, 0);
-        }
-        if (time >= 40 && time < 45)
-        {
-            rotY += -Time.deltaTime * 18.0f;
-            transform.rotation = Quaternion.Euler(0, rotY, 0);
-            //RandomizeBallNumbers(numbers, gameObjList);
-            //return;
-        }
-        if (time >= 50 && time < 55)
-        {
-            rotY += -Time.deltaTime * 18.0f;
-            transform.rotation = Quaternion.Euler(0, rotY, 0);
-        }
-        if (time >= 60 && time < 65)
-        {
-            rotY += -Time.deltaTime * 18.0f;
-            transform.rotation = Quaternion.Euler(0, rotY, 0);
-            //RandomizeBallNumbers(numbers, gameObjList);
-            //return;
-        }
-        if (time >= 70 && time < 75)
-        {
-            rotY += -Time.deltaTime * 18.0f;
-            transform.rotation = Quaternion.Euler(0, rotY, 0);
-        }
-        if (time >= 80 && time < 85)
-        {
-            rotY += -Time.deltaTime * 18.0f;
-            transform.rotation = Quaternion.Euler(0, rotY, 0);
-            //RandomizeBallNumbers(numbers, gameObjList);
-            //return;
-        }
+        //if (time >= 20 && time < 25)
+        //{
+        //    rotY += -Time.deltaTime * 18.0f;
+        //    transform.rotation = Quaternion.Euler(0, rotY, 0);
+        //    //RandomizeBallNumbers(numbers, gameObjList);
+        //    //return;
+        //}
+        //if (time >= 30 && time < 35)
+        //{
+        //    rotY += -Time.deltaTime * 18.0f;
+        //    transform.rotation = Quaternion.Euler(0, rotY, 0);
+        //}
+        //if (time >= 40 && time < 45)
+        //{
+        //    rotY += -Time.deltaTime * 18.0f;
+        //    transform.rotation = Quaternion.Euler(0, rotY, 0);
+        //    //RandomizeBallNumbers(numbers, gameObjList);
+        //    //return;
+        //}
+        //if (time >= 50 && time < 55)
+        //{
+        //    rotY += -Time.deltaTime * 18.0f;
+        //    transform.rotation = Quaternion.Euler(0, rotY, 0);
+        //}
+        //if (time >= 60 && time < 65)
+        //{
+        //    rotY += -Time.deltaTime * 18.0f;
+        //    transform.rotation = Quaternion.Euler(0, rotY, 0);
+        //    //RandomizeBallNumbers(numbers, gameObjList);
+        //    //return;
+        //}
+        //if (time >= 70 && time < 75)
+        //{
+        //    rotY += -Time.deltaTime * 18.0f;
+        //    transform.rotation = Quaternion.Euler(0, rotY, 0);
+        //}
+        //if (time >= 80 && time < 85)
+        //{
+        //    rotY += -Time.deltaTime * 18.0f;
+        //    transform.rotation = Quaternion.Euler(0, rotY, 0);
+        //    //RandomizeBallNumbers(numbers, gameObjList);
+        //    //return;
+        //}
         //if (time >= 90 && time < 95)
         //{
         //    rotY += -Time.deltaTime * 18.0f;
