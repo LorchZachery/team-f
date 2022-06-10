@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-
+using TMPro;
 
 /**
  * This class deals with the logic of generating grid from prefabs
@@ -101,7 +101,12 @@ public class GridManager : MonoBehaviour
         DrawGridLines();
 
         GeneratePlayer();
-        PlaceBlocksInMaze(32);
+
+        int target = 8;
+        var script = winBlock.GetComponent<GameEndController>();
+        script.targetScore = target;
+
+        PlaceBlocksInMaze(target);
         /*GenerateBlock(2, 7, 16);
         GenerateBlock(4, 4, 32);
         GenerateBlock(4, 2, 4);
@@ -118,7 +123,8 @@ public class GridManager : MonoBehaviour
         PlaceObstacle(10, 1, 0.25f);
         PlaceSpikeObstacle(8, 8);
         PlaceWinBlock(1, 10);*/
-        AddWinBlock();
+
+        AddWinBlock(target);
         ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
 
 
@@ -230,9 +236,12 @@ public class GridManager : MonoBehaviour
         // t.transform.localScale = new Vector3(scale * 0.30f, scale * 0.30f, 1);
     }
 
-    void PlaceWinBlock(int x, int y)
+    void PlaceWinBlock(int x, int y, int value)
     {
         GameObject t = Instantiate(winBlock, GetCameraCoordinates(x, y), Quaternion.identity);
+        GameObject textChild = winBlock.transform.GetChild(0).gameObject;
+        TMP_Text textOf = textChild.GetComponent<TextMeshPro>();
+        textOf.text = value.ToString();
         t.transform.localScale = new Vector3(scale, scale, 1);
     }
 
@@ -283,13 +292,15 @@ public class GridManager : MonoBehaviour
                     if (!temp.isWall())
                     {
                         MazeWall neighbor = null;
-                        bool working = true;
-                        while(working){
+                        int working = 0;
+                        int attempts = 0;
+                        while(working < 2 && attempts < 4){
                             neighbor = generator.getNext(temp, random.Next(3));
+                            attempts++;
                             if(neighbor != null){
                             if(!neighbor.isWall()){
                                 neighbor.removeWall();
-                                working = false;
+                                working++;
                             }
                             }
                         }
@@ -310,7 +321,7 @@ public class GridManager : MonoBehaviour
 
 
 
-    void AddWinBlock(){
+    void AddWinBlock(int value){
         
         bool end = false;
         while(!end){
@@ -321,7 +332,7 @@ public class GridManager : MonoBehaviour
              MazeWall temp = mazeWallsList.Find(r=> r.x == x && r.y ==y);
                 if(temp != null){
                 if(!temp.isWall() && !temp.isBlock()){
-                    PlaceWinBlock(x,y);
+                    PlaceWinBlock(x,y,value);
                     end = true;
                 }
                 }

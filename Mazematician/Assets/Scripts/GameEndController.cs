@@ -7,11 +7,11 @@ using UnityEngine.SceneManagement;
 
 public class GameEndController : MonoBehaviour
 {
-    int targetScore;
+    public int targetScore;
     // Start is called before the first frame update
     void Start()
     {
-        targetScore = 64;
+        
     }
 
     // Update is called once per frame
@@ -19,8 +19,12 @@ public class GameEndController : MonoBehaviour
     {
 
     }
-
-    private void OnCollisionEnter2D(Collision2D collision)
+    public void setTargetScore(int value)
+    {
+        this.targetScore = value;
+    }
+    
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("player"))
         {
