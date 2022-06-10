@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Mazematician/Assets/Prefabs/Platform.prefab.meta
 guid: 6688746c232c64055bcdbc4c6243f0ec
+=======
+guid: d46503a604fc91947ad416c64fdb8834
+>>>>>>> main:Mazematician/Assets/Scenes/Block.prefab.meta
 PrefabImporter:
   externalObjects: {}
   userData: 

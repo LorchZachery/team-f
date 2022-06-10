@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Mazematician/Assets/Scripts/CameraController.cs.meta
 guid: 5baef980b6a7548cc9da63a1faa0e510
+=======
+guid: f3e4ef1b8a571c742b9a5c501a275a9a
+>>>>>>> main:Mazematician/Assets/Scripts/Merge.cs.meta
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2

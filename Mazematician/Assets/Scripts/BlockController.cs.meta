@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Mazematician/Assets/Scripts/BlockController.cs.meta
 guid: 8561fe76d2ad84fb180f86da510ff776
+=======
+guid: 0eb8ed1233a83c047942f2676240def4
+>>>>>>> main:Mazematician/Assets/Scripts/MovePlayer.cs.meta
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2

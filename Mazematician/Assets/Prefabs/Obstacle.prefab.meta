@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Mazematician/Assets/Prefabs/Obstacle.prefab.meta
 guid: df4afda6eb5b14640b44c34ad3ff168d
+=======
+guid: 65901f6a91c53274884ab81576e19899
+>>>>>>> main:Mazematician/Assets/Scenes/Text.prefab.meta
 PrefabImporter:
   externalObjects: {}
   userData: 
