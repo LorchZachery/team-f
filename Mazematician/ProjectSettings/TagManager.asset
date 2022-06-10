@@ -4,16 +4,11 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - MergeBlock
-  - TextTag
-  - TextTag2
-  - New Circle
-  - Undefined
+  - player
+  - tile
   - obstacle
-  - Player Tag
-  - New Block
-  - Move Point
   - block
+  - target
   layers:
   - Default
   - TransparentFX

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: -5452235250198222273}
   - component: {fileID: 8381251637057323770}
   - component: {fileID: 2629842846770313994}
+  - component: {fileID: -2797095626745858420}
   m_Layer: 0
   m_Name: Block
   m_TagString: block
@@ -100,7 +101,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 10
+  m_Mass: 1
   m_LinearDrag: 10
   m_AngularDrag: 1
   m_GravityScale: 0
@@ -140,6 +141,17 @@ MonoBehaviour:
   points: 0
   id: 0
   pointsText: {fileID: 5251274894046119092}
+--- !u!247 &-2797095626745858420
+ConstantForce2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2483983227542680485}
+  m_Enabled: 1
+  m_Force: {x: 0, y: 0}
+  m_RelativeForce: {x: 0, y: 0}
+  m_Torque: 0
 --- !u!1 &8238052285448431203
 GameObject:
   m_ObjectHideFlags: 0
