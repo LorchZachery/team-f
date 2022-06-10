@@ -105,8 +105,8 @@ public class GridManager : MonoBehaviour
         int target = 8;
         var script = winBlock.GetComponent<GameEndController>();
         script.targetScore = target;
-
         PlaceBlocksInMaze(target);
+        AddWinBlock(target);
         /*GenerateBlock(2, 7, 16);
         GenerateBlock(4, 4, 32);
         GenerateBlock(4, 2, 4);
@@ -124,7 +124,7 @@ public class GridManager : MonoBehaviour
         PlaceSpikeObstacle(8, 8);
         PlaceWinBlock(1, 10);*/
 
-        AddWinBlock(target);
+        
         ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
 
 
@@ -275,7 +275,7 @@ public class GridManager : MonoBehaviour
         double numNeeded = Math.Log((double)target, 2);
         int value = 2;
         int mulitplier = (int)numNeeded;
-        while (blocksPlaced < (int)(numNeeded *2))
+        while (mulitplier > 0)
         {
             for(int i = 0; i < mulitplier;i++){
             bool taken = true;
@@ -289,18 +289,17 @@ public class GridManager : MonoBehaviour
                 MazeWall temp = mazeWallsList.Find(r => r.x == x && r.y == y);
                 if (temp != null)
                 {
-                    if (!temp.isWall())
+                    if (!temp.isWall() && !temp.isBlock())
                     {
                         MazeWall neighbor = null;
-                        int working = 0;
-                        int attempts = 0;
-                        while(working < 2 && attempts < 4){
-                            neighbor = generator.getNext(temp, random.Next(3));
-                            attempts++;
+                        List<int> directions = new List<int>{ 0,1,2,3};
+                        directions.RemoveAll(item=> item ==  random.Next(3));
+                        foreach(int direction in directions){
+                            neighbor = generator.getNext(temp, direction);
+                            
                             if(neighbor != null){
                             if(!neighbor.isWall()){
                                 neighbor.removeWall();
-                                working++;
                             }
                             }
                         }
