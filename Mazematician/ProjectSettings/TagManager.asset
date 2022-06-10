@@ -9,6 +9,8 @@ TagManager:
   - obstacle
   - block
   - target
+  - platform
+  - spikeObstacle
   layers:
   - Default
   - TransparentFX

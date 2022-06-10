@@ -19,8 +19,8 @@ public class GridManager : MonoBehaviour
     float scale;
 
     public List<MazeWall> mazeWallsList = new List<MazeWall>();
-    
-    public System.Random random = new System.Random(); 
+
+    public System.Random random = new System.Random();
 
     public GameObject tile;
     public GameObject player;
@@ -28,6 +28,7 @@ public class GridManager : MonoBehaviour
     public GameObject obstacle;
     public GameObject winBlock;
     public GameObject myCamera;
+    public GameObject spikeObstacle;
 
     void Start()
     {
@@ -41,10 +42,11 @@ public class GridManager : MonoBehaviour
         Generator generator = new Generator(gridLength,screenWidth);
         mazeWallsList = generator.MazeGenerator();
         GenerateWalls();
-        foreach(var wall in mazeWallsList)
+        foreach (var wall in mazeWallsList)
         {
-            if(wall.isWall()){
-                GenerateTile(wall.x,wall.y);
+            if (wall.isWall())
+            {
+                GenerateTile(wall.x, wall.y);
             }
         }
         //GenerateTile(1, 2);
@@ -85,12 +87,20 @@ public class GridManager : MonoBehaviour
         //GenerateTile(8, 1);
         //GenerateTile(8, 3);
         //GenerateTile(8, 5);
+        //GenerateTile(8, 7);
+
+        // GenerateTile(9, 6);
+        // GenerateTile(9, 8);
+        // GenerateTile(10, 6);
+        // GenerateTile(10, 8);
+
         //GenerateTile(10, 10);
         //GenerateTile(1,1);
         DrawGridLines();
 
         GeneratePlayer();
         PlaceBlocksInMaze(32);
+        PlaceObstaclesInMaze();
         /*GenerateBlock(2, 7, 16);
         GenerateBlock(4, 4, 32);
         GenerateBlock(4, 2, 4);
@@ -98,10 +108,14 @@ public class GridManager : MonoBehaviour
         GenerateBlock(5, 5, 16);
         GenerateBlock(6, 1, 4);
         GenerateBlock(7, 3, 2);
-        GenerateBlock(7, 4, 2); 
+        GenerateBlock(7, 4, 2);
+        GenerateBlock(10, 7, 2);
         GenerateBlock(7, 6, 2);
         PlaceObstacle(9, 8);
         PlaceWinBlock(1, 10);
+        PlaceObstacle(1, 1, 0.5f);
+        PlaceObstacle(10, 1, 0.25f);
+        PlaceSpikeObstacle(8, 8);
         PlaceWinBlock(1, 10);*/
         AddWinBlock();
         ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
@@ -151,7 +165,7 @@ public class GridManager : MonoBehaviour
 
     void GeneratePlayer()
     {
-        GameObject t = Instantiate(player, GetCameraCoordinates((int) gridLength-2, (int)gridLength-2), Quaternion.identity);
+        GameObject t = Instantiate(player, GetCameraCoordinates((int)gridLength - 2, (int)gridLength - 2), Quaternion.identity);
         t.transform.localScale = new Vector3(scale * 0.9f, scale * 0.9f, 1);
         var script = t.GetComponent<PlayerController>();
         script.SetScore(2);
@@ -180,7 +194,7 @@ public class GridManager : MonoBehaviour
             GenerateTile((int)gridLength - 1, i);
         }
 
-        for(int i = 1; i < gridLength - 1; i++)
+        for (int i = 1; i < gridLength - 1; i++)
         {
             //left x = i, y = 0
             GenerateTile(i, 0);
@@ -192,18 +206,27 @@ public class GridManager : MonoBehaviour
 
     void DrawGridLines()
     {
-        for(int i = 0; i < gridLength - 1; i++)
+        for (int i = 0; i < gridLength - 1; i++)
         {
             Debug.DrawLine(GetCameraCoordinates(i, 0, 2), GetCameraCoordinates(i, (int)gridLength - 2, 2), Color.green, 1000f);
-            Debug.DrawLine(GetCameraCoordinates(0, i, 2), GetCameraCoordinates((int) gridLength - 2, i, 2), Color.green, 1000f);
+            Debug.DrawLine(GetCameraCoordinates(0, i, 2), GetCameraCoordinates((int)gridLength - 2, i, 2), Color.green, 1000f);
         }
-        
+
     }
 
-    void PlaceObstacle(int x, int y)
+    void PlaceObstacle(int x, int y, float penalty)
     {
         GameObject t = Instantiate(obstacle, GetCameraCoordinates(x, y), Quaternion.identity);
         t.transform.localScale = new Vector3(scale, scale, 1);
+
+        var script = t.GetComponent<ObstacleController>();
+        script.SetPenalty(penalty);
+    }
+
+    void PlaceSpikeObstacle(int x, int y)
+    {
+        GameObject t = Instantiate(spikeObstacle, GetCameraCoordinates(x, y), Quaternion.identity);
+        // t.transform.localScale = new Vector3(scale * 0.30f, scale * 0.30f, 1);
     }
 
     void PlaceWinBlock(int x, int y)
@@ -233,29 +256,71 @@ public class GridManager : MonoBehaviour
     {
         float cartesianX = ((y + 1) - (gridLength + 1) / 2) * scale;
         float cartesianY = (-(x + 1) + (gridLength + 1) / 2) * scale;
-        return new Vector3(cartesianX + (0.5f*scale), cartesianY - (0.5f*scale), z);
+        return new Vector3(cartesianX + (0.5f * scale), cartesianY - (0.5f * scale), z);
     }
 
     void PlaceBlocksInMaze(int target)
     {
         int blocksPlaced = 0;
-        double numNeeded = Math.Log((double)target,2);
+        double numNeeded = Math.Log((double)target, 2);
         int value = 2;
-        while(blocksPlaced < (int)numNeeded)
+        while (blocksPlaced < (int)numNeeded)
         {
             bool taken = true;
-            
-            while(taken)
+
+            while (taken)
             {
-                int x = random.Next((int)(screenWidth-5));
-                int y = random.Next((int)gridLength-1);
-                MazeWall temp = mazeWallsList.Find(r=> r.x == x && r.y ==y);
-                if(temp != null){
-                if(!temp.isWall()){
-                    GenerateBlock(x,y,value);
-                    taken = false;
-                    blocksPlaced++;
+                int x = random.Next((int)(screenWidth - 5));
+                int y = random.Next((int)gridLength - 1);
+                MazeWall temp = mazeWallsList.Find(r => r.x == x && r.y == y);
+                if (temp != null)
+                {
+                    if (!temp.isWall())
+                    {
+                        GenerateBlock(x, y, value);
+                        taken = false;
+                        blocksPlaced++;
+                    }
                 }
+            }
+        }
+    }
+
+    void PlaceObstaclesInMaze()
+    {
+        int blocksPlaced = 0;
+        float penalty = 0.5f;
+        while (blocksPlaced < 5)
+        {
+            bool taken = true;
+            while (taken)
+            {
+                int x = random.Next((int)(screenWidth - 5));
+                int y = random.Next((int)gridLength - 1);
+                MazeWall temp = mazeWallsList.Find(r => r.x == x && r.y == y);
+                if (temp != null)
+                {
+                    if (!temp.isWall())
+                    {
+                        if (blocksPlaced < 2)
+                        {
+                            PlaceObstacle(x, y, penalty);
+                            taken = false;
+                            blocksPlaced++;
+                        }
+                        else if (blocksPlaced < 4)
+                        {
+                            PlaceSpikeObstacle(x, y);
+                            taken = false;
+                            blocksPlaced++;
+                        }
+                        else if (blocksPlaced < 5)
+                        {
+                            PlaceWinBlock(x, y);
+                            taken = false;
+                            blocksPlaced++;
+                        }
+                    }
                 }
             }
         }
@@ -277,7 +342,6 @@ public class GridManager : MonoBehaviour
         }
        
     }
-
 
 
 

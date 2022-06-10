@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameEndController : MonoBehaviour
 {
@@ -15,7 +17,7 @@ public class GameEndController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -25,7 +27,8 @@ public class GameEndController : MonoBehaviour
             var script = collision.gameObject.GetComponent<PlayerController>();
             if (script.score == targetScore)
             {
-                script.NotifyPlayerWin();
+                // script.NotifyPlayerWin();
+                SceneManager.LoadScene("GameOverWon");
             }
         }
     }

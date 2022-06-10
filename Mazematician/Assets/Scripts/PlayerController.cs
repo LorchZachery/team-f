@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 /*
  * This class deals with below logics:
@@ -113,7 +114,7 @@ public class PlayerController : MonoBehaviour
          * If Colliding object is block, and has same points as player,
          * then add the points to player's score, destroy the block, and update the text.
          */
-        if (collision.gameObject.CompareTag("block")) 
+        if (collision.gameObject.CompareTag("block"))
         {
             var script = collision.gameObject.GetComponent<BlockController>();
             if (score == script.points)
@@ -122,6 +123,10 @@ public class PlayerController : MonoBehaviour
                 Destroy(collision.gameObject);
                 UpdateText(this.score.ToString());
             }
+        }
+        else if (collision.gameObject.CompareTag("spikeObstacle"))
+        {
+            SceneManager.LoadScene("GameOver");
         }
     }
 
@@ -144,6 +149,4 @@ public class PlayerController : MonoBehaviour
         this.score = 2;
         UpdateText("Player won");
     }
-
-
 }
