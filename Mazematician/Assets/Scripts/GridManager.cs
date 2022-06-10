@@ -29,17 +29,26 @@ public class GridManager : MonoBehaviour
     public GameObject winBlock;
     public GameObject myCamera;
     public GameObject spikeObstacle;
+    public int target = 32;
     public Generator generator;
     public Vector2 playerCooridantes; 
+    public Vector2 winBlockCoor;
     private float time;
     private float rotation;
 
+
+    void Awake()
+    {
+        var script = winBlock.GetComponent<GameEndController>();
+        script.targetScore = target;
+    }
     void Start()
     {
-        screenWidth = 16;
+        
+        screenWidth = 24;
         screenHeight = Camera.main.orthographicSize * 2;
 
-        gridLength = 12; //10 + 2; // 8 x 8 grid + 1 top(left) wall + 1 bottom(right);
+        gridLength = 20; //10 + 2; // 8 x 8 grid + 1 top(left) wall + 1 bottom(right);
 
         /* We need to scale the the tiles such that grid fits in camera(screen) */
         scale = Mathf.Min(screenWidth, screenHeight) / gridLength;
@@ -105,18 +114,18 @@ public class GridManager : MonoBehaviour
 
         GeneratePlayer();
 
-        int target = 8;
-        var script = winBlock.GetComponent<GameEndController>();
-        script.targetScore = target;
-        PlaceBlocksInMaze(target);
+        
+        
         AddWinBlock(target);
+        PlaceBlocksInMaze();
+        
         /*GenerateBlock(2, 7, 16);
         GenerateBlock(4, 4, 32);
         GenerateBlock(4, 2, 4);
         GenerateBlock(5, 3, 16);
         GenerateBlock(5, 5, 16);
         GenerateBlock(6, 1, 4);
-        GenerateBlock(7, 3, 2);
+        GenerateBlock(7, 3, 2);p
         GenerateBlock(7, 4, 2);
         GenerateBlock(10, 7, 2);
         GenerateBlock(7, 6, 2);
@@ -260,7 +269,7 @@ public class GridManager : MonoBehaviour
     void PlaceWinBlock(int x, int y, int value)
     {
         GameObject t = Instantiate(winBlock, GetCameraCoordinates(x, y), Quaternion.identity);
-        GameObject textChild = winBlock.transform.GetChild(0).gameObject;
+        GameObject textChild = t.transform.GetChild(0).gameObject;
         TMP_Text textOf = textChild.GetComponent<TextMeshPro>();
         textOf.text = value.ToString();
         t.transform.localScale = new Vector3(scale, scale, 1);
@@ -290,7 +299,7 @@ public class GridManager : MonoBehaviour
         return new Vector3(cartesianX + (0.5f * scale), cartesianY - (0.5f * scale), z);
     }
 
-    void PlaceBlocksInMaze(int target)
+    void PlaceBlocksInMaze()
     {
         int blocksPlaced = 0;
         double numNeeded = Math.Log((double)target, 2);
@@ -306,30 +315,43 @@ public class GridManager : MonoBehaviour
                 int x = random.Next((int)(screenWidth - 5));
                 int y = random.Next((int)gridLength - 1);
                 Vector2 coor = new Vector2(x,y);
-                
+                if(coor != winBlockCoor){
                 MazeWall temp = mazeWallsList.Find(r => r.x == x && r.y == y);
                 if (temp != null)
                 {
                     if (!temp.isWall() && !temp.isBlock())
                     {
-                        MazeWall neighbor = null;
-                        List<int> directions = new List<int>{ 0,1,2,3};
-                        directions.RemoveAll(item=> item ==  random.Next(3));
-                        foreach(int direction in directions){
-                            neighbor = generator.getNext(temp, direction);
+                        
+                        MazeWall upWall = mazeWallsList.Find(r=> r.x == temp.x+1 && r.y == temp.y+1);
+                        if(upWall != null){
+                            if(!upWall.isWall()){
+                                upWall.removeWall();
+                            }
+                            }
+                        MazeWall downWall = mazeWallsList.Find(r=> r.x == temp.x-1 && r.y == temp.y-1);
+                        if(downWall != null){
+                            if(!downWall.isWall()){
+                                downWall.removeWall();
+                            }
+                        }
+
+
+                        
+                            MazeWall neighbor = generator.getNext(temp, random.Next(3));
                             
                             if(neighbor != null){
                             if(!neighbor.isWall()){
                                 neighbor.removeWall();
                             }
                             }
-                        }
+                        
                         temp.setBlock();
                         GenerateBlock(x, y, value);
                         taken = false;
                         blocksPlaced++;
                     }
                 }
+            }
             
             }
             }
@@ -352,6 +374,7 @@ public class GridManager : MonoBehaviour
              MazeWall temp = mazeWallsList.Find(r=> r.x == x && r.y ==y);
                 if(temp != null){
                 if(!temp.isWall() && !temp.isBlock()){
+                    winBlockCoor = new Vector2(x,y);
                     PlaceWinBlock(x,y,value);
                     end = true;
                 }
