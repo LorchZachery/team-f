@@ -11,6 +11,9 @@ TagManager:
   - target
   - platform
   - spikeObstacle
+  - New Block
+  - MergeBlock
+  - Move Point
   layers:
   - Default
   - TransparentFX
@@ -19,8 +22,8 @@ TagManager:
   - Water
   - UI
   - 
-  - 
-  - 
+  - Grid
+  - StopsMovement
   - 
   - 
   - 
