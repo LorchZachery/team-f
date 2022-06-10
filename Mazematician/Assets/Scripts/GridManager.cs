@@ -152,6 +152,8 @@ public class GridManager : MonoBehaviour
         t.transform.localScale = new Vector3(scale * 0.9f, scale * 0.9f, 1);
         var script = t.GetComponent<PlayerController>();
         script.SetScore(2);
+        var cameraController = Camera.main.GetComponent<CameraController>();
+        cameraController.SetPlayer(t);
     }
 
     void GenerateBlock(int x, int y, int points)
