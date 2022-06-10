@@ -99,7 +99,7 @@ public class GridManager : MonoBehaviour
         GenerateBlock(7, 6, 2);
         PlaceObstacle(9, 8);
         PlaceWinBlock(1, 10);*/
-
+        AddWinBlock();
 
     }
 
@@ -220,9 +220,28 @@ public class GridManager : MonoBehaviour
             }
         }
     }
+    void AddWinBlock(){
+        
+        bool end = false;
+        while(!end){
+            int x = random.Next((int)screenWidth-5);
+            int y = random.Next((int)gridLength-1);
+             MazeWall temp = mazeWallsList.Find(r=> r.x == x && r.y ==y);
+                if(temp != null){
+                if(!temp.isWall()){
+                    PlaceWinBlock(x,y);
+                    end = true;
+                }
+                }
+
+        }
+       
+    }
 
 
     void MazeGenerator(){
+
+        //inilizing list of maze wall objects
         for(int x =1; x < screenWidth-5; x++){
             for(int y = 1; y < gridLength-1; y++){
                  mazeWallsList.Add(new MazeWall(x,y) );
@@ -233,10 +252,14 @@ public class GridManager : MonoBehaviour
         
 
         Queue<MazeWall> Q = new Queue<MazeWall>();
-        //MazeWall N = mazeWallsList[random.Next(mazeWallsList.Count)];
+        //currently starting maze generation from where the player is starting to allow the player never to
+        //be placed on a wall, can probably change this down the line and just have a check for when 
+        //player is placed
+
         MazeWall N = mazeWallsList.Find(r => r.x == (int)gridLength -2 && r.y == (int)gridLength -2);
         
        
+        //Algo for creating maze, following DFS generation
         int spacesCount = 0;
         bool exit = false;
         while(true){
@@ -259,7 +282,7 @@ public class GridManager : MonoBehaviour
             MazeWall next = selectNeighbor(N);
             if(N.isWall()){ 
                     N.removeWall();
-                    
+                    //need because the center of the blocks are the coordinates not the corners
                     translationWork(N,next);
                     
                    spacesCount++;
