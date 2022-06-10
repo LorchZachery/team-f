@@ -20,7 +20,7 @@ public class ObstacleController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.CompareTag("player"))
+        if (collision.gameObject.CompareTag("player"))
         {
             var script = collision.gameObject.GetComponent<PlayerController>();
             GameObject penaltyObj = gameObject.transform.GetChild(0).gameObject;

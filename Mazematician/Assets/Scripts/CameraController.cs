@@ -20,9 +20,9 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(player != null)
+        if (player != null)
         {
-            transform.position = new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z-10);
+            transform.position = new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z - 10);
         }
 
         if (Input.GetKeyUp(KeyCode.RightBracket))
@@ -33,10 +33,8 @@ public class CameraController : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.LeftBracket))
         {
             currentSize = Mathf.Min(currentSize + 1, maxSize);
-            
-        }
 
-        
+        }
         Camera.main.orthographicSize = currentSize;
 
     }
