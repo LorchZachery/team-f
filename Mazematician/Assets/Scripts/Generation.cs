@@ -7,7 +7,8 @@ public class MazeWall
     public int x;
     public int y;
     private bool visited =false;
-   private bool aWall = true;
+    private bool aWall = true;
+    private bool aBlock = false;
     public MazeWall(int x_set, int y_set){
         this.x = x_set;
         this.y =y_set;
@@ -25,7 +26,12 @@ public class MazeWall
     public void removeWall(){
         this.aWall = false;
     }
-   
+   public void setBlock(){
+       this.aBlock = true;
+   }
+   public bool isBlock(){
+       return this.aBlock;
+   }
 }
 
 public class Generator
@@ -187,7 +193,7 @@ public class Generator
         return null;
         
     }
-    private MazeWall getNext(MazeWall N, int direction){
+    public MazeWall getNext(MazeWall N, int direction){
         if(direction == 0){
             return mazeWallsList.Find(r=> r.x == N.x+1 && r.y == N.y);
         }

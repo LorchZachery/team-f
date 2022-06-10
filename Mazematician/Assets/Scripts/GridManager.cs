@@ -29,7 +29,8 @@ public class GridManager : MonoBehaviour
     public GameObject winBlock;
     public GameObject myCamera;
     public GameObject spikeObstacle;
-
+    public Generator generator;
+    public Vector2 playerCooridantes; 
     void Start()
     {
         screenWidth = 16;
@@ -39,7 +40,8 @@ public class GridManager : MonoBehaviour
 
         /* We need to scale the the tiles such that grid fits in camera(screen) */
         scale = Mathf.Min(screenWidth, screenHeight) / gridLength;
-        Generator generator = new Generator(gridLength,screenWidth);
+        playerCooridantes = GetCameraCoordinates((int)gridLength - 2, (int)gridLength - 2);
+        generator = new Generator(gridLength,screenWidth);
         mazeWallsList = generator.MazeGenerator();
         GenerateWalls();
         foreach (var wall in mazeWallsList)
@@ -100,7 +102,6 @@ public class GridManager : MonoBehaviour
 
         GeneratePlayer();
         PlaceBlocksInMaze(32);
-        PlaceObstaclesInMaze();
         /*GenerateBlock(2, 7, 16);
         GenerateBlock(4, 4, 32);
         GenerateBlock(4, 2, 4);
@@ -264,80 +265,67 @@ public class GridManager : MonoBehaviour
         int blocksPlaced = 0;
         double numNeeded = Math.Log((double)target, 2);
         int value = 2;
-        while (blocksPlaced < (int)numNeeded)
+        int mulitplier = (int)numNeeded;
+        while (blocksPlaced < (int)(numNeeded *2))
         {
+            for(int i = 0; i < mulitplier;i++){
             bool taken = true;
 
             while (taken)
             {
                 int x = random.Next((int)(screenWidth - 5));
                 int y = random.Next((int)gridLength - 1);
+                Vector2 coor = new Vector2(x,y);
+                
                 MazeWall temp = mazeWallsList.Find(r => r.x == x && r.y == y);
                 if (temp != null)
                 {
                     if (!temp.isWall())
                     {
+                        MazeWall neighbor = null;
+                        bool working = true;
+                        while(working){
+                            neighbor = generator.getNext(temp, random.Next(3));
+                            if(neighbor != null){
+                            if(!neighbor.isWall()){
+                                neighbor.removeWall();
+                                working = false;
+                            }
+                            }
+                        }
+                        temp.setBlock();
                         GenerateBlock(x, y, value);
                         taken = false;
                         blocksPlaced++;
                     }
                 }
+            
             }
+            }
+           
+            mulitplier = mulitplier - 1;
+            value = 2 * value ;
         }
     }
 
-    void PlaceObstaclesInMaze()
-    {
-        int blocksPlaced = 0;
-        float penalty = 0.5f;
-        while (blocksPlaced < 5)
-        {
-            bool taken = true;
-            while (taken)
-            {
-                int x = random.Next((int)(screenWidth - 5));
-                int y = random.Next((int)gridLength - 1);
-                MazeWall temp = mazeWallsList.Find(r => r.x == x && r.y == y);
-                if (temp != null)
-                {
-                    if (!temp.isWall())
-                    {
-                        if (blocksPlaced < 2)
-                        {
-                            PlaceObstacle(x, y, penalty);
-                            taken = false;
-                            blocksPlaced++;
-                        }
-                        else if (blocksPlaced < 4)
-                        {
-                            PlaceSpikeObstacle(x, y);
-                            taken = false;
-                            blocksPlaced++;
-                        }
-                        else if (blocksPlaced < 5)
-                        {
-                            PlaceWinBlock(x, y);
-                            taken = false;
-                            blocksPlaced++;
-                        }
-                    }
-                }
-            }
-        }
-    }
+
+
     void AddWinBlock(){
         
         bool end = false;
         while(!end){
             int x = random.Next((int)screenWidth-5);
             int y = random.Next((int)gridLength-1);
+            Vector2 coor = new Vector2(x,y);
+            if(coor != playerCooridantes){
              MazeWall temp = mazeWallsList.Find(r=> r.x == x && r.y ==y);
                 if(temp != null){
-                if(!temp.isWall()){
+                if(!temp.isWall() && !temp.isBlock()){
                     PlaceWinBlock(x,y);
                     end = true;
                 }
                 }
+            }
 
         }
        
