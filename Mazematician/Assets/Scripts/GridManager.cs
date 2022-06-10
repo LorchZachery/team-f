@@ -31,6 +31,9 @@ public class GridManager : MonoBehaviour
     public GameObject spikeObstacle;
     public Generator generator;
     public Vector2 playerCooridantes; 
+    private float time;
+    private float rotation;
+
     void Start()
     {
         screenWidth = 16;
@@ -135,16 +138,34 @@ public class GridManager : MonoBehaviour
     {
         if (Input.GetKeyUp(KeyCode.Space))
         {
-            //myCamera.transform.eulerAngles = new Vector3(0f, 0f, 360 + currentTransform.z - 90);
-            Camera.main.transform.Rotate(0, 0, -90f, Space.World);
-            TransformGameObjects(GameObject.FindGameObjectsWithTag("block"), -90f);
-            TransformGameObjects(GameObject.FindGameObjectsWithTag("obstacle"), -90f);
-            TransformGameObjects(GameObject.FindGameObjectsWithTag("player"), -90f);
-            TransformGameObjects(GameObject.FindGameObjectsWithTag("target"), -90f);
-
-            ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
-
+            //time = 1.5f;
+            rotation = 90f;
         }
+
+        if (rotation > 0)
+        {
+            float currentRotation = Time.deltaTime * 90 / 1.5f;
+            currentRotation = Math.Min(currentRotation, rotation);
+            //if ((rotation - currentRotation) < 0)
+            //{
+            //    currentRotation = rotation;
+            //}
+            //time -= Time.deltaTime;
+            rotation -= currentRotation;
+            RotateGame(currentRotation);
+        }
+
+        
+    }
+
+    void RotateGame(float angle)
+    {
+        Camera.main.transform.Rotate(0, 0, angle);
+        TransformGameObjects(GameObject.FindGameObjectsWithTag("block"), angle);
+        TransformGameObjects(GameObject.FindGameObjectsWithTag("obstacle"), angle);
+        TransformGameObjects(GameObject.FindGameObjectsWithTag("player"), angle);
+        TransformGameObjects(GameObject.FindGameObjectsWithTag("target"), angle);
+        ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
     }
 
     void TransformGameObjects(GameObject[] gameObjects, float z)

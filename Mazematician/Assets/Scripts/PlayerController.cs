@@ -29,82 +29,14 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        Vector3 v = Camera.main.transform.eulerAngles;
-
-        /*
-         * 0 dont change
-         * 
-         */
-
-       
-       
         x = Input.GetAxisRaw("Horizontal");
         y = Input.GetAxisRaw("Vertical");
         int isDiagonal = x * y != 0 ? 0 : 1;
 
-        if(v.z == 270)
-        {
-            /* Convert coordinates accoordint to camera
-             * -1  0 =>  0  1
-             *  1  0 =>  0 -1
-             *  0  1 =>  1  0
-             *  = -1 => -1  0
-             */ 
-            if(x != 0f || y != 0f)
-            {
-                //float tempX = x;
-                //float tempY = y;
-                //x = tempY;
-                //y = -tempX;
-
-                Vector2 dir1 = Camera.main.transform.right * x;
-                Vector2 dir2 = Camera.main.transform.up * y;
-                x = (dir1 + dir2).x;
-                y = (dir1 + dir2).y;
-            }
-        }
-        else if(v.z == 180)
-        {
-            if (x != 0f || y != 0f)
-            {
-                Debug.Log("before x = " + x + " y = " + y);
-                //x = -1 * x;
-                //y = -1 * y;
-                Vector2 dir1 = Camera.main.transform.right * x;
-                Vector2 dir2 = Camera.main.transform.up * y;
-                x = (dir1 + dir2).x;
-                y = (dir1 + dir2).y;
-            }
-            
-        }
-        else if(v.z == 90)
-        {
-            if (x != 0f || y != 0f)
-            {
-                Debug.Log("before x = " + x + " y = " + y);
-            }
-            /* Convert coordinates accoordint to camera
-             * -1  0 =>  0 -1
-             *  1  0 =>  0  1
-             *  0  1 => -1  0
-             *  = -1 =>  1  0
-             */
-            if (x != 0f || y != 0f)
-            {
-                //float tempX = x;
-                //float tempY = y;
-                //x = -tempY;
-                //y = tempX;
-                Vector2 dir1 = Camera.main.transform.right * x;
-                Vector2 dir2 = Camera.main.transform.up * y;
-                x = (dir1 + dir2).x;
-                y = (dir1 + dir2).y;
-            }
-            if (x != 0f || y != 0f)
-            {
-                Debug.Log("after x = " + x + " y = " + y);
-            }
-        }
+        Vector2 dir1 = Camera.main.transform.right * x;
+        Vector2 dir2 = Camera.main.transform.up * y;
+        x = (dir1 + dir2).x;
+        y = (dir1 + dir2).y;
         GetComponent<Rigidbody2D>().velocity = new Vector2(x * ballSpeed * isDiagonal, y * ballSpeed * isDiagonal);
     }
 
