@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 /**
  * This class deals with the logic of generating grid from prefabs
@@ -16,6 +17,10 @@ public class GridManager : MonoBehaviour
     float gridLength;
     float scale;
 
+    public List<MazeWall> mazeWallsList = new List<MazeWall>();
+
+    public System.Random random = new System.Random();
+
     public GameObject tile;
     public GameObject player;
     public GameObject block;
@@ -28,12 +33,19 @@ public class GridManager : MonoBehaviour
         screenWidth = 16;
         screenHeight = Camera.main.orthographicSize * 2;
 
-        gridLength = 10 + 2; // 8 x 8 grid + 1 top(left) wall + 1 bottom(right);
+        gridLength = 12; //10 + 2; // 8 x 8 grid + 1 top(left) wall + 1 bottom(right);
 
         /* We need to scale the the tiles such that grid fits in camera(screen) */
         scale = Mathf.Min(screenWidth, screenHeight) / gridLength;
-
+        MazeGenerator();
         GenerateWalls();
+        foreach (var wall in mazeWallsList)
+        {
+            if (wall.isWall())
+            {
+                GenerateTile(wall.x, wall.y);
+            }
+        }
         //GenerateTile(1, 2);
         //GenerateTile(1, 4);
         //GenerateTile(1, 6);
@@ -41,22 +53,22 @@ public class GridManager : MonoBehaviour
 
         //GenerateTile(2, 1);
         //GenerateTile(2, 3);
-        GenerateTile(2, 5);
-        GenerateTile(2, 7);
+        //GenerateTile(2, 5);
+        //GenerateTile(2, 7);
 
-        GenerateTile(3, 2);
+        //GenerateTile(3, 2);
         //GenerateTile(3, 4);
         //GenerateTile(3, 6);
         //GenerateTile(3, 8);
 
         //GenerateTile(4, 1);
         //GenerateTile(4, 3);
-        GenerateTile(4, 5);
+        //GenerateTile(4, 5);
         //GenerateTile(4, 7);
 
-        GenerateTile(5, 2);
-        GenerateTile(5, 4);
-        GenerateTile(5, 6);
+        //GenerateTile(5, 2);
+        //GenerateTile(5, 4);
+        //GenerateTile(5, 6);
         //GenerateTile(5, 8);
 
         //GenerateTile(6, 1);
@@ -64,7 +76,7 @@ public class GridManager : MonoBehaviour
         //GenerateTile(6, 5);
         //GenerateTile(6, 7);
 
-        GenerateTile(7, 2);
+        //GenerateTile(7, 2);
         //GenerateTile(7, 4);
         //GenerateTile(7, 6);
         //GenerateTile(7, 8);
@@ -74,15 +86,19 @@ public class GridManager : MonoBehaviour
         //GenerateTile(8, 5);
         //GenerateTile(8, 7);
 
-        GenerateTile(9, 6);
-        GenerateTile(9, 8);
-        GenerateTile(10, 6);
-        GenerateTile(10, 8);
+        // GenerateTile(9, 6);
+        // GenerateTile(9, 8);
+        // GenerateTile(10, 6);
+        // GenerateTile(10, 8);
 
+        //GenerateTile(10, 10);
+        //GenerateTile(1,1);
         DrawGridLines();
 
         GeneratePlayer();
-        GenerateBlock(2, 7, 16);
+        PlaceBlocksInMaze(32);
+        PlaceObstaclesInMaze();
+        /*GenerateBlock(2, 7, 16);
         GenerateBlock(4, 4, 32);
         GenerateBlock(4, 2, 4);
         GenerateBlock(5, 3, 16);
@@ -91,10 +107,11 @@ public class GridManager : MonoBehaviour
         GenerateBlock(7, 3, 2);
         GenerateBlock(7, 4, 2);
         GenerateBlock(10, 7, 2);
+        GenerateBlock(7, 6, 2);
         PlaceObstacle(1, 1, 0.5f);
         PlaceObstacle(10, 1, 0.25f);
-        PlaceWinBlock(1, 10);
         PlaceSpikeObstacle(8, 8);
+        PlaceWinBlock(1, 10);*/
 
 
     }
@@ -201,4 +218,293 @@ public class GridManager : MonoBehaviour
     }
 
 
+    void PlaceBlocksInMaze(int target)
+    {
+        int blocksPlaced = 0;
+        double numNeeded = Math.Log((double)target, 2);
+        int value = 2;
+        while (blocksPlaced < (int)numNeeded)
+        {
+            bool taken = true;
+
+            while (taken)
+            {
+                int x = random.Next((int)(screenWidth - 5));
+                int y = random.Next((int)gridLength - 1);
+                MazeWall temp = mazeWallsList.Find(r => r.x == x && r.y == y);
+                if (temp != null)
+                {
+                    if (!temp.isWall())
+                    {
+                        GenerateBlock(x, y, value);
+                        taken = false;
+                        blocksPlaced++;
+                    }
+                }
+            }
+        }
+    }
+
+    void PlaceObstaclesInMaze()
+    {
+        int blocksPlaced = 0;
+        float penalty = 0.5f;
+        while (blocksPlaced < 5)
+        {
+            bool taken = true;
+            while (taken)
+            {
+                int x = random.Next((int)(screenWidth - 5));
+                int y = random.Next((int)gridLength - 1);
+                MazeWall temp = mazeWallsList.Find(r => r.x == x && r.y == y);
+                if (temp != null)
+                {
+                    if (!temp.isWall())
+                    {
+                        if (blocksPlaced < 2)
+                        {
+                            PlaceObstacle(x, y, penalty);
+                            taken = false;
+                            blocksPlaced++;
+                        }
+                        else if (blocksPlaced < 4)
+                        {
+                            PlaceSpikeObstacle(x, y);
+                            taken = false;
+                            blocksPlaced++;
+                        }
+                        else if (blocksPlaced < 5)
+                        {
+                            PlaceWinBlock(x, y);
+                            taken = false;
+                            blocksPlaced++;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    void MazeGenerator()
+    {
+        for (int x = 1; x < screenWidth - 5; x++)
+        {
+            for (int y = 1; y < gridLength - 1; y++)
+            {
+                mazeWallsList.Add(new MazeWall(x, y));
+
+            }
+        }
+
+
+
+        Queue<MazeWall> Q = new Queue<MazeWall>();
+        //MazeWall N = mazeWallsList[random.Next(mazeWallsList.Count)];
+        MazeWall N = mazeWallsList.Find(r => r.x == (int)gridLength - 2 && r.y == (int)gridLength - 2);
+
+
+        int spacesCount = 0;
+        bool exit = false;
+        while (true)
+        {
+            Q.Enqueue(N);
+            N.setVisited();
+            while (checkVisitedNeighbors(N))
+            {
+                if (Q.Count == 0)
+                {
+                    exit = true;
+                    break;
+                }
+                N = Q.Dequeue();
+                N.setVisited();
+
+            }
+            if (exit)
+            {
+                break;
+            }
+
+
+            MazeWall next = selectNeighbor(N);
+            if (N.isWall())
+            {
+                N.removeWall();
+
+                translationWork(N, next);
+
+                spacesCount++;
+
+            }
+            N = next;
+
+        }
+
+
+
+
+    }
+
+    void translationWork(MazeWall N, MazeWall next)
+    {
+        MazeWall nextDoor = null;
+        if (N.x - next.x > 0)
+        {
+            nextDoor = mazeWallsList.Find(r => r.x == next.x - 1 && r.y == next.y + 1);
+            if (nextDoor != null)
+            {
+                nextDoor.setVisited();
+            }
+        }
+        else if (N.x - next.x < 0)
+        {
+            nextDoor = mazeWallsList.Find(r => r.x == next.x + 1 && r.y == next.y - 1);
+            if (nextDoor != null)
+            {
+                nextDoor.setVisited();
+            }
+        }
+        else if (N.y - next.y > 0)
+        {
+            nextDoor = mazeWallsList.Find(r => r.x == next.x + 1 && r.y == next.y - 1);
+            if (nextDoor != null)
+            {
+                nextDoor.setVisited();
+            }
+        }
+        else if (N.y - next.y < 0)
+        {
+            nextDoor = mazeWallsList.Find(r => r.x == next.x - 1 && r.y == next.y + 1);
+            if (nextDoor != null)
+            {
+                nextDoor.setVisited();
+            }
+        }
+    }
+
+    bool checkVisitedNeighbors(MazeWall N)
+    {
+        MazeWall neighbor = mazeWallsList.Find(r => r.x == N.x + 1 && r.y == N.y);
+        if (neighbor != null)
+        {
+            if (!neighbor.isVisited())
+            {
+                return false;
+            }
+        }
+        neighbor = mazeWallsList.Find(r => r.x == N.x - 1 && r.y == N.y);
+        if (neighbor != null)
+        {
+            if (!neighbor.isVisited())
+            {
+                return false;
+            }
+        }
+        neighbor = mazeWallsList.Find(r => r.x == N.x && r.y == N.y + 1);
+        if (neighbor != null)
+        {
+            if (!neighbor.isVisited())
+            {
+                return false;
+            }
+        }
+        neighbor = mazeWallsList.Find(r => r.x == N.x && r.y == N.y - 1);
+        if (neighbor != null)
+        {
+            if (!neighbor.isVisited())
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    MazeWall selectNeighbor(MazeWall N)
+    {
+
+        int possibleDirection = random.Next(4);
+        MazeWall possibleNext = getNext(N, possibleDirection);
+
+        if (possibleNext != null)
+        {
+            if (!possibleNext.isVisited())
+            {
+                return possibleNext;
+            }
+        }
+        int index = 1;
+
+        while (index < 4)
+        {
+            possibleDirection = (index + possibleDirection) % 4;
+
+            possibleNext = getNext(N, possibleDirection);
+
+            if (possibleNext != null)
+            {
+                if (!possibleNext.isVisited())
+                {
+                    return possibleNext;
+                }
+            }
+            index++;
+        }
+        return null;
+
+    }
+    MazeWall getNext(MazeWall N, int direction)
+    {
+        if (direction == 0)
+        {
+            return mazeWallsList.Find(r => r.x == N.x + 1 && r.y == N.y);
+        }
+        if (direction == 1)
+        {
+            return mazeWallsList.Find(r => r.x == N.x - 1 && r.y == N.y);
+        }
+        if (direction == 2)
+        {
+            return mazeWallsList.Find(r => r.x == N.x && r.y == N.y + 1);
+        }
+        if (direction == 3)
+        {
+            return mazeWallsList.Find(r => r.x == N.x && r.y == N.y - 1);
+        }
+        return null;
+    }
+
+
 }
+
+public class MazeWall
+{
+    public int x;
+    public int y;
+    private bool visited = false;
+    private bool aWall = true;
+    public MazeWall(int x_set, int y_set)
+    {
+        this.x = x_set;
+        this.y = y_set;
+    }
+    public bool isVisited()
+    {
+        return this.visited;
+    }
+
+    public void setVisited()
+    {
+        this.visited = true;
+    }
+    public bool isWall()
+    {
+        return this.aWall;
+    }
+    public void removeWall()
+    {
+        this.aWall = false;
+    }
+
+}
+
