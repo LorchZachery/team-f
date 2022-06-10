@@ -101,12 +101,9 @@ public class GridManager : MonoBehaviour
         PlaceObstacle(9, 8);
         PlaceWinBlock(1, 10);
         PlaceWinBlock(1, 10);*/
-<<<<<<< HEAD
         AddWinBlock();
-=======
         ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
 
->>>>>>> 7fa7c5c957c80d223ab0bf0a49eb65ade2b2ec64
 
     }
 
