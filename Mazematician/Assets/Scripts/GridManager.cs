@@ -265,8 +265,14 @@ public class GridManager : MonoBehaviour
         double numNeeded = Math.Log((double)target, 2);
         int value = 2;
         int mulitplier = (int)numNeeded;
-        while (mulitplier > 0)
+        int total = (int)numNeeded;
+        bool divided = false;
+        while (total > 0)
         {
+            if(value >= (numNeeded/2) && !divided){
+                mulitplier = 1;
+                divided = true;
+            }
             for(int i = 0; i < mulitplier;i++){
             bool taken = true;
 
@@ -275,7 +281,7 @@ public class GridManager : MonoBehaviour
                 int x = random.Next((int)(screenWidth - 5));
                 int y = random.Next((int)gridLength - 1);
                 Vector2 coor = new Vector2(x,y);
-                if(coor != winBlockCoor){
+                if(coor != winBlockCoor && coor != playerCooridantes){
                 MazeWall temp = mazeWallsList.Find(r => r.x == x && r.y == y);
                 if (temp != null)
                 {
@@ -316,7 +322,7 @@ public class GridManager : MonoBehaviour
             }
             }
            
-            mulitplier = mulitplier - 1;
+            total--;
             value = 2 * value ;
         }
     }
