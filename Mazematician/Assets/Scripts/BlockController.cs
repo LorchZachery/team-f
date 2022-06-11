@@ -66,7 +66,7 @@ public class BlockController : MonoBehaviour
     {
         this.points = points;
         UpdateText();
-        Debug.Log("Point updated" + points);
+        //Debug.Log("Point updated" + points);
     }
 
     void UpdateText()

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using System;
 using TMPro;
 
@@ -37,14 +38,19 @@ public class GridManager : MonoBehaviour
     private float rotation;
 
 
+    public GameObject warningPrefab;
+    private GameObject warning;
     void Awake()
     {
         var script = winBlock.GetComponent<GameEndController>();
         script.targetScore = target;
     }
     void Start()
-    {
+    {   
+        warning = Instantiate(warningPrefab, new Vector2(Screen.width, Screen.height), Quaternion.identity);
+
         
+        warning.gameObject.SetActive(false);
         screenWidth = 24;
         screenHeight = Camera.main.orthographicSize * 2;
 
@@ -63,53 +69,7 @@ public class GridManager : MonoBehaviour
                 GenerateTile(wall.x, wall.y);
             }
         }
-        //GenerateTile(1, 2);
-        //GenerateTile(1, 4);
-        //GenerateTile(1, 6);
-        //GenerateTile(1, 8);
-
-        //GenerateTile(2, 1);
-        //GenerateTile(2, 3);
-        //GenerateTile(2, 5);
-        //GenerateTile(2, 7);
-
-        //GenerateTile(3, 2);
-        //GenerateTile(3, 4);
-        //GenerateTile(3, 6);
-        //GenerateTile(3, 8);
-
-        //GenerateTile(4, 1);
-        //GenerateTile(4, 3);
-        //GenerateTile(4, 5);
-        //GenerateTile(4, 7);
-
-        //GenerateTile(5, 2);
-        //GenerateTile(5, 4);
-        //GenerateTile(5, 6);
-        //GenerateTile(5, 8);
-
-        //GenerateTile(6, 1);
-        //GenerateTile(6, 3);
-        //GenerateTile(6, 5);
-        //GenerateTile(6, 7);
-
-        //GenerateTile(7, 2);
-        //GenerateTile(7, 4);
-        //GenerateTile(7, 6);
-        //GenerateTile(7, 8);
-
-        //GenerateTile(8, 1);
-        //GenerateTile(8, 3);
-        //GenerateTile(8, 5);
-        //GenerateTile(8, 7);
-
-        // GenerateTile(9, 6);
-        // GenerateTile(9, 8);
-        // GenerateTile(10, 6);
-        // GenerateTile(10, 8);
-
-        //GenerateTile(10, 10);
-        //GenerateTile(1,1);
+       
         DrawGridLines();
 
         GeneratePlayer();
@@ -119,54 +79,54 @@ public class GridManager : MonoBehaviour
         AddWinBlock(target);
         PlaceBlocksInMaze();
         
-        /*GenerateBlock(2, 7, 16);
-        GenerateBlock(4, 4, 32);
-        GenerateBlock(4, 2, 4);
-        GenerateBlock(5, 3, 16);
-        GenerateBlock(5, 5, 16);
-        GenerateBlock(6, 1, 4);
-        GenerateBlock(7, 3, 2);p
-        GenerateBlock(7, 4, 2);
-        GenerateBlock(10, 7, 2);
-        GenerateBlock(7, 6, 2);
-        PlaceObstacle(9, 8);
-        PlaceWinBlock(1, 10);
-        PlaceObstacle(1, 1, 0.5f);
-        PlaceObstacle(10, 1, 0.25f);
-        PlaceSpikeObstacle(8, 8);
-        PlaceWinBlock(1, 10);*/
 
         
         ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
-
+        
+        InvokeRepeating("rotateGameRoutine", 7.0f, 7.0f);
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            //time = 1.5f;
-            rotation = 90f;
-        }
-
         if (rotation > 0)
         {
             float currentRotation = Time.deltaTime * 90 / 1.5f;
             currentRotation = Math.Min(currentRotation, rotation);
-            //if ((rotation - currentRotation) < 0)
-            //{
-            //    currentRotation = rotation;
-            //}
-            //time -= Time.deltaTime;
+            
             rotation -= currentRotation;
             RotateGame(currentRotation);
-        }
 
-        
+        }
     }
 
+    void rotateGameRoutine(){
+        
+        StartCoroutine(flash());
+        
+
+
+    }
+    IEnumerator flash()
+    {
+
+                warning.gameObject.SetActive(true);
+                var whenAreweDone = Time.time + 3;
+                while(Time.time < whenAreweDone){
+                     
+                    yield return new WaitForSeconds(0.5f);
+                    warning.gameObject.SetActive(!warning.gameObject.activeSelf);
+                }
+                warning.gameObject.SetActive(false) ; 
+                rotation = 90.0f;
+               
+                
+            
+
+
+    }
+    
     void RotateGame(float angle)
     {
         Camera.main.transform.Rotate(0, 0, angle);

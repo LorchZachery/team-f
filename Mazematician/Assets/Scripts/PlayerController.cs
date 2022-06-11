@@ -68,7 +68,7 @@ public class PlayerController : MonoBehaviour
     {
         this.score = score;
         UpdateText(this.score.ToString());
-        Debug.Log("Score updated");
+        //Debug.Log("Score updated");
     }
 
     void UpdateText(string message)
