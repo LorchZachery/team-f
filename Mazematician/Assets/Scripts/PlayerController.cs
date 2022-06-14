@@ -18,11 +18,15 @@ public class PlayerController : MonoBehaviour
     float y;
     int ballSpeed = 7;
     public TMP_Text scoreText;
+    private bool isIntangible = false;
+    private List<Collider2D> collist;
+
 
     // Start is called before the first frame update
     void Start()
     {
         UpdateText(this.score.ToString());
+        collist = new List<Collider2D>();
     }
 
     // Update is called once per frame
@@ -38,6 +42,19 @@ public class PlayerController : MonoBehaviour
         x = (dir1 + dir2).x;
         y = (dir1 + dir2).y;
         GetComponent<Rigidbody2D>().velocity = new Vector2(x * ballSpeed * isDiagonal, y * ballSpeed * isDiagonal);
+
+        if (Input.GetKeyUp(KeyCode.L))
+        {
+            isIntangible = !isIntangible;
+            Debug.Log(isIntangible);
+            if (!isIntangible) {
+                foreach (Collider2D col in collist) 
+                {
+                    Physics2D.IgnoreCollision(col, GetComponent<CircleCollider2D>(), false);
+                }
+                collist.Clear();
+            }
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -60,9 +77,12 @@ public class PlayerController : MonoBehaviour
         {
             SceneManager.LoadScene("GameOver");
         }
+        else if (collision.gameObject.CompareTag("tile") && isIntangible)
+        {
+            Physics2D.IgnoreCollision(collision.gameObject.GetComponent<BoxCollider2D>(), GetComponent<CircleCollider2D>());
+            collist.Add(collision.gameObject.GetComponent<BoxCollider2D>());
+        }
     }
-
-
 
     public void SetScore(int score)
     {

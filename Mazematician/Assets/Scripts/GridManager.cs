@@ -225,18 +225,18 @@ public class GridManager : MonoBehaviour
         for (int i = 0; i < gridLength; i++)
         {
             //top : x = 0, y = i
-            GenerateTile(0, i);
+            GenerateOuterTile(0, i);
 
             //bottom: x = 9, y = i
-            GenerateTile((int)gridLength - 1, i);
+            GenerateOuterTile((int)gridLength - 1, i);
         }
 
         for (int i = 1; i < gridLength - 1; i++)
         {
             //left x = i, y = 0
-            GenerateTile(i, 0);
+            GenerateOuterTile(i, 0);
             //right x = i, y = 9
-            GenerateTile(i, (int)gridLength - 1);
+            GenerateOuterTile(i, (int)gridLength - 1);
         }
     }
 
@@ -282,6 +282,14 @@ public class GridManager : MonoBehaviour
     {
         GameObject t = Instantiate(tile, GetCameraCoordinates(x, y), Quaternion.identity);
         t.transform.localScale = new Vector3(scale, scale, 1);
+
+    }
+
+    void GenerateOuterTile(int x, int y)
+    {
+        GameObject t = Instantiate(tile, GetCameraCoordinates(x, y), Quaternion.identity);
+        t.transform.localScale = new Vector3(scale, scale, 1);
+        t.tag = "outerTile";
 
     }
 
