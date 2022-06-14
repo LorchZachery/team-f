@@ -42,6 +42,6 @@ public class CameraController : MonoBehaviour
     public void SetPlayer(GameObject player)
     {
         this.player = player;
-        Debug.Log("Player has been set");
+        //Debug.Log("Player has been set");
     }
 }

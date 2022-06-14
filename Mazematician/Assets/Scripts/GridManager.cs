@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using System;
 using TMPro;
 
@@ -31,142 +32,127 @@ public class GridManager : MonoBehaviour
     public GameObject spikeObstacle;
     public int target = 32;
     public Generator generator;
+    
     public Vector2 playerCooridantes; 
     public Vector2 winBlockCoor;
+    public List<Vector2> noGoCorr = new List<Vector2>();
+
+    //TODO work for reset of map (blocklist, mazeWallList, winblockcorr)
+    public List<Vector3> blockList = new List<Vector3>();
+
+
     private float time;
     private float rotation;
 
 
+    public GameObject warningPrefab;
+    private GameObject warning;
+    
+    //adds win block script to winblock
+    //calculates to see if the player is at the target
     void Awake()
     {
         var script = winBlock.GetComponent<GameEndController>();
         script.targetScore = target;
     }
+
+    //Maze Generation, player, blocks and obsticle placement
     void Start()
-    {
+    {   
+
+        //warning red flash creation to alert user to gravity switch
+        warning = Instantiate(warningPrefab, new Vector2(Screen.width, Screen.height), Quaternion.identity);
+        warning.gameObject.SetActive(false);
         
+        
+        //setting screen length and height and translating it to a camera scale
         screenWidth = 24;
         screenHeight = Camera.main.orthographicSize * 2;
-
         gridLength = 20; //10 + 2; // 8 x 8 grid + 1 top(left) wall + 1 bottom(right);
-
         /* We need to scale the the tiles such that grid fits in camera(screen) */
         scale = Mathf.Min(screenWidth, screenHeight) / gridLength;
-        playerCooridantes = GetCameraCoordinates((int)gridLength - 2, (int)gridLength - 2);
+        
+        //saving the player cooridantes and generating a list of cooridinates where blocks
+        //obsticles and walls should not be allow to generate. prevents crappy starting situations
+        //for players
+        playerCooridantes = new Vector2((int)gridLength - 2, (int)gridLength - 2);
+        createNoGoCoorList();
+
+       
+        //maze generation script and then placement in the maze
         generator = new Generator(gridLength,screenWidth);
         mazeWallsList = generator.MazeGenerator();
         GenerateWalls();
         foreach (var wall in mazeWallsList)
         {
-            if (wall.isWall())
-            {
-                GenerateTile(wall.x, wall.y);
+
+            if(!noGoCorr.Contains(new Vector2(wall.x,wall.y))){
+                if (wall.isWall())
+                {
+                    GenerateTile(wall.x, wall.y);
+                }
             }
         }
-        //GenerateTile(1, 2);
-        //GenerateTile(1, 4);
-        //GenerateTile(1, 6);
-        //GenerateTile(1, 8);
-
-        //GenerateTile(2, 1);
-        //GenerateTile(2, 3);
-        //GenerateTile(2, 5);
-        //GenerateTile(2, 7);
-
-        //GenerateTile(3, 2);
-        //GenerateTile(3, 4);
-        //GenerateTile(3, 6);
-        //GenerateTile(3, 8);
-
-        //GenerateTile(4, 1);
-        //GenerateTile(4, 3);
-        //GenerateTile(4, 5);
-        //GenerateTile(4, 7);
-
-        //GenerateTile(5, 2);
-        //GenerateTile(5, 4);
-        //GenerateTile(5, 6);
-        //GenerateTile(5, 8);
-
-        //GenerateTile(6, 1);
-        //GenerateTile(6, 3);
-        //GenerateTile(6, 5);
-        //GenerateTile(6, 7);
-
-        //GenerateTile(7, 2);
-        //GenerateTile(7, 4);
-        //GenerateTile(7, 6);
-        //GenerateTile(7, 8);
-
-        //GenerateTile(8, 1);
-        //GenerateTile(8, 3);
-        //GenerateTile(8, 5);
-        //GenerateTile(8, 7);
-
-        // GenerateTile(9, 6);
-        // GenerateTile(9, 8);
-        // GenerateTile(10, 6);
-        // GenerateTile(10, 8);
-
-        //GenerateTile(10, 10);
-        //GenerateTile(1,1);
+       
         DrawGridLines();
 
-        GeneratePlayer();
 
+        //creating player
+        GeneratePlayer();
         
-        
+
+        //creating win block 
         AddWinBlock(target);
+        noGoCorr.Add(winBlockCoor);
+
+        //placing number blocks in maze
         PlaceBlocksInMaze();
         
-        /*GenerateBlock(2, 7, 16);
-        GenerateBlock(4, 4, 32);
-        GenerateBlock(4, 2, 4);
-        GenerateBlock(5, 3, 16);
-        GenerateBlock(5, 5, 16);
-        GenerateBlock(6, 1, 4);
-        GenerateBlock(7, 3, 2);p
-        GenerateBlock(7, 4, 2);
-        GenerateBlock(10, 7, 2);
-        GenerateBlock(7, 6, 2);
-        PlaceObstacle(9, 8);
-        PlaceWinBlock(1, 10);
-        PlaceObstacle(1, 1, 0.5f);
-        PlaceObstacle(10, 1, 0.25f);
-        PlaceSpikeObstacle(8, 8);
-        PlaceWinBlock(1, 10);*/
 
-        
+        //giving gavity to objects
         ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
-
+        
+        //invoking gravity to switch every 7 seconds, with a red screen flash before
+        InvokeRepeating("rotateGameRoutine", 7.0f, 7.0f);
 
     }
 
     // Update is called once per frame
+    //on update there is a create to rotate the screen slowly
     void Update()
     {
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            //time = 1.5f;
-            rotation = 90f;
-        }
-
         if (rotation > 0)
         {
             float currentRotation = Time.deltaTime * 90 / 1.5f;
             currentRotation = Math.Min(currentRotation, rotation);
-            //if ((rotation - currentRotation) < 0)
-            //{
-            //    currentRotation = rotation;
-            //}
-            //time -= Time.deltaTime;
+            
             rotation -= currentRotation;
             RotateGame(currentRotation);
-        }
 
-        
+        }
+       
     }
 
+    //function that is called every 7 seconds that then starts a screen flash co routine
+    void rotateGameRoutine(){
+        
+        StartCoroutine(flash());
+
+    }
+    IEnumerator flash()
+    {
+
+                warning.gameObject.SetActive(true);
+                var whenAreweDone = Time.time + 3;
+                while(Time.time < whenAreweDone){
+                     
+                    yield return new WaitForSeconds(0.5f);
+                    warning.gameObject.SetActive(!warning.gameObject.activeSelf);
+                }
+                warning.gameObject.SetActive(false) ; 
+                rotation = 90.0f;
+    }
+    
     void RotateGame(float angle)
     {
         Camera.main.transform.Rotate(0, 0, angle);
@@ -307,14 +293,33 @@ public class GridManager : MonoBehaviour
         return new Vector3(cartesianX + (0.5f * scale), cartesianY - (0.5f * scale), z);
     }
 
+
+    void createNoGoCoorList(){
+        noGoCorr.Add(playerCooridantes);
+        //noGoCorr.Add(new Vector2(playerCooridantes[0]+1,playerCooridantes[1]+1));
+        noGoCorr.Add(new Vector2(playerCooridantes[0],playerCooridantes[1]+1));
+        noGoCorr.Add(new Vector2(playerCooridantes[0]+1,playerCooridantes[1]));
+        //noGoCorr.Add(new Vector2(playerCooridantes[0]-1,playerCooridantes[1]-1));
+        noGoCorr.Add(new Vector2(playerCooridantes[0],playerCooridantes[1]-1));
+        noGoCorr.Add(new Vector2(playerCooridantes[0]-1,playerCooridantes[1]));
+
+
+    }
+
     void PlaceBlocksInMaze()
     {
-        int blocksPlaced = 0;
+        
         double numNeeded = Math.Log((double)target, 2);
         int value = 2;
         int mulitplier = (int)numNeeded;
-        while (mulitplier > 0)
+        int total = (int)numNeeded;
+        bool divided = false;
+        while (total > 0)
         {
+            if(value >= (numNeeded/2) && !divided){
+                mulitplier = 1;
+                divided = true;
+            }
             for(int i = 0; i < mulitplier;i++){
             bool taken = true;
 
@@ -323,40 +328,18 @@ public class GridManager : MonoBehaviour
                 int x = random.Next((int)(screenWidth - 5));
                 int y = random.Next((int)gridLength - 1);
                 Vector2 coor = new Vector2(x,y);
-                if(coor != winBlockCoor){
+                if(!noGoCorr.Contains(coor)){
                 MazeWall temp = mazeWallsList.Find(r => r.x == x && r.y == y);
                 if (temp != null)
                 {
                     if (!temp.isWall() && !temp.isBlock())
                     {
                         
-                        MazeWall upWall = mazeWallsList.Find(r=> r.x == temp.x+1 && r.y == temp.y+1);
-                        if(upWall != null){
-                            if(!upWall.isWall()){
-                                upWall.removeWall();
-                            }
-                            }
-                        MazeWall downWall = mazeWallsList.Find(r=> r.x == temp.x-1 && r.y == temp.y-1);
-                        if(downWall != null){
-                            if(!downWall.isWall()){
-                                downWall.removeWall();
-                            }
-                        }
-
-
-                        
-                            MazeWall neighbor = generator.getNext(temp, random.Next(3));
-                            
-                            if(neighbor != null){
-                            if(!neighbor.isWall()){
-                                neighbor.removeWall();
-                            }
-                            }
-                        
                         temp.setBlock();
                         GenerateBlock(x, y, value);
+                        blockList.Add(new Vector3(x,y, value));
                         taken = false;
-                        blocksPlaced++;
+                        
                     }
                 }
             }
@@ -364,7 +347,7 @@ public class GridManager : MonoBehaviour
             }
             }
            
-            mulitplier = mulitplier - 1;
+            total--;
             value = 2 * value ;
         }
     }
@@ -392,10 +375,6 @@ public class GridManager : MonoBehaviour
         }
        
     }
-
-
-
-
 }
 
 
