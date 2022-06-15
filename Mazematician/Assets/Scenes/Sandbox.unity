@@ -473,7 +473,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43f48efd7beee2047a112ec827e191c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  screenWidth: 12
+  screenWidth: 10
   gridLength: 8
   tile: {fileID: 2483983227542680485, guid: ed7b1c1c964724d7183b701b9faedfc0, type: 3}
   player: {fileID: 2483983227542680485, guid: 9e9aea2a167394a11a5da1040029dcd8, type: 3}
@@ -488,5 +488,5 @@ MonoBehaviour:
   winBlockCoor: {x: 0, y: 0}
   blockList: []
   warningPrefab: {fileID: 3725297818231593299, guid: f4e79fe507a8e174bbd06bda189a76c7, type: 3}
-  LevelName: tutorial_lorch
+  LevelName: level3_lorch
   textbox: {fileID: 1036459285}
