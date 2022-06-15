@@ -59,17 +59,16 @@ public class GridManager : MonoBehaviour
     //Maze Generation, player, blocks and obsticle placement
     void Start()
     {   
-
-        //warning red flash creation to alert user to gravity switch
-        warning = Instantiate(warningPrefab, new Vector2(Screen.width, Screen.height), Quaternion.identity);
-        warning.gameObject.SetActive(false);
-        
-        
-        //setting screen length and height and translating it to a camera scale
+        // Setting screen length and height and translating it to a camera scale
         screenWidth = 24;
         screenHeight = Camera.main.orthographicSize * 2;
+
+        // Instantiate warning red flash creation to alert user to gravity switch
+        warning = Instantiate(warningPrefab, new Vector2(Screen.width, Screen.height), Quaternion.identity);
+        warning.gameObject.SetActive(false);
+
         gridLength = 20; //10 + 2; // 8 x 8 grid + 1 top(left) wall + 1 bottom(right);
-        /* We need to scale the the tiles such that grid fits in camera(screen) */
+        // We need to scale the the tiles such that grid fits in camera(screen)
         scale = Mathf.Min(screenWidth, screenHeight) / gridLength;
         
         //saving the player cooridantes and generating a list of cooridinates where blocks
@@ -93,7 +92,7 @@ public class GridManager : MonoBehaviour
                 }
             }
         }
-       
+
         DrawGridLines();
 
 
@@ -114,7 +113,6 @@ public class GridManager : MonoBehaviour
         
         //invoking gravity to switch every 7 seconds, with a red screen flash before
         InvokeRepeating("rotateGameRoutine", 7.0f, 7.0f);
-
     }
 
     // Update is called once per frame
@@ -143,8 +141,8 @@ public class GridManager : MonoBehaviour
     {
 
                 warning.gameObject.SetActive(true);
-                var whenAreweDone = Time.time + 3;
-                while(Time.time < whenAreweDone){
+                var dur = Time.time + 3;
+                while(Time.time < dur){
                      
                     yield return new WaitForSeconds(0.5f);
                     warning.gameObject.SetActive(!warning.gameObject.activeSelf);
