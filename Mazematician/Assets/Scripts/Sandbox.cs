@@ -11,6 +11,16 @@ using System.IO;
  * This class deals with the logic of generating grid from prefabs
  * */
 
+static class Constants
+{
+    public const int tile = 0;
+    public const int block = 1;
+    public const int delete = 2;
+    public const int play = 3;
+    public const int exitPlay = 4;
+    public const int nothing = 5;
+}
+
 
 public class Sandbox : MonoBehaviour
 {
@@ -52,6 +62,10 @@ public class Sandbox : MonoBehaviour
     
 
     public string LevelName; 
+    private int mode = 0;
+
+    public List<Tuple<GameObject,Vector2>> tileList = new List<Tuple<GameObject,Vector2>>();
+
     //adds win block script to winblock
     //calculates to see if the player is at the target
     void Awake()
@@ -140,18 +154,74 @@ public class Sandbox : MonoBehaviour
 
     }
 
+    void stopTesting()
+    {
+        CancelInvoke();
+        RotateGame(0);
+        RemoveGravity(GameObject.FindGameObjectsWithTag("block"));
+        
+    }
+
     // Update is called once per frame
     //on update there is a create to rotate the screen slowly
     void Update()
     {
+        
+        
+        if(Input.GetKeyDown(KeyCode.T))
+        {
+            mode = Constants.tile;
+        }
+        if(Input.GetKeyDown(KeyCode.D))
+        {
+            mode = Constants.delete;
+        }
+        if(Input.GetKeyDown(KeyCode.P))
+        {
+            mode = Constants.play;
+        }
+        if(Input.GetKeyDown(KeyCode.E))
+        {
+            mode = Constants.exitPlay;
+        }
 
-        if (Input.GetMouseButtonDown(0)) {
+        if (Input.GetMouseButtonDown(0) && mode == Constants.tile) {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             
-            Debug.Log(mousePos);
+           
             Vector2 tilePos = GetTileCoordinates(mousePos[0],mousePos[1]);
-            Debug.Log(tilePos);
+            Debug.Log($"CREATE TILE {tilePos}");
             GenerateTile((int)tilePos[0],(int)tilePos[1]);
+        }
+
+        if (Input.GetMouseButtonDown(0) && mode == Constants.delete) {
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            
+            
+            Vector2 tilePos = GetTileCoordinates(mousePos[0],mousePos[1]);
+            Debug.Log($"DELETE attempt {tilePos}");
+            Tuple<GameObject,Vector2> tupleObject = tileList.Find(r => r.Item2[0] == (int)tilePos[0] && r.Item2[1] == (int)tilePos[1]);
+            if(tupleObject != null)
+            {
+                Debug.Log($"DELTING");
+                tileList.Remove(tupleObject);
+                Destroy(tupleObject.Item1);
+                
+
+            }
+
+            
+        }
+
+        if(mode == Constants.play)
+        {
+            startTesting();
+            mode = Constants.nothing;
+        }
+        if(mode == Constants.exitPlay)
+        {
+            stopTesting();
+            mode = Constants.nothing;
         }
 
 
@@ -218,6 +288,19 @@ public class Sandbox : MonoBehaviour
             ConstantForce2D constantForce = gameObject.GetComponent<ConstantForce2D>();
             Vector2 direction = Camera.main.transform.up * -1;
             constantForce.force = direction * 50f;
+        }
+        //Debug.Log(gameObjects[0].transform.x);
+    }
+
+
+    void RemoveGravity(GameObject[] gameObjects)
+    {
+        //Debug.Log(gameObjects[0].transform.eulerAngles.ToString());
+        foreach (GameObject gameObject in gameObjects)
+        {
+            ConstantForce2D constantForce = gameObject.GetComponent<ConstantForce2D>();
+            Vector2 direction = Camera.main.transform.up * -1;
+            constantForce.force = direction * 0;
         }
         //Debug.Log(gameObjects[0].transform.x);
     }
@@ -304,6 +387,7 @@ public class Sandbox : MonoBehaviour
     {
         GameObject t = Instantiate(tile, GetCameraCoordinates(x, y), Quaternion.identity);
         t.transform.localScale = new Vector3(scale, scale, 1);
+        tileList.Add(new Tuple<GameObject,Vector2>(t,new Vector2(x,y)));
 
     }
 
