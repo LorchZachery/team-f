@@ -483,10 +483,10 @@ MonoBehaviour:
   myCamera: {fileID: 534770649}
   spikeObstacle: {fileID: 2927829571682668071, guid: 3c606bbb02d784689b305601a99fbd0b, type: 3}
   target: 32
+  noGoCorr: []
   playerCooridantes: {x: 0, y: 0}
   winBlockCoor: {x: 0, y: 0}
-  noGoCorr: []
   blockList: []
   warningPrefab: {fileID: 3725297818231593299, guid: f4e79fe507a8e174bbd06bda189a76c7, type: 3}
-  LevelName: test
+  LevelName: tutorial_lorch
   textbox: {fileID: 1036459285}
