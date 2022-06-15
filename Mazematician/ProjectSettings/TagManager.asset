@@ -11,6 +11,7 @@ TagManager:
   - target
   - platform
   - spikeObstacle
+  - timer
   layers:
   - Default
   - TransparentFX
