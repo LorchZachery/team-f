@@ -35,6 +35,7 @@ to delete any object you added press "d" and click on that object
 to play the game press "p" 
 to exit play mode or just reset player and balls press "e"
 to save current set up press "s" this will use provided level name so if it will re-write files if the names are the same
+"[" zooms in and "]" zooms out
 */
 
 public class Sandbox : MonoBehaviour
@@ -526,8 +527,8 @@ public class Sandbox : MonoBehaviour
         t.transform.localScale = new Vector3(scale * 0.9f, scale * 0.9f, 1);
         var script = t.GetComponent<PlayerController>();
         script.SetScore(2);
-        var cameraController = Camera.main.GetComponent<CameraController>();
-        cameraController.SetPlayer(t);
+        var cameraController = Camera.main.GetComponent<CameraControllerSandBox>();
+        cameraController.SetPlayerSandBox(t);
         playerObject = t;
     }
 
