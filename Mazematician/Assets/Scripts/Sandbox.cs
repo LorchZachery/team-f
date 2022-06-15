@@ -21,16 +21,17 @@ static class Constants
     public const int play = 3;
     public const int exitPlay = 4;
     public const int nothing = 5;
+    public const int win = 6;
 }
 
 
 public class Sandbox : MonoBehaviour
 {
     // Start is called before the first frame update
-    float screenWidth;
-    float screenHeight;
+    public float screenWidth = 0f;
+    private float screenHeight;
 
-    float gridLength;
+    public float gridLength = 0f;
     float scale;
 
     public List<MazeWall> mazeWallsList = new List<MazeWall>();
@@ -74,6 +75,7 @@ public class Sandbox : MonoBehaviour
     
 
     private GameObject playerObject;
+    private GameObject winBlockObject;
 
     //adds win block script to winblock
     //calculates to see if the player is at the target
@@ -91,13 +93,16 @@ public class Sandbox : MonoBehaviour
         warning = Instantiate(warningPrefab, new Vector2(Screen.width, Screen.height), Quaternion.identity);
         warning.gameObject.SetActive(false);
         textbox.gameObject.SetActive(false);
-        if(!File.Exists("Assets/Levels/" + LevelName + ".txt"))
+        if(!File.Exists("Assets/Levels/" + LevelName + ".txt") || new FileInfo("Assets/Levels/" + LevelName + ".txt").Length == 0)
         {
             //setting screen length and height and translating it to a camera scale
-            screenWidth = 24;
+            if(screenWidth == 0){
+                screenWidth = 24;
+            }
             screenHeight = Camera.main.orthographicSize * 2;
-            gridLength = 20; //10 + 2; // 8 x 8 grid + 1 top(left) wall + 1 bottom(right);
-            /* We need to scale the the tiles such that grid fits in camera(screen) */
+            if(gridLength == 0){
+                gridLength = 20; 
+            }
         
         
             //saving the player cooridantes and generating a list of cooridinates where blocks
@@ -225,6 +230,10 @@ public class Sandbox : MonoBehaviour
         {
             mode = Constants.block;
         }
+         if(Input.GetKeyDown(KeyCode.G))
+        {
+            mode = Constants.win;
+        }
         if(Input.GetKeyDown(KeyCode.D))
         {
             mode = Constants.delete;
@@ -255,6 +264,14 @@ public class Sandbox : MonoBehaviour
             GenerateTile((int)tilePos[0],(int)tilePos[1]);
             mazeWallsList.Add(new MazeWall((int)tilePos[0],(int)tilePos[1]));
         }
+         if( Input.GetMouseButtonDown(0) && mode == Constants.win)
+         {
+            Debug.Log("starting win block co-r");
+
+            StartCoroutine(winBlockMakingFunction());
+
+         }
+
 
         if( Input.GetMouseButtonDown(0) && mode == Constants.block)
         {
@@ -272,7 +289,7 @@ public class Sandbox : MonoBehaviour
             Tuple<GameObject,Vector2> tupleObject = tileList.Find(r => r.Item2[0] == (int)tilePos[0] && r.Item2[1] == (int)tilePos[1]);
             if(tupleObject != null)
             {
-                Debug.Log($"DELTING");
+                Debug.Log($"DELTING TILE");
                 tileList.Remove(tupleObject);
                 mazeWallsList.Remove(mazeWallsList.Find(r=> r.x == tilePos[0] && r.y == tilePos[1]));
                 Destroy(tupleObject.Item1);
@@ -284,10 +301,19 @@ public class Sandbox : MonoBehaviour
                 Tuple<GameObject,Vector3> blockTupleObject = blockListObjects.Find(r => r.Item2[0] == (int)tilePos[0] && r.Item2[1] == (int)tilePos[1]);
                 if(blockTupleObject != null)
                 {
-                    Debug.Log("DELETING");
+                    Debug.Log("DELETING BLOCK");
                     blockListObjects.Remove(blockTupleObject);
                     blockList.Remove(blockList.Find(r => r[0] == blockTupleObject.Item2[0] && r[1] == blockTupleObject.Item2[1]));
                     Destroy(blockTupleObject.Item1);
+                }
+                else
+                {
+                    if(tilePos[0] == winBlockCoor[0] && tilePos[1] == winBlockCoor[1])
+                    {
+                        Debug.Log("DELETE WINBLOCK");
+                        winBlockCoor = new Vector2(0,0);
+                        Destroy(winBlockObject);
+                    }
                 }
             }
 
@@ -317,6 +343,34 @@ public class Sandbox : MonoBehaviour
         }
        
     }
+
+
+
+    private IEnumerator winBlockMakingFunction()
+    {
+            mode = Constants.nothing;
+            Debug.Log("Enter Win maker");
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 blockPos = GetTileCoordinates(mousePos[0],mousePos[1]);
+            Debug.Log($"Got win pos {blockPos}");
+            
+           if(textbox != null)
+           {
+            textbox.transform.position = Camera.main.ScreenToWorldPoint( new Vector3(Screen.width/2, Screen.height/2, Camera.main.nearClipPlane) );
+            textbox.gameObject.SetActive(true);
+            yield return waitForInput();
+            Debug.Log($"CREATE WIN BLOCK {blockPos} value {blockInput}");
+            PlaceWinBlock((int)blockPos[0], (int)blockPos[1], Int32.Parse(blockInput));
+            winBlockCoor = new Vector2((int)blockPos[0], (int)blockPos[1]);
+            target = Int32.Parse(blockInput);
+            
+            blockInput = null;
+            textbox.gameObject.SetActive(false);
+            
+           } 
+    }
+
+
 
 
     private IEnumerator blockMakingFunction()
@@ -509,6 +563,7 @@ public class Sandbox : MonoBehaviour
         TMP_Text textOf = textChild.GetComponent<TextMeshPro>();
         textOf.text = value.ToString();
         t.transform.localScale = new Vector3(scale, scale, 1);
+        winBlockObject = t;
     }
 
     /*
