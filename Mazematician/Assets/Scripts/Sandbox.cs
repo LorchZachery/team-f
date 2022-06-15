@@ -24,6 +24,18 @@ static class Constants
     public const int win = 6;
 }
 
+/*
+To use sandbox mode in unity inspect make sure to give level a name (or use level name to load a level 
+you are currently designing)
+you also can change the screen width and gridlength in unity editor
+To add a tile press "t" and click somewhere
+to add a block press "b", click where you want it and  provided a number in input box, press enter
+to add a win block press "g" click where you want it and provide the target number in the input box, press enter
+to delete any object you added press "d" and click on that object
+to play the game press "p" 
+to exit play mode or just reset player and balls press "e"
+to save current set up press "s" this will use provided level name so if it will re-write files if the names are the same
+*/
 
 public class Sandbox : MonoBehaviour
 {
@@ -34,7 +46,7 @@ public class Sandbox : MonoBehaviour
     public float gridLength = 0f;
     float scale;
 
-    public List<MazeWall> mazeWallsList = new List<MazeWall>();
+   
 
     public System.Random random = new System.Random();
 
@@ -45,14 +57,17 @@ public class Sandbox : MonoBehaviour
     public GameObject winBlock;
     public GameObject myCamera;
     public GameObject spikeObstacle;
+    //value player must reach to win
     public int target = 32;
-    public Generator generator;
+
+
     
-    public Vector2 playerCooridantes; 
-    public Vector2 winBlockCoor;
     public List<Vector2> noGoCorr = new List<Vector2>();
 
-    //TODO work for reset of map (blocklist, mazeWallList, winblockcorr)
+    //For level loading and saving
+    public Vector2 playerCooridantes; 
+    public Vector2 winBlockCoor;
+    public List<MazeWall> mazeWallsList = new List<MazeWall>();
     public List<Vector3> blockList = new List<Vector3>();
 
 
@@ -63,17 +78,18 @@ public class Sandbox : MonoBehaviour
     public GameObject warningPrefab;
     private GameObject warning;
 
-
+    //level name to load or save as (or both)
     public string LevelName; 
+    //mode for what to start at
     private int mode = 0;
 
-    
+    //sandbox variables
     public GameObject textbox;
     private string blockInput = null;
     public List<Tuple<GameObject,Vector2>> tileList = new List<Tuple<GameObject,Vector2>>();
     public List<Tuple<GameObject,Vector3>> blockListObjects = new List<Tuple<GameObject,Vector3>>();
     
-
+    //to delete and reset player and win box
     private GameObject playerObject;
     private GameObject winBlockObject;
 
@@ -85,14 +101,18 @@ public class Sandbox : MonoBehaviour
         script.targetScore = target;
     }
 
-    //Maze Generation, player, blocks and obsticle placement
+    
     void Start()
     {   
 
         //warning red flash creation to alert user to gravity switch
         warning = Instantiate(warningPrefab, new Vector2(Screen.width, Screen.height), Quaternion.identity);
         warning.gameObject.SetActive(false);
+
+        //hids input box for blocks
         textbox.gameObject.SetActive(false);
+
+        //if the level name is not a file create a new map
         if(!File.Exists("Assets/Levels/" + LevelName + ".txt") || new FileInfo("Assets/Levels/" + LevelName + ".txt").Length == 0)
         {
             //setting screen length and height and translating it to a camera scale
@@ -111,15 +131,17 @@ public class Sandbox : MonoBehaviour
             playerCooridantes = new Vector2((int)gridLength - 2, (int)gridLength - 2);
             
         }
+        //if the level name is a file load that verision
         else
         {
             ReadFile(LevelName);
         }
 
         scale = Mathf.Min(screenWidth, screenHeight) / gridLength;
-        createNoGoCoorList();       
+        //createNoGoCoorList();       
         GenerateWalls();
         
+        //adding walls if we are loading a level
         foreach (var wall in mazeWallsList)
         {
 
@@ -136,12 +158,13 @@ public class Sandbox : MonoBehaviour
         
         GeneratePlayer(playerCooridantes);
         
+        //if we are loading a level create winblock
         if(winBlockCoor != new Vector2(0,0))
         {
             PlaceWinBlock((int)winBlockCoor[0],(int)winBlockCoor[1],target);
         }
         
-
+        //if we are loading a level add blocks 
         if(blockList.Count != 0)
         {
             foreach(Vector3 block in blockList)
@@ -156,8 +179,7 @@ public class Sandbox : MonoBehaviour
         
     }
 
-    //Function to run test on level that has been created 
-    //TODO figure out how to call
+   //to start testing putting the game in play mode
     void startTesting()
     {
         //giving gavity to objects
@@ -168,6 +190,7 @@ public class Sandbox : MonoBehaviour
 
     }
 
+    //return objects to there upright position and flipping the camera back
     void ReturnRotation()
     {
         Camera.main.transform.rotation = Quaternion.identity;
@@ -186,13 +209,16 @@ public class Sandbox : MonoBehaviour
         }
     }
 
-
+    //function to reset the testing enviroment back to the orignal state
     void stopTesting()
     {
+        //stops the rotation and flashing
         CancelInvoke();
+        //puts everything right side up
         ReturnRotation();
         
-        //RemoveGravity(GameObject.FindGameObjectsWithTag("block"));
+        //have to destory blocks and then re-instantate them because player could have
+        //merged with blocks meaning they dont exist anymore
         List<Tuple<GameObject,Vector3>> temp = new List<Tuple<GameObject,Vector3>>(blockListObjects);
         foreach(var blockTuple in temp)
         {
@@ -208,7 +234,7 @@ public class Sandbox : MonoBehaviour
 
 
         }
-        
+        //reset the player
         playerObject.transform.position = GetCameraCoordinates((int)playerCooridantes[0],(int)playerCooridantes[1]);
         var script = playerObject.GetComponent<PlayerController>();
         script.SetScore(2);
@@ -221,40 +247,49 @@ public class Sandbox : MonoBehaviour
     void Update()
     {
         
-        
+        //press T to enter tile creation mode
         if(Input.GetKeyDown(KeyCode.T))
         {
             mode = Constants.tile;
         }
+        //press B to enter block creation mode
          if(Input.GetKeyDown(KeyCode.B))
         {
             mode = Constants.block;
         }
+        //press G to enter winblock creation mode
          if(Input.GetKeyDown(KeyCode.G))
         {
             mode = Constants.win;
         }
+        //press D to enter delete mode
         if(Input.GetKeyDown(KeyCode.D))
         {
             mode = Constants.delete;
         }
+        //press P to enter play mode
         if(Input.GetKeyDown(KeyCode.P))
         {
             Debug.Log("PLAY MODE");
             mode = Constants.play;
         }
+        //press E to exit play mode, or reset player back to start
+        //do not have to be in play mode for E to work 
         if(Input.GetKeyDown(KeyCode.E))
         {
             Debug.Log("EXIT PLAY MODE");
             mode = Constants.exitPlay;
         }
+
+        //press S to save the current map
         if(Input.GetKeyDown(KeyCode.S))
         {
             Debug.Log("SAVING");
             File.Delete("Assets/Levels/" + LevelName + ".txt");
             writeToFile(LevelName);
         }
-        //adding tiles to map
+        
+        //adding tiles to map where user clicks
         if (Input.GetMouseButtonDown(0) && mode == Constants.tile) {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             
@@ -264,6 +299,7 @@ public class Sandbox : MonoBehaviour
             GenerateTile((int)tilePos[0],(int)tilePos[1]);
             mazeWallsList.Add(new MazeWall((int)tilePos[0],(int)tilePos[1]));
         }
+         //adding win block where user clicks
          if( Input.GetMouseButtonDown(0) && mode == Constants.win)
          {
             Debug.Log("starting win block co-r");
@@ -272,14 +308,14 @@ public class Sandbox : MonoBehaviour
 
          }
 
-
+        //adding block where user clicks
         if( Input.GetMouseButtonDown(0) && mode == Constants.block)
         {
             Debug.Log("starting block co-r");
            StartCoroutine(blockMakingFunction());
                 
         }
-
+        //delete clicked item
         if (Input.GetMouseButtonDown(0) && mode == Constants.delete) {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             
@@ -319,19 +355,20 @@ public class Sandbox : MonoBehaviour
 
             
         }
-
+        //entering testing mode
         if(mode == Constants.play)
         {
             startTesting();
             mode = Constants.nothing;
         }
+        //exiting testing mode or reseting map
         if(mode == Constants.exitPlay)
         {
             stopTesting();
             mode = Constants.nothing;
         }
 
-
+        //rotation for actual game play
         if (rotation > 0)
         {
             float currentRotation = Time.deltaTime * 90 / 1.5f;
@@ -345,7 +382,7 @@ public class Sandbox : MonoBehaviour
     }
 
 
-
+    //function to create winblock with input value
     private IEnumerator winBlockMakingFunction()
     {
             mode = Constants.nothing;
@@ -372,7 +409,7 @@ public class Sandbox : MonoBehaviour
 
 
 
-
+    //function to create normal block with input value
     private IEnumerator blockMakingFunction()
     {
             mode = Constants.nothing;
@@ -396,6 +433,7 @@ public class Sandbox : MonoBehaviour
            } 
     }
 
+    //waits for input from input box when block needs a value
     private IEnumerator waitForInput()
     {
         bool done = false;
@@ -409,6 +447,7 @@ public class Sandbox : MonoBehaviour
         }
     }
 
+    //gets input string from input box
     public void ReadStringInput(string s)
     {
         blockInput = s;
@@ -615,75 +654,6 @@ public class Sandbox : MonoBehaviour
 
     }
 
-    void PlaceBlocksInMaze()
-    {
-        
-        double numNeeded = Math.Log((double)target, 2);
-        int value = 2;
-        int mulitplier = (int)numNeeded;
-        int total = (int)numNeeded;
-        bool divided = false;
-        while (total > 0)
-        {
-            if(value >= (numNeeded/2) && !divided){
-                mulitplier = 1;
-                divided = true;
-            }
-            for(int i = 0; i < mulitplier;i++){
-            bool taken = true;
-
-            while (taken)
-            {
-                int x = random.Next((int)(screenWidth - 5));
-                int y = random.Next((int)gridLength - 1);
-                Vector2 coor = new Vector2(x,y);
-                if(!noGoCorr.Contains(coor)){
-                MazeWall temp = mazeWallsList.Find(r => r.x == x && r.y == y);
-                if (temp != null)
-                {
-                    if (!temp.isWall() && !temp.isBlock())
-                    {
-                        
-                        temp.setBlock();
-                        GenerateBlock(x, y, value);
-                        blockList.Add(new Vector3(x,y, value));
-                        taken = false;
-                        
-                    }
-                }
-            }
-            
-            }
-            }
-           
-            total--;
-            value = 2 * value ;
-        }
-    }
-
-
-
-    void AddWinBlock(int value){
-        
-        bool end = false;
-        while(!end){
-            int x = random.Next((int)screenWidth-5);
-            int y = random.Next((int)gridLength-1);
-            Vector2 coor = new Vector2(x,y);
-            if(coor != playerCooridantes){
-             MazeWall temp = mazeWallsList.Find(r=> r.x == x && r.y ==y);
-                if(temp != null){
-                if(!temp.isWall() && !temp.isBlock()){
-                    winBlockCoor = new Vector2(x,y);
-                    PlaceWinBlock(x,y,value);
-                    end = true;
-                }
-                }
-            }
-
-        }
-       
-    }
     void writeToFile(string LevelName)
     {
         string path = "Assets/Levels/" + LevelName + ".txt";
@@ -709,7 +679,7 @@ public class Sandbox : MonoBehaviour
         writer.WriteLine("END");
         writer.Close();
 
-        //ReadFile(path);
+        
        
     }
     void ReadFile(string level)
