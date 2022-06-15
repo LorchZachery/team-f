@@ -12,4 +12,10 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene("SampleGrid");
     }
 
+    public void LevelsButton()
+    {
+
+        SceneManager.LoadScene("Levels");
+    }
+
 }
