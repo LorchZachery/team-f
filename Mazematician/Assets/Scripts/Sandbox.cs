@@ -6,6 +6,8 @@ using System;
 using TMPro;
 using UnityEditor;
 using System.IO;
+using System.Linq;
+using System.Text;
 
 /**
  * This class deals with the logic of generating grid from prefabs
@@ -59,12 +61,19 @@ public class Sandbox : MonoBehaviour
 
     public GameObject warningPrefab;
     private GameObject warning;
-    
+
 
     public string LevelName; 
     private int mode = 0;
 
+    
+    public GameObject textbox;
+    private string blockInput = null;
     public List<Tuple<GameObject,Vector2>> tileList = new List<Tuple<GameObject,Vector2>>();
+    public List<Tuple<GameObject,Vector3>> blockListObjects = new List<Tuple<GameObject,Vector3>>();
+    
+
+    private GameObject playerObject;
 
     //adds win block script to winblock
     //calculates to see if the player is at the target
@@ -81,7 +90,7 @@ public class Sandbox : MonoBehaviour
         //warning red flash creation to alert user to gravity switch
         warning = Instantiate(warningPrefab, new Vector2(Screen.width, Screen.height), Quaternion.identity);
         warning.gameObject.SetActive(false);
-        
+        textbox.gameObject.SetActive(false);
         if(!File.Exists("Assets/Levels/" + LevelName + ".txt"))
         {
             //setting screen length and height and translating it to a camera scale
@@ -154,13 +163,53 @@ public class Sandbox : MonoBehaviour
 
     }
 
+    void ReturnRotation()
+    {
+        Camera.main.transform.rotation = Quaternion.identity;
+        rightSideUp(GameObject.FindGameObjectsWithTag("block"));
+        rightSideUp(GameObject.FindGameObjectsWithTag("obstacle"));
+        rightSideUp(GameObject.FindGameObjectsWithTag("player"));
+        rightSideUp(GameObject.FindGameObjectsWithTag("target"));
+
+    }
+
+    void rightSideUp(GameObject[] gameObjects)
+    {
+        foreach(GameObject gameObject in gameObjects)
+        {
+            gameObject.transform.rotation = Quaternion.identity;
+        }
+    }
+
+
     void stopTesting()
     {
         CancelInvoke();
-        RotateGame(0);
-        RemoveGravity(GameObject.FindGameObjectsWithTag("block"));
+        ReturnRotation();
         
+        //RemoveGravity(GameObject.FindGameObjectsWithTag("block"));
+        List<Tuple<GameObject,Vector3>> temp = new List<Tuple<GameObject,Vector3>>(blockListObjects);
+        foreach(var blockTuple in temp)
+        {
+            //moveBlock((int)blockTuple.Item2[0],(int)blockTuple.Item2[1],blockTuple.Item1);
+            blockListObjects.Remove(blockTuple);
+            blockList.Remove(blockList.Find(r => r[0] == blockTuple.Item2[0] && r[1] == blockTuple.Item2[1]));
+            Destroy(blockTuple.Item1);
+            
+
+            GenerateBlock((int)blockTuple.Item2[0], (int)blockTuple.Item2[1], (int)blockTuple.Item2[2]);
+            blockList.Add(new Vector3((int)blockTuple.Item2[0], (int)blockTuple.Item2[1], (int)blockTuple.Item2[2]));
+            
+
+
+        }
+        
+        playerObject.transform.position = GetCameraCoordinates((int)playerCooridantes[0],(int)playerCooridantes[1]);
+        var script = playerObject.GetComponent<PlayerController>();
+        script.SetScore(2);
     }
+
+   
 
     // Update is called once per frame
     //on update there is a create to rotate the screen slowly
@@ -172,19 +221,31 @@ public class Sandbox : MonoBehaviour
         {
             mode = Constants.tile;
         }
+         if(Input.GetKeyDown(KeyCode.B))
+        {
+            mode = Constants.block;
+        }
         if(Input.GetKeyDown(KeyCode.D))
         {
             mode = Constants.delete;
         }
         if(Input.GetKeyDown(KeyCode.P))
         {
+            Debug.Log("PLAY MODE");
             mode = Constants.play;
         }
         if(Input.GetKeyDown(KeyCode.E))
         {
+            Debug.Log("EXIT PLAY MODE");
             mode = Constants.exitPlay;
         }
-
+        if(Input.GetKeyDown(KeyCode.S))
+        {
+            Debug.Log("SAVING");
+            File.Delete("Assets/Levels/" + LevelName + ".txt");
+            writeToFile(LevelName);
+        }
+        //adding tiles to map
         if (Input.GetMouseButtonDown(0) && mode == Constants.tile) {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             
@@ -192,6 +253,14 @@ public class Sandbox : MonoBehaviour
             Vector2 tilePos = GetTileCoordinates(mousePos[0],mousePos[1]);
             Debug.Log($"CREATE TILE {tilePos}");
             GenerateTile((int)tilePos[0],(int)tilePos[1]);
+            mazeWallsList.Add(new MazeWall((int)tilePos[0],(int)tilePos[1]));
+        }
+
+        if( Input.GetMouseButtonDown(0) && mode == Constants.block)
+        {
+            Debug.Log("starting block co-r");
+           StartCoroutine(blockMakingFunction());
+                
         }
 
         if (Input.GetMouseButtonDown(0) && mode == Constants.delete) {
@@ -205,9 +274,21 @@ public class Sandbox : MonoBehaviour
             {
                 Debug.Log($"DELTING");
                 tileList.Remove(tupleObject);
+                mazeWallsList.Remove(mazeWallsList.Find(r=> r.x == tilePos[0] && r.y == tilePos[1]));
                 Destroy(tupleObject.Item1);
                 
 
+            }
+            else
+            {
+                Tuple<GameObject,Vector3> blockTupleObject = blockListObjects.Find(r => r.Item2[0] == (int)tilePos[0] && r.Item2[1] == (int)tilePos[1]);
+                if(blockTupleObject != null)
+                {
+                    Debug.Log("DELETING");
+                    blockListObjects.Remove(blockTupleObject);
+                    blockList.Remove(blockList.Find(r => r[0] == blockTupleObject.Item2[0] && r[1] == blockTupleObject.Item2[1]));
+                    Destroy(blockTupleObject.Item1);
+                }
             }
 
             
@@ -229,7 +310,7 @@ public class Sandbox : MonoBehaviour
         {
             float currentRotation = Time.deltaTime * 90 / 1.5f;
             currentRotation = Math.Min(currentRotation, rotation);
-            
+
             rotation -= currentRotation;
             RotateGame(currentRotation);
 
@@ -238,6 +319,47 @@ public class Sandbox : MonoBehaviour
     }
 
 
+    private IEnumerator blockMakingFunction()
+    {
+            mode = Constants.nothing;
+            Debug.Log("Enter Block maker");
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 blockPos = GetTileCoordinates(mousePos[0],mousePos[1]);
+            Debug.Log($"Got block pos {blockPos}");
+            
+           if(textbox != null)
+           {
+            textbox.transform.position = Camera.main.ScreenToWorldPoint( new Vector3(Screen.width/2, Screen.height/2, Camera.main.nearClipPlane) );
+            textbox.gameObject.SetActive(true);
+            yield return waitForInput();
+            Debug.Log($"CREATE BLOCK {blockPos} value {blockInput}");
+            GenerateBlock((int)blockPos[0], (int)blockPos[1], Int32.Parse(blockInput));
+            blockList.Add(new Vector3((int)blockPos[0], (int)blockPos[1], Int32.Parse(blockInput)));
+            
+            blockInput = null;
+            textbox.gameObject.SetActive(false);
+            
+           } 
+    }
+
+    private IEnumerator waitForInput()
+    {
+        bool done = false;
+        while(!done)
+        {
+            if(blockInput != null)
+            {
+                done = true;
+            }
+            yield return null;
+        }
+    }
+
+    public void ReadStringInput(string s)
+    {
+        blockInput = s;
+       
+    }
 
     //function that is called every 7 seconds that then starts a screen flash co routine
     void rotateGameRoutine(){
@@ -313,6 +435,7 @@ public class Sandbox : MonoBehaviour
         script.SetScore(2);
         var cameraController = Camera.main.GetComponent<CameraController>();
         cameraController.SetPlayer(t);
+        playerObject = t;
     }
 
     void GenerateBlock(int x, int y, int points)
@@ -322,6 +445,14 @@ public class Sandbox : MonoBehaviour
 
         var script = t.GetComponent<BlockController>();
         script.SetPoints(points);
+        blockListObjects.Add(new Tuple<GameObject,Vector3>(t,new Vector3(x,y,points)));
+
+
+    }
+    void moveBlock(int x, int y, GameObject t)
+    {
+       t.transform.position = GetCameraCoordinates(x,y);
+    
     }
 
 
