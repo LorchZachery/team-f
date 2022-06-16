@@ -10,10 +10,15 @@ public class DashBoardController : MonoBehaviour
     GameObject player;
     float remainingTime;
     bool timerRunning;
+    float flashTimer;
+    float flashDuration = 1f;
+
+    public TextMeshProUGUI rewardsText;
+    public TextMeshProUGUI timerText;
     // Start is called before the first frame update
     void Start()
     {
-        remainingTime = 300f;
+        remainingTime = 10f;
         timerRunning = true;
         UpdateScore(0);
     }
@@ -31,8 +36,6 @@ public class DashBoardController : MonoBehaviour
 
     public void UpdateScore(int score)
     {
-        GameObject rewards = gameObject.transform.GetChild(1).gameObject;
-        TextMeshProUGUI rewardsText = rewards.GetComponent<TextMeshProUGUI>();
         rewardsText.text = "" + score;
     }
 
@@ -49,8 +52,13 @@ public class DashBoardController : MonoBehaviour
             {
                 remainingTime -= Time.deltaTime;
                 DisplayTime(remainingTime);
+                if(remainingTime < 5)
+                {
+                    Flash();
+                }
             } else
             {
+                timerText.enabled = true;
                 Debug.Log("Out of time");
                 //TODO End Game ? or Use rewards?
                 timerRunning = false;
@@ -65,9 +73,25 @@ public class DashBoardController : MonoBehaviour
         int minutes = Mathf.FloorToInt(time / 60);
         int seconds = Mathf.FloorToInt(time % 60);
 
-        GameObject timer = gameObject.transform.GetChild(2).gameObject;
-        TextMeshProUGUI timerText = timer.GetComponent<TextMeshProUGUI>();
+        
         timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
     }
 
+    private void Flash()
+    {
+        timerText.color = Color.red;
+        if(flashTimer <= 0)
+        {
+            flashTimer = flashDuration;
+        } else if(flashTimer <= flashDuration / 2)
+        {
+            flashTimer -= Time.deltaTime;
+            timerText.enabled = false;
+
+        } else
+        {
+            flashTimer -= Time.deltaTime;
+            timerText.enabled = true;
+        }
+    }
 }

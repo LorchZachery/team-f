@@ -394,6 +394,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f250433a6b9e34e46b0371cc4e2ba19f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rewardsText: {fileID: 1746369471}
+  timerText: {fileID: 2106373136}
 --- !u!1 &415319002
 GameObject:
   m_ObjectHideFlags: 0
