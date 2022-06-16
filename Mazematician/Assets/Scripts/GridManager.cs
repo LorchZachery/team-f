@@ -30,6 +30,7 @@ public class GridManager : MonoBehaviour
     public GameObject winBlock;
     public GameObject myCamera;
     public GameObject spikeObstacle;
+    public GameObject powerUpWalkThru;
     public int target = 32;
     public Generator generator;
     
@@ -105,6 +106,9 @@ public class GridManager : MonoBehaviour
         AddWinBlock(target);
         noGoCorr.Add(winBlockCoor);
 
+        //creating powerup walkthru
+        AddPowerUpWalkThru();
+
         //placing number blocks in maze
         PlaceBlocksInMaze();
         
@@ -160,6 +164,7 @@ public class GridManager : MonoBehaviour
         TransformGameObjects(GameObject.FindGameObjectsWithTag("obstacle"), angle);
         TransformGameObjects(GameObject.FindGameObjectsWithTag("player"), angle);
         TransformGameObjects(GameObject.FindGameObjectsWithTag("target"), angle);
+        TransformGameObjects(GameObject.FindGameObjectsWithTag("powerUpWalkThru"), angle);
         ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
     }
 
@@ -374,6 +379,34 @@ public class GridManager : MonoBehaviour
 
         }
        
+    }
+
+    void AddPowerUpWalkThru() {
+        bool end = false;
+        while (!end) {
+            int x = random.Next((int)screenWidth - 5);
+            int y = random.Next((int)gridLength - 1);
+            Vector2 coor = new Vector2(x, y);
+            if (coor != playerCooridantes && coor != winBlockCoor) 
+            {
+                MazeWall temp = mazeWallsList.Find(r => r.x == x && r.y == y);
+                if (temp != null)
+                {
+                    if (!temp.isWall() && !temp.isBlock())
+                    {
+                        noGoCorr.Add(new Vector2(x, y));
+                        PlacePowerUpWalkThru(x, y);
+                        end = true;
+                    }
+                }
+            }
+        }
+    }
+
+    void PlacePowerUpWalkThru(int x, int y)
+    {
+        GameObject t = Instantiate(powerUpWalkThru, GetCameraCoordinates(x, y), Quaternion.identity);
+        t.transform.localScale = new Vector3(scale * 0.5f, scale * 0.5f, 1);
     }
 }
 

@@ -12,6 +12,7 @@ TagManager:
   - platform
   - spikeObstacle
   - outerTile
+  - powerUpWalkThru
   layers:
   - Default
   - TransparentFX
