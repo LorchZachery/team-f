@@ -15,8 +15,10 @@ public class PlayerController : MonoBehaviour
 {
     public int score;
     public int targetScore;
-    public GameObject gridManager;
+    GameObject gridManager;
     GridManager grid;
+    GameObject dashboard;
+    DashBoardController dashboardController;
     public int coins;
     float x;
     float y;
@@ -90,6 +92,7 @@ public class PlayerController : MonoBehaviour
         else if (this.score == this.targetScore)
         {
             grid.AddWinBlock(this.targetScore);
+            dashboardController.SetTime(20f);
         }
     }
 
@@ -113,5 +116,11 @@ public class PlayerController : MonoBehaviour
     {
         this.gridManager = gm;
         grid = this.gridManager.GetComponent<GridManager>();
+    }
+
+    public void setDashboardController(GameObject dc)
+    {
+        this.dashboard = dc;
+        dashboardController = this.dashboard.GetComponent<DashBoardController>();
     }
 }

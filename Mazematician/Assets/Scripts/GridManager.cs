@@ -207,6 +207,7 @@ public class GridManager : MonoBehaviour
         GameObject dashboard = GameObject.Find("Dashboard");
         var dashBoardController = dashboard.GetComponent<DashBoardController>();
         dashBoardController.SetPlayer(t);
+        script.setDashboardController(dashboard);
     }
 
     Vector2 GetCameraCoordinates(int x, int y)

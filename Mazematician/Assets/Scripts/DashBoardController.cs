@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 
 public class DashBoardController : MonoBehaviour
@@ -22,7 +24,7 @@ public class DashBoardController : MonoBehaviour
     void Update()
     {
         UpdateTime();
-        if(player != null)
+        if (player != null)
         {
             var playerScript = player.GetComponent<PlayerController>();
             UpdateScore(playerScript.coins);
@@ -43,20 +45,27 @@ public class DashBoardController : MonoBehaviour
 
     void UpdateTime()
     {
-        if(timerRunning)
+        if (timerRunning)
         {
             if (remainingTime > 0)
             {
                 remainingTime -= Time.deltaTime;
                 DisplayTime(remainingTime);
-            } else
+            }
+            else
             {
                 Debug.Log("Out of time");
                 //TODO End Game ? or Use rewards?
+                SceneManager.LoadScene("GameOver");
                 timerRunning = false;
             }
         }
-        
+
+    }
+
+    public void SetTime(float time)
+    {
+        remainingTime = time;
     }
 
     void DisplayTime(float time)
