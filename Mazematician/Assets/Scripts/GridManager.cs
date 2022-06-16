@@ -327,8 +327,8 @@ public class GridManager : MonoBehaviour
                             }
                         
                         temp.setBlock();
-                                //GenerateBlock(x, y, value);
-                        GenerateCoin(x, y);
+                        GenerateBlock(x, y, value);
+                        GenerateCoin(x+1, y);
                         taken = false;
                         blocksPlaced++;
                     }

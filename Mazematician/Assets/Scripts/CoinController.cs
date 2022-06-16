@@ -22,4 +22,12 @@ public class CoinController : MonoBehaviour
             currentTransform.z);
 
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.CompareTag("block"))
+        {
+            Physics2D.IgnoreCollision(collision.gameObject.GetComponent<CircleCollider2D>(), GetComponent<CircleCollider2D>());
+        }
+    }
 }

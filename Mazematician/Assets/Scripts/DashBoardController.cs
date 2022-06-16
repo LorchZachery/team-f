@@ -9,10 +9,12 @@ public class DashBoardController : MonoBehaviour
 
     GameObject player;
     float remainingTime;
+    bool timerRunning;
     // Start is called before the first frame update
     void Start()
     {
-        remainingTime = 30f;
+        remainingTime = 300f;
+        timerRunning = true;
         UpdateScore(0);
     }
 
@@ -41,11 +43,20 @@ public class DashBoardController : MonoBehaviour
 
     void UpdateTime()
     {
-        if(remainingTime > 0)
+        if(timerRunning)
         {
-            remainingTime -= Time.deltaTime;
-            DisplayTime(remainingTime);
+            if (remainingTime > 0)
+            {
+                remainingTime -= Time.deltaTime;
+                DisplayTime(remainingTime);
+            } else
+            {
+                Debug.Log("Out of time");
+                //TODO End Game ? or Use rewards?
+                timerRunning = false;
+            }
         }
+        
     }
 
     void DisplayTime(float time)

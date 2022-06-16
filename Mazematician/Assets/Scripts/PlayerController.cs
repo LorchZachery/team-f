@@ -65,7 +65,6 @@ public class PlayerController : MonoBehaviour
         if(collision.gameObject.CompareTag("coin"))
         {
             coins++;
-            //Physics2D.IgnoreCollision(collision.gameObject.GetComponent<CircleCollider2D>(), GetComponent<CircleCollider2D>());
             Destroy(collision.gameObject);
         }
     }
