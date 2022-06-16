@@ -207,6 +207,7 @@ public class GridManager : MonoBehaviour
         GameObject dashboard = GameObject.Find("Dashboard");
         var dashBoardController = dashboard.GetComponent<DashBoardController>();
         dashBoardController.SetPlayer(t);
+        dashBoardController.SetTarget(this.target);
         script.setDashboardController(dashboard);
     }
 

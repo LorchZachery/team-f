@@ -12,12 +12,14 @@ public class DashBoardController : MonoBehaviour
     GameObject player;
     float remainingTime;
     bool timerRunning;
+    int target;
     // Start is called before the first frame update
     void Start()
     {
         remainingTime = 300f;
         timerRunning = true;
         UpdateScore(0);
+        DisplayTargetText();
     }
 
     // Update is called once per frame
@@ -77,6 +79,18 @@ public class DashBoardController : MonoBehaviour
         GameObject timer = gameObject.transform.GetChild(2).gameObject;
         TextMeshProUGUI timerText = timer.GetComponent<TextMeshProUGUI>();
         timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+    }
+
+    public void SetTarget(int target)
+    {
+        this.target = target;
+    }
+
+    void DisplayTargetText()
+    {
+        GameObject targetObject = gameObject.transform.GetChild(3).gameObject;
+        TextMeshProUGUI targetText = targetObject.GetComponent<TextMeshProUGUI>();
+        targetText.text = "Target: " + this.target;
     }
 
 }
