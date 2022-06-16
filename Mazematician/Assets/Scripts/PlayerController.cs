@@ -14,6 +14,9 @@ using UnityEngine.SceneManagement;
 public class PlayerController : MonoBehaviour
 {
     public int score;
+    public int targetScore;
+    public GameObject gridManager;
+    GridManager grid;
     float x;
     float y;
     int ballSpeed = 7;
@@ -49,11 +52,10 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("block"))
         {
             var script = collision.gameObject.GetComponent<BlockController>();
-            if (score == script.points)
+            if (this.score == script.points)
             {
-                score += script.points;
                 Destroy(collision.gameObject);
-                UpdateText(this.score.ToString());
+                SetScore(this.score + script.points);
             }
         }
         else if (collision.gameObject.CompareTag("upperBound"))
@@ -78,6 +80,15 @@ public class PlayerController : MonoBehaviour
         {
             SceneManager.LoadScene("GameOver");
         }
+        else if (this.score == this.targetScore)
+        {
+            grid.AddWinBlock(this.targetScore);
+        }
+    }
+
+    public void setTargetScore(int score)
+    {
+        this.targetScore = score;
     }
 
     void UpdateText(string message)
@@ -89,5 +100,11 @@ public class PlayerController : MonoBehaviour
     {
         this.score = 2;
         UpdateText("Player won");
+    }
+
+    public void setGridManager(GameObject gm)
+    {
+        this.gridManager = gm;
+        grid = this.gridManager.GetComponent<GridManager>();
     }
 }

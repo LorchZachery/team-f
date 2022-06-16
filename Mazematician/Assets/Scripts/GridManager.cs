@@ -97,23 +97,12 @@ public class GridManager : MonoBehaviour
 
         DrawGridLines();
 
-
-        //creating player
-        GeneratePlayer();
-
         //creating win block 
-        AddWinBlock(target);
-        noGoCorr.Add(winBlockCoor);
+        // AddWinBlock(target);
+        // noGoCorr.Add(winBlockCoor);
 
         //placing number blocks in maze
         PlaceBlocksInMaze();
-
-        // hard placing spike obstacle for testing
-        PlaceSpikeObstacle(16, 16);
-
-        PlaceObstacle(14, 14, 0.5f);
-
-
 
         //giving gavity to objects
         ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
@@ -121,6 +110,14 @@ public class GridManager : MonoBehaviour
         //invoking gravity to switch every 7 seconds, with a red screen flash before
         InvokeRepeating("rotateGameRoutine", 7.0f, 7.0f);
 
+        //creating player
+        GeneratePlayer(target);
+
+        // hard placing spike obstacle for testing
+        PlaceSpikeObstacle(16, 16);
+
+        // hard placing decrease points obstacle for testing
+        PlaceObstacle(14, 14, 0.5f);
     }
 
     // Update is called once per frame
@@ -193,12 +190,14 @@ public class GridManager : MonoBehaviour
 
     }
 
-    void GeneratePlayer()
+    void GeneratePlayer(int target)
     {
         GameObject t = Instantiate(player, GetCameraCoordinates((int)gridLength - 2, (int)gridLength - 2), Quaternion.identity);
         t.transform.localScale = new Vector3(scale * 0.9f, scale * 0.9f, 1);
         var script = t.GetComponent<PlayerController>();
+        script.setTargetScore(target);
         script.SetScore(2);
+        script.setGridManager(gameObject);
         var cameraController = Camera.main.GetComponent<CameraController>();
         cameraController.SetPlayer(t);
     }
@@ -217,9 +216,9 @@ public class GridManager : MonoBehaviour
         return new Vector3(cartesianX + (0.5f * scale), cartesianY - (0.5f * scale), z);
     }
 
-    void AddWinBlock(int value)
+    public void AddWinBlock(int value)
     {
-
+        Debug.Log("IN ADD WIN BLOCK");
         bool end = false;
         while (!end)
         {
@@ -242,6 +241,15 @@ public class GridManager : MonoBehaviour
 
         }
 
+    }
+
+    void PlaceWinBlock(int x, int y, int value)
+    {
+        GameObject t = Instantiate(winBlock, GetCameraCoordinates(x, y), Quaternion.identity);
+        GameObject textChild = t.transform.GetChild(0).gameObject;
+        TMP_Text textOf = textChild.GetComponent<TextMeshPro>();
+        textOf.text = value.ToString();
+        t.transform.localScale = new Vector3(scale, scale, 1);
     }
 
     void PlaceBlocksInMaze()
@@ -382,14 +390,6 @@ public class GridManager : MonoBehaviour
         // t.transform.localScale = new Vector3(scale * 0.30f, scale * 0.30f, 1);
     }
 
-    void PlaceWinBlock(int x, int y, int value)
-    {
-        GameObject t = Instantiate(winBlock, GetCameraCoordinates(x, y), Quaternion.identity);
-        GameObject textChild = t.transform.GetChild(0).gameObject;
-        TMP_Text textOf = textChild.GetComponent<TextMeshPro>();
-        textOf.text = value.ToString();
-        t.transform.localScale = new Vector3(scale, scale, 1);
-    }
 }
 
 
