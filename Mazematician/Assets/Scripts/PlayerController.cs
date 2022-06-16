@@ -56,9 +56,14 @@ public class PlayerController : MonoBehaviour
                 UpdateText(this.score.ToString());
             }
         }
-        else if (collision.gameObject.CompareTag("spikeObstacle"))
+        else if (collision.gameObject.CompareTag("upperBound"))
         {
+            Debug.Log("HIT TOP");
             SceneManager.LoadScene("GameOver");
+        }
+        else if (collision.gameObject.CompareTag("lowerBound"))
+        {
+            Debug.Log("HIT BOTTOM");
         }
     }
 
