@@ -74,6 +74,10 @@ public class PlayerController : MonoBehaviour
         this.score = score;
         UpdateText(this.score.ToString());
         //Debug.Log("Score updated");
+        if (this.score < 2)
+        {
+            SceneManager.LoadScene("GameOver");
+        }
     }
 
     void UpdateText(string message)

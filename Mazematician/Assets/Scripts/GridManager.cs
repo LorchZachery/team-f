@@ -111,6 +111,9 @@ public class GridManager : MonoBehaviour
         // hard placing spike obstacle for testing
         PlaceSpikeObstacle(16, 16);
 
+        PlaceObstacle(14, 14, 0.5f);
+
+
 
         //giving gavity to objects
         ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
@@ -147,6 +150,9 @@ public class GridManager : MonoBehaviour
                 noGoCorr.Add(new Vector2(i, j));
             }
         }
+        // Hard coding points obstacle
+        noGoCorr.Add(new Vector2(14, 14));
+
         //noGoCorr.Add(new Vector2(playerCoordinates[0]+1,playerCoordinates[1]+1));
         noGoCorr.Add(new Vector2(playerCoordinates[0], playerCoordinates[1] + 1));
         noGoCorr.Add(new Vector2(playerCoordinates[0] + 1, playerCoordinates[1]));
