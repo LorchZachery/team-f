@@ -11,6 +11,8 @@ TagManager:
   - target
   - platform
   - spikeObstacle
+  - coin
+  - rewardsText
   layers:
   - Default
   - TransparentFX

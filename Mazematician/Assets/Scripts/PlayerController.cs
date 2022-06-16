@@ -14,6 +14,7 @@ using UnityEngine.SceneManagement;
 public class PlayerController : MonoBehaviour
 {
     public int score;
+    public int coins;
     float x;
     float y;
     int ballSpeed = 7;
@@ -22,6 +23,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        coins = 0;
         UpdateText(this.score.ToString());
     }
 
@@ -59,6 +61,12 @@ public class PlayerController : MonoBehaviour
         else if (collision.gameObject.CompareTag("spikeObstacle"))
         {
             SceneManager.LoadScene("GameOver");
+        }
+        if(collision.gameObject.CompareTag("coin"))
+        {
+            coins++;
+            //Physics2D.IgnoreCollision(collision.gameObject.GetComponent<CircleCollider2D>(), GetComponent<CircleCollider2D>());
+            Destroy(collision.gameObject);
         }
     }
 

@@ -30,11 +30,12 @@ public class GridManager : MonoBehaviour
     public GameObject winBlock;
     public GameObject myCamera;
     public GameObject spikeObstacle;
+    public GameObject coin;
+
     public int target = 32;
     public Generator generator;
     public Vector2 playerCooridantes; 
     public Vector2 winBlockCoor;
-    private float time;
     private float rotation;
 
 
@@ -73,13 +74,12 @@ public class GridManager : MonoBehaviour
         DrawGridLines();
 
         GeneratePlayer();
-
         
         
         AddWinBlock(target);
         PlaceBlocksInMaze();
-        
 
+        Debug.Log(GameObject.FindGameObjectsWithTag("coin")[0].tag);
         
         ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
         
@@ -134,6 +134,7 @@ public class GridManager : MonoBehaviour
         TransformGameObjects(GameObject.FindGameObjectsWithTag("obstacle"), angle);
         TransformGameObjects(GameObject.FindGameObjectsWithTag("player"), angle);
         TransformGameObjects(GameObject.FindGameObjectsWithTag("target"), angle);
+        TransformGameObjects(GameObject.FindGameObjectsWithTag("coin"), angle);
         ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
     }
 
@@ -150,7 +151,7 @@ public class GridManager : MonoBehaviour
 
     void ApplyGravity(GameObject[] gameObjects)
     {
-        Debug.Log(gameObjects[0].transform.eulerAngles.ToString());
+        
         foreach (GameObject gameObject in gameObjects)
         {
             ConstantForce2D constantForce = gameObject.GetComponent<ConstantForce2D>();
@@ -166,9 +167,23 @@ public class GridManager : MonoBehaviour
         t.transform.localScale = new Vector3(scale * 0.9f, scale * 0.9f, 1);
         var script = t.GetComponent<PlayerController>();
         script.SetScore(2);
+
         var cameraController = Camera.main.GetComponent<CameraController>();
         cameraController.SetPlayer(t);
+
+        GameObject dashboard = GameObject.Find("Dashboard");
+        var dashBoardController = dashboard.GetComponent<DashBoardController>();
+        dashBoardController.SetPlayer(t);
     }
+
+
+    void GenerateCoin(int x, int y)
+    {
+        GameObject t = Instantiate(coin, GetCameraCoordinates(x, y), Quaternion.identity);
+        t.transform.localScale = new Vector3(scale * 0.7f, scale * 0.7f, 1);
+    }
+
+
 
     void GenerateBlock(int x, int y, int points)
     {
@@ -312,7 +327,8 @@ public class GridManager : MonoBehaviour
                             }
                         
                         temp.setBlock();
-                        GenerateBlock(x, y, value);
+                                //GenerateBlock(x, y, value);
+                        GenerateCoin(x, y);
                         taken = false;
                         blocksPlaced++;
                     }
