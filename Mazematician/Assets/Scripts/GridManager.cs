@@ -30,6 +30,8 @@ public class GridManager : MonoBehaviour
     public GameObject winBlock;
     public GameObject myCamera;
     public GameObject spikeObstacle;
+    public GameObject coin;
+
     public int target = 32;
     public Generator generator;
 
@@ -41,7 +43,6 @@ public class GridManager : MonoBehaviour
     public List<Vector3> blockList = new List<Vector3>();
 
 
-    private float time;
     private float rotation;
 
 
@@ -59,17 +60,20 @@ public class GridManager : MonoBehaviour
     //Maze Generation, player, blocks and obsticle placement
     void Start()
     {
+        // Setting screen length and height and translating it to a camera scale
+        screenWidth = 24;
+        screenHeight = Camera.main.orthographicSize * 2;
 
-        //warning red flash creation to alert user to gravity switch
+        // Instantiate warning red flash creation to alert user to gravity switch
         warning = Instantiate(warningPrefab, new Vector2(Screen.width, Screen.height), Quaternion.identity);
         warning.gameObject.SetActive(false);
 
 
         //setting screen length and height and translating it to a camera scale
-        screenWidth = 24;
-        screenHeight = Camera.main.orthographicSize * 2;
+        // screenWidth = 24;
+        // screenHeight = Camera.main.orthographicSize * 2;
         gridLength = 20; //10 + 2; // 8 x 8 grid + 1 top(left) wall + 1 bottom(right);
-        /* We need to scale the the tiles such that grid fits in camera(screen) */
+        // We need to scale the the tiles such that grid fits in camera(screen)
         scale = Mathf.Min(screenWidth, screenHeight) / gridLength;
 
         //saving the player cooridantes and generating a list of cooridinates where blocks
@@ -156,8 +160,6 @@ public class GridManager : MonoBehaviour
         //noGoCorr.Add(new Vector2(playerCoordinates[0]-1,playerCoordinates[1]-1));
         noGoCorr.Add(new Vector2(playerCoordinates[0], playerCoordinates[1] - 1));
         noGoCorr.Add(new Vector2(playerCoordinates[0] - 1, playerCoordinates[1]));
-
-
     }
 
     void GenerateWalls()
@@ -198,8 +200,13 @@ public class GridManager : MonoBehaviour
         script.setTargetScore(target);
         script.SetScore(2);
         script.setGridManager(gameObject);
+
         var cameraController = Camera.main.GetComponent<CameraController>();
         cameraController.SetPlayer(t);
+
+        GameObject dashboard = GameObject.Find("Dashboard");
+        var dashBoardController = dashboard.GetComponent<DashBoardController>();
+        dashBoardController.SetPlayer(t);
     }
 
     Vector2 GetCameraCoordinates(int x, int y)
@@ -286,6 +293,7 @@ public class GridManager : MonoBehaviour
 
                                 temp.setBlock();
                                 GenerateBlock(x, y, value);
+                                GenerateCoin(x + 1, y);
                                 blockList.Add(new Vector3(x, y, value));
                                 taken = false;
 
@@ -308,6 +316,12 @@ public class GridManager : MonoBehaviour
 
         var script = t.GetComponent<BlockController>();
         script.SetPoints(points);
+    }
+
+    void GenerateCoin(int x, int y)
+    {
+        GameObject t = Instantiate(coin, GetCameraCoordinates(x, y), Quaternion.identity);
+        t.transform.localScale = new Vector3(scale * 0.7f, scale * 0.7f, 1);
     }
 
     void RotateGame(float angle)

@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     public int targetScore;
     public GameObject gridManager;
     GridManager grid;
+    public int coins;
     float x;
     float y;
     int ballSpeed = 7;
@@ -25,6 +26,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        coins = 0;
         UpdateText(this.score.ToString());
     }
 
@@ -66,6 +68,11 @@ public class PlayerController : MonoBehaviour
         else if (collision.gameObject.CompareTag("lowerBound"))
         {
             Debug.Log("HIT BOTTOM");
+        }
+        if (collision.gameObject.CompareTag("coin"))
+        {
+            coins++;
+            Destroy(collision.gameObject);
         }
     }
 

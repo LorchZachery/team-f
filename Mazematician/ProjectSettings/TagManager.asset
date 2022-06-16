@@ -13,6 +13,8 @@ TagManager:
   - spikeObstacle
   - lowerBound
   - upperBound
+  - coin
+  - rewardsText
   layers:
   - Default
   - TransparentFX
