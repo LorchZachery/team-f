@@ -26,6 +26,9 @@ public class MazeWall
     public void removeWall(){
         this.aWall = false;
     }
+    public void setWall(){
+        this.aWall = true;
+    }
    public void setBlock(){
        this.aBlock = true;
    }

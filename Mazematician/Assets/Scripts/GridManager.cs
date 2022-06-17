@@ -44,7 +44,7 @@ public class GridManager : MonoBehaviour
 
     //TODO work for reset of map (blocklist, mazeWallList, winblockcorr)
     public List<Vector3> blockList = new List<Vector3>();
-
+    public List<Vector3> powerUpList = new List<Vector3>();
 
     private float rotation;
 
@@ -52,7 +52,10 @@ public class GridManager : MonoBehaviour
     public GameObject warningPrefab;
     private GameObject warning;
 
-    public string LevelName;
+    
+    private bool read = false;
+    public string LevelName; 
+
     //adds win block script to winblock
     //calculates to see if the player is at the target
     void Awake()
@@ -63,10 +66,9 @@ public class GridManager : MonoBehaviour
 
     //Maze Generation, player, blocks and obsticle placement
     void Start()
-    {
-        // Setting screen length and height and translating it to a camera scale
-        screenWidth = 24;
-        screenHeight = Camera.main.orthographicSize * 2;
+
+    {   
+        
 
         // Instantiate warning red flash creation to alert user to gravity switch
         warning = Instantiate(warningPrefab, new Vector2(Screen.width, Screen.height), Quaternion.identity);
@@ -76,7 +78,7 @@ public class GridManager : MonoBehaviour
         {
             //setting screen length and height and translating it to a camera scale
             screenWidth = 24;
-            screenHeight = Camera.main.orthographicSize * 2;
+            
             gridLength = 20; //10 + 2; // 8 x 8 grid + 1 top(left) wall + 1 bottom(right);
             /* We need to scale the the tiles such that grid fits in camera(screen) */
 
@@ -91,8 +93,10 @@ public class GridManager : MonoBehaviour
         else
         {
             ReadFile(LevelName);
+            read = true;
         }
 
+        screenHeight = Camera.main.orthographicSize * 2;
         scale = Mathf.Min(screenWidth, screenHeight) / gridLength;
         createNoGoCoorList();
         GenerateWalls();
@@ -144,8 +148,11 @@ public class GridManager : MonoBehaviour
             PlaceBlocksInMaze();
         }
 
+        
+        if(!read){
+            AddPowerUpWalkThru();
+        }
 
-        AddPowerUpWalkThru();
 
 
         /*
@@ -163,10 +170,13 @@ public class GridManager : MonoBehaviour
         InvokeRepeating("rotateGameRoutine", 7.0f, 7.0f);
 
         // hard placing spike obstacle for testing
-        PlaceSpikeObstacle(16, 16);
-
-        // hard placing decrease points obstacle for testing
-        PlaceObstacle(14, 14, 0.5f);
+        if(!read){
+            PlaceSpikeObstacle(16, 16);
+        }
+        if(!read){
+            // hard placing decrease points obstacle for testing
+            PlaceObstacle(14, 14, 0.5f);
+        }
     }
 
     // Update is called once per frame
@@ -477,7 +487,9 @@ public class GridManager : MonoBehaviour
         {
             if (tile.isWall())
             {
-                writer.WriteLine($"{tile.x},{tile.y}");
+                writer.WriteLine($"{tile.x},{tile.y},1");
+            }else{
+                writer.WriteLine($"{tile.x},{tile.y},0");
             }
 
         }
@@ -530,7 +542,12 @@ public class GridManager : MonoBehaviour
                     while ((line = sr.ReadLine()) != "MazeBlocks")
                     {
                         string[] values = line.Split(',');
-                        mazeWallsList.Add(new MazeWall(Int32.Parse(values[0]), Int32.Parse(values[1])));
+                        MazeWall temp = new MazeWall(Int32.Parse(values[0]), Int32.Parse(values[1]));
+                        
+                        if(values[2] == "0"){
+                            temp.removeWall();
+                        }
+                        mazeWallsList.Add(temp);
                     }
 
                 }
