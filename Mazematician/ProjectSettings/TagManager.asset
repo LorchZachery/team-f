@@ -13,6 +13,8 @@ TagManager:
   - spikeObstacle
   - coin
   - rewardsText
+  - outerTile
+  - powerUpWalkThru
   layers:
   - Default
   - TransparentFX

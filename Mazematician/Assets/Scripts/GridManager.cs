@@ -31,6 +31,7 @@ public class GridManager : MonoBehaviour
     public GameObject myCamera;
     public GameObject spikeObstacle;
     public GameObject coin;
+    public GameObject powerUpWalkThru;
 
     public int target = 32;
     public Generator generator;
@@ -104,6 +105,9 @@ public class GridManager : MonoBehaviour
         AddWinBlock(target);
         noGoCorr.Add(winBlockCoor);
 
+        //creating powerup walkthru
+        AddPowerUpWalkThru();
+
         //placing number blocks in maze
         PlaceBlocksInMaze();
 
@@ -158,6 +162,7 @@ public class GridManager : MonoBehaviour
         TransformGameObjects(GameObject.FindGameObjectsWithTag("player"), angle);
         TransformGameObjects(GameObject.FindGameObjectsWithTag("target"), angle);
         TransformGameObjects(GameObject.FindGameObjectsWithTag("coin"), angle);
+        TransformGameObjects(GameObject.FindGameObjectsWithTag("powerUpWalkThru"), angle);
         ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
     }
 
@@ -223,18 +228,18 @@ public class GridManager : MonoBehaviour
         for (int i = 0; i < gridLength; i++)
         {
             //top : x = 0, y = i
-            GenerateTile(0, i);
+            GenerateOuterTile(0, i);
 
             //bottom: x = 9, y = i
-            GenerateTile((int)gridLength - 1, i);
+            GenerateOuterTile((int)gridLength - 1, i);
         }
 
         for (int i = 1; i < gridLength - 1; i++)
         {
             //left x = i, y = 0
-            GenerateTile(i, 0);
+            GenerateOuterTile(i, 0);
             //right x = i, y = 9
-            GenerateTile(i, (int)gridLength - 1);
+            GenerateOuterTile(i, (int)gridLength - 1);
         }
     }
 
@@ -280,6 +285,14 @@ public class GridManager : MonoBehaviour
     {
         GameObject t = Instantiate(tile, GetCameraCoordinates(x, y), Quaternion.identity);
         t.transform.localScale = new Vector3(scale, scale, 1);
+
+    }
+
+    void GenerateOuterTile(int x, int y)
+    {
+        GameObject t = Instantiate(tile, GetCameraCoordinates(x, y), Quaternion.identity);
+        t.transform.localScale = new Vector3(scale, scale, 1);
+        t.tag = "outerTile";
 
     }
 
@@ -379,6 +392,34 @@ public class GridManager : MonoBehaviour
 
         }
        
+    }
+
+    void AddPowerUpWalkThru() {
+        bool end = false;
+        while (!end) {
+            int x = random.Next((int)screenWidth - 5);
+            int y = random.Next((int)gridLength - 1);
+            Vector2 coor = new Vector2(x, y);
+            if (coor != playerCooridantes && coor != winBlockCoor) 
+            {
+                MazeWall temp = mazeWallsList.Find(r => r.x == x && r.y == y);
+                if (temp != null)
+                {
+                    if (!temp.isWall() && !temp.isBlock())
+                    {
+                        noGoCorr.Add(new Vector2(x, y));
+                        PlacePowerUpWalkThru(x, y);
+                        end = true;
+                    }
+                }
+            }
+        }
+    }
+
+    void PlacePowerUpWalkThru(int x, int y)
+    {
+        GameObject t = Instantiate(powerUpWalkThru, GetCameraCoordinates(x, y), Quaternion.identity);
+        t.transform.localScale = new Vector3(scale * 0.5f, scale * 0.5f, 1);
     }
 }
 
