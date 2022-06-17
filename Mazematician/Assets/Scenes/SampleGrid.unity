@@ -159,14 +159,14 @@ MonoBehaviour:
   winBlock: {fileID: 2483983227542680485, guid: 6bb51171fc4084713befef5614528d83, type: 3}
   myCamera: {fileID: 138263140}
   spikeObstacle: {fileID: 2927829571682668071, guid: 3c606bbb02d784689b305601a99fbd0b, type: 3}
-  powerUpWalkThru: {fileID: 6968998894726097684, guid: cea76485167642b48a13df5fa9a0a71a, type: 3}
+  powerUpWalkThru: {fileID: 6968998894726097684, guid: 682c872be983cb34aa6a054f1c8fd3e6, type: 3}
   target: 32
   playerCooridantes: {x: 0, y: 0}
   winBlockCoor: {x: 0, y: 0}
   noGoCorr: []
   blockList: []
   warningPrefab: {fileID: 3725297818231593299, guid: f4e79fe507a8e174bbd06bda189a76c7, type: 3}
-  LevelName: Level0
+  LevelName: null
 --- !u!4 &79570880
 Transform:
   m_ObjectHideFlags: 0

@@ -124,7 +124,8 @@ public class GridManager : MonoBehaviour
             noGoCorr.Add(winBlockCoor);
         }
         
-        AddPowerUpWalkThru();
+      
+
         if(blockList.Count != 0)
         {
             foreach(Vector3 block in blockList)
@@ -138,13 +139,15 @@ public class GridManager : MonoBehaviour
             PlaceBlocksInMaze();
         }
         
-
         
+        AddPowerUpWalkThru();
+        
+        /*
         if(!File.Exists("Assets/Levels/" + LevelName + ".txt"))
         {
             writeToFile(LevelName);
         }
-       
+       */
        
         //giving gavity to objects
         ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
@@ -495,7 +498,7 @@ public class GridManager : MonoBehaviour
                 }
         }
        
-
+    }
 
     void AddPowerUpWalkThru() {
         bool end = false;
@@ -522,7 +525,8 @@ public class GridManager : MonoBehaviour
     void PlacePowerUpWalkThru(int x, int y)
     {
         GameObject t = Instantiate(powerUpWalkThru, GetCameraCoordinates(x, y), Quaternion.identity);
-        t.transform.localScale = new Vector3(scale * 0.5f, scale * 0.5f, 1)
+        t.transform.localScale = new Vector3(scale * 0.5f, scale * 0.5f, 1);
+        Debug.Log("Power Up Add");
     }
 }
 
