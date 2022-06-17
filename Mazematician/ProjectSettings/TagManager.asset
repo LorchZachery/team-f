@@ -11,6 +11,8 @@ TagManager:
   - target
   - platform
   - spikeObstacle
+  - coin
+  - rewardsText
   - outerTile
   - powerUpWalkThru
   layers:

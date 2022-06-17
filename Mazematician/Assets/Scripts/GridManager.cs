@@ -30,7 +30,9 @@ public class GridManager : MonoBehaviour
     public GameObject winBlock;
     public GameObject myCamera;
     public GameObject spikeObstacle;
+    public GameObject coin;
     public GameObject powerUpWalkThru;
+
     public int target = 32;
     public Generator generator;
     
@@ -42,7 +44,6 @@ public class GridManager : MonoBehaviour
     public List<Vector3> blockList = new List<Vector3>();
 
 
-    private float time;
     private float rotation;
 
 
@@ -96,7 +97,6 @@ public class GridManager : MonoBehaviour
 
         DrawGridLines();
 
-
         //creating player
         GeneratePlayer();
         
@@ -110,7 +110,6 @@ public class GridManager : MonoBehaviour
 
         //placing number blocks in maze
         PlaceBlocksInMaze();
-        
 
         //giving gavity to objects
         ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
@@ -162,6 +161,7 @@ public class GridManager : MonoBehaviour
         TransformGameObjects(GameObject.FindGameObjectsWithTag("obstacle"), angle);
         TransformGameObjects(GameObject.FindGameObjectsWithTag("player"), angle);
         TransformGameObjects(GameObject.FindGameObjectsWithTag("target"), angle);
+        TransformGameObjects(GameObject.FindGameObjectsWithTag("coin"), angle);
         TransformGameObjects(GameObject.FindGameObjectsWithTag("powerUpWalkThru"), angle);
         ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
     }
@@ -179,7 +179,7 @@ public class GridManager : MonoBehaviour
 
     void ApplyGravity(GameObject[] gameObjects)
     {
-        Debug.Log(gameObjects[0].transform.eulerAngles.ToString());
+        
         foreach (GameObject gameObject in gameObjects)
         {
             ConstantForce2D constantForce = gameObject.GetComponent<ConstantForce2D>();
@@ -195,9 +195,23 @@ public class GridManager : MonoBehaviour
         t.transform.localScale = new Vector3(scale * 0.9f, scale * 0.9f, 1);
         var script = t.GetComponent<PlayerController>();
         script.SetScore(2);
+
         var cameraController = Camera.main.GetComponent<CameraController>();
         cameraController.SetPlayer(t);
+
+        GameObject dashboard = GameObject.Find("Dashboard");
+        var dashBoardController = dashboard.GetComponent<DashBoardController>();
+        dashBoardController.SetPlayer(t);
     }
+
+
+    void GenerateCoin(int x, int y)
+    {
+        GameObject t = Instantiate(coin, GetCameraCoordinates(x, y), Quaternion.identity);
+        t.transform.localScale = new Vector3(scale * 0.7f, scale * 0.7f, 1);
+    }
+
+
 
     void GenerateBlock(int x, int y, int points)
     {
@@ -340,6 +354,7 @@ public class GridManager : MonoBehaviour
                         
                         temp.setBlock();
                         GenerateBlock(x, y, value);
+                        GenerateCoin(x+1, y);
                         blockList.Add(new Vector3(x,y, value));
                         taken = false;
                         
