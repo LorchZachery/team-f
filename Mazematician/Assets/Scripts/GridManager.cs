@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using TMPro;
+using UnityEditor;
+using System.IO;
 
 /**
  * This class deals with the logic of generating grid from prefabs
@@ -31,6 +33,7 @@ public class GridManager : MonoBehaviour
     public GameObject myCamera;
     public GameObject spikeObstacle;
     public GameObject coin;
+    public GameObject powerUpWalkThru;
 
     public int target = 32;
     public Generator generator;
@@ -49,6 +52,7 @@ public class GridManager : MonoBehaviour
     public GameObject warningPrefab;
     private GameObject warning;
 
+    public string LevelName;
     //adds win block script to winblock
     //calculates to see if the player is at the target
     void Awake()
@@ -68,24 +72,29 @@ public class GridManager : MonoBehaviour
         warning = Instantiate(warningPrefab, new Vector2(Screen.width, Screen.height), Quaternion.identity);
         warning.gameObject.SetActive(false);
 
+        if (!File.Exists("Assets/Levels/" + LevelName + ".txt"))
+        {
+            //setting screen length and height and translating it to a camera scale
+            screenWidth = 24;
+            screenHeight = Camera.main.orthographicSize * 2;
+            gridLength = 20; //10 + 2; // 8 x 8 grid + 1 top(left) wall + 1 bottom(right);
+            /* We need to scale the the tiles such that grid fits in camera(screen) */
 
-        //setting screen length and height and translating it to a camera scale
-        // screenWidth = 24;
-        // screenHeight = Camera.main.orthographicSize * 2;
-        gridLength = 20; //10 + 2; // 8 x 8 grid + 1 top(left) wall + 1 bottom(right);
-        // We need to scale the the tiles such that grid fits in camera(screen)
+
+            //saving the player cooridantes and generating a list of cooridinates where blocks
+            //obsticles and walls should not be allow to generate. prevents crappy starting situations
+            //for players
+            playerCoordinates = new Vector2((int)gridLength - 2, (int)gridLength - 2);
+            generator = new Generator(gridLength, screenWidth);
+            mazeWallsList = generator.MazeGenerator();
+        }
+        else
+        {
+            ReadFile(LevelName);
+        }
+
         scale = Mathf.Min(screenWidth, screenHeight) / gridLength;
-
-        //saving the player cooridantes and generating a list of cooridinates where blocks
-        //obsticles and walls should not be allow to generate. prevents crappy starting situations
-        //for players
-        playerCoordinates = new Vector2((int)gridLength - 2, (int)gridLength - 2);
         createNoGoCoorList();
-
-
-        //maze generation script and then placement in the maze
-        generator = new Generator(gridLength, screenWidth);
-        mazeWallsList = generator.MazeGenerator();
         GenerateWalls();
         foreach (var wall in mazeWallsList)
         {
@@ -105,17 +114,53 @@ public class GridManager : MonoBehaviour
         // AddWinBlock(target);
         // noGoCorr.Add(winBlockCoor);
 
-        //placing number blocks in maze
-        PlaceBlocksInMaze();
+        //creating player
+        GeneratePlayer(playerCoordinates);
+
+        // Commenting this code because win block gets generated only when target score is reached
+        // if (winBlockCoor != new Vector2(0, 0))
+        // {
+        //     PlaceWinBlock((int)winBlockCoor[0], (int)winBlockCoor[1], target);
+        // }
+        // else
+        // {
+        //     //creating win block 
+        //     AddWinBlock(target);
+        //     noGoCorr.Add(winBlockCoor);
+        // }
+
+
+
+        if (blockList.Count != 0)
+        {
+            foreach (Vector3 block in blockList)
+            {
+                GenerateBlock((int)block[0], (int)block[1], (int)block[2]);
+            }
+        }
+        else
+        {
+            //placing number blocks in maze
+            PlaceBlocksInMaze();
+        }
+
+
+        AddPowerUpWalkThru();
+
+
+        /*
+        if(!File.Exists("Assets/Levels/" + LevelName + ".txt"))
+        {
+            writeToFile(LevelName);
+        }
+       */
+
 
         //giving gavity to objects
         ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
 
         //invoking gravity to switch every 7 seconds, with a red screen flash before
         InvokeRepeating("rotateGameRoutine", 7.0f, 7.0f);
-
-        //creating player
-        GeneratePlayer(target);
 
         // hard placing spike obstacle for testing
         PlaceSpikeObstacle(16, 16);
@@ -167,24 +212,24 @@ public class GridManager : MonoBehaviour
         for (int i = 0; i < gridLength; i++)
         {
             //top : x = 0, y = i
-            GenerateTile(0, i);
+            GenerateOuterTile(0, i);
 
             //bottom: x = 9, y = i
-            GenerateTile((int)gridLength - 1, i);
+            GenerateOuterTile((int)gridLength - 1, i);
         }
 
         for (int i = 1; i < gridLength - 1; i++)
         {
             //left x = i, y = 0
-            GenerateTile(i, 0);
+            GenerateOuterTile(i, 0);
             //right x = i, y = 9
-            GenerateTile(i, (int)gridLength - 1);
+            GenerateOuterTile(i, (int)gridLength - 1);
         }
     }
 
     /*
-     * Generate grid based on coordinates
-     */
+    * Generate grid based on coordinates
+    */
     void GenerateTile(int x, int y)
     {
         GameObject t = Instantiate(tile, GetCameraCoordinates(x, y), Quaternion.identity);
@@ -192,9 +237,9 @@ public class GridManager : MonoBehaviour
 
     }
 
-    void GeneratePlayer(int target)
+    void GeneratePlayer(Vector2 coordinates)
     {
-        GameObject t = Instantiate(player, GetCameraCoordinates((int)gridLength - 2, (int)gridLength - 2), Quaternion.identity);
+        GameObject t = Instantiate(player, GetCameraCoordinates((int)coordinates[0], (int)coordinates[1]), Quaternion.identity);
         t.transform.localScale = new Vector3(scale * 0.9f, scale * 0.9f, 1);
         var script = t.GetComponent<PlayerController>();
         script.setTargetScore(target);
@@ -209,6 +254,14 @@ public class GridManager : MonoBehaviour
         dashBoardController.SetPlayer(t);
         dashBoardController.SetTarget(this.target);
         script.setDashboardController(dashboard);
+    }
+
+    void GenerateOuterTile(int x, int y)
+    {
+        GameObject t = Instantiate(tile, GetCameraCoordinates(x, y), Quaternion.identity);
+        t.transform.localScale = new Vector3(scale, scale, 1);
+        t.tag = "outerTile";
+
     }
 
     Vector2 GetCameraCoordinates(int x, int y)
@@ -333,6 +386,8 @@ public class GridManager : MonoBehaviour
         TransformGameObjects(GameObject.FindGameObjectsWithTag("obstacle"), angle);
         TransformGameObjects(GameObject.FindGameObjectsWithTag("player"), angle);
         TransformGameObjects(GameObject.FindGameObjectsWithTag("target"), angle);
+        TransformGameObjects(GameObject.FindGameObjectsWithTag("coin"), angle);
+        TransformGameObjects(GameObject.FindGameObjectsWithTag("powerUpWalkThru"), angle);
         ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
     }
 
@@ -406,6 +461,123 @@ public class GridManager : MonoBehaviour
         // t.transform.localScale = new Vector3(scale * 0.30f, scale * 0.30f, 1);
     }
 
+    void writeToFile(string LevelName)
+    {
+        string path = "Assets/Levels/" + LevelName + ".txt";
+        StreamWriter writer = new StreamWriter(path, true);
+        writer.WriteLine("width height gridlength");
+        writer.WriteLine($"{screenWidth},{screenHeight},{gridLength}");
+        writer.WriteLine("playerCoor");
+        writer.WriteLine($"{playerCoordinates[0]},{playerCoordinates[1]}");
+        writer.WriteLine("winBlock");
+        //Vector3 winBlockVector = new Vector3(winBlockCoor[0],winBlockCoor[1],target);
+        writer.WriteLine($"{winBlockCoor[0]},{winBlockCoor[1]},{target}");
+        writer.WriteLine("MazeWalls");
+        foreach (MazeWall tile in mazeWallsList)
+        {
+            if (tile.isWall())
+            {
+                writer.WriteLine($"{tile.x},{tile.y}");
+            }
+
+        }
+        writer.WriteLine("MazeBlocks");
+        foreach (Vector3 block in blockList)
+        {
+            writer.WriteLine($"{block[0]},{block[1]},{block[2]}");
+        }
+        writer.WriteLine("END");
+        writer.Close();
+
+        //ReadFile(path);
+
+    }
+    void ReadFile(string level)
+    {
+
+        string path = "Assets/Levels/" + level + ".txt";
+        using (StreamReader sr = new StreamReader(path))
+        {
+            string line;
+            // Read and display lines from the file until the end of
+            // the file is reached.
+            while ((line = sr.ReadLine()) != null)
+            {
+                if (line == "width height gridlength")
+                {
+                    line = sr.ReadLine();
+                    string[] values = line.Split(',');
+                    screenWidth = float.Parse(values[0]);
+                    screenHeight = float.Parse(values[1]);
+                    gridLength = float.Parse(values[2]);
+                }
+                if (line == "playerCoor")
+                {
+                    line = sr.ReadLine();
+                    string[] values = line.Split(',');
+                    playerCoordinates = new Vector2(float.Parse(values[0]), float.Parse(values[1]));
+                }
+                if (line == "winBlock")
+                {
+                    line = sr.ReadLine();
+                    string[] values = line.Split(',');
+                    winBlockCoor = new Vector2(float.Parse(values[0]), float.Parse(values[1]));
+                    target = Int32.Parse(values[2]);
+                }
+                if (line == "MazeWalls")
+                {
+
+                    while ((line = sr.ReadLine()) != "MazeBlocks")
+                    {
+                        string[] values = line.Split(',');
+                        mazeWallsList.Add(new MazeWall(Int32.Parse(values[0]), Int32.Parse(values[1])));
+                    }
+
+                }
+                if (line == "MazeBlocks")
+                {
+
+                    while ((line = sr.ReadLine()) != "END")
+                    {
+                        string[] values = line.Split(',');
+                        blockList.Add(new Vector3(Int32.Parse(values[0]), Int32.Parse(values[1]), Int32.Parse(values[2])));
+                    }
+                }
+            }
+        }
+
+    }
+
+    void AddPowerUpWalkThru()
+    {
+        bool end = false;
+        while (!end)
+        {
+            int x = random.Next((int)screenWidth - 5);
+            int y = random.Next((int)gridLength - 1);
+            Vector2 coor = new Vector2(x, y);
+            if (coor != playerCoordinates && coor != winBlockCoor)
+            {
+                MazeWall temp = mazeWallsList.Find(r => r.x == x && r.y == y);
+                if (temp != null)
+                {
+                    if (!temp.isWall() && !temp.isBlock())
+                    {
+                        noGoCorr.Add(new Vector2(x, y));
+                        PlacePowerUpWalkThru(x, y);
+                        end = true;
+                    }
+                }
+            }
+        }
+    }
+
+    void PlacePowerUpWalkThru(int x, int y)
+    {
+        GameObject t = Instantiate(powerUpWalkThru, GetCameraCoordinates(x, y), Quaternion.identity);
+        t.transform.localScale = new Vector3(scale * 0.5f, scale * 0.5f, 1);
+        Debug.Log("Power Up Add");
+    }
 }
 
 

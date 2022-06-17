@@ -295,12 +295,14 @@ MonoBehaviour:
   myCamera: {fileID: 138263140}
   spikeObstacle: {fileID: 2927829571682668071, guid: 3c606bbb02d784689b305601a99fbd0b, type: 3}
   coin: {fileID: 2483983227542680485, guid: d6f7d26c050c74901a8743d57ecbb8ef, type: 3}
+  powerUpWalkThru: {fileID: 6968998894726097684, guid: c99ccf159be3f4f4594ccc88063d0161, type: 3}
   target: 32
   playerCoordinates: {x: 0, y: 0}
   winBlockCoor: {x: 0, y: 0}
   noGoCorr: []
   blockList: []
   warningPrefab: {fileID: 3725297818231593299, guid: f4e79fe507a8e174bbd06bda189a76c7, type: 3}
+  LevelName: null
 --- !u!4 &79570880
 Transform:
   m_ObjectHideFlags: 0
@@ -530,6 +532,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f250433a6b9e34e46b0371cc4e2ba19f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rewardsText: {fileID: 1746369471}
+  timerText: {fileID: 2106373136}
 --- !u!1 &415319002
 GameObject:
   m_ObjectHideFlags: 0
