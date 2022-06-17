@@ -45,6 +45,8 @@ public class GridManager : MonoBehaviour
     //TODO work for reset of map (blocklist, mazeWallList, winblockcorr)
     public List<Vector3> blockList = new List<Vector3>();
     public List<Vector3> powerUpList = new List<Vector3>();
+    private FileClass fileObject = new FileClass();
+
 
     private float rotation;
 
@@ -92,7 +94,9 @@ public class GridManager : MonoBehaviour
         }
         else
         {
-            ReadFile(LevelName);
+            fileObject.ReadFile(LevelName);
+            setFileClassVars(fileObject);
+        
             read = true;
         }
 
@@ -471,99 +475,7 @@ public class GridManager : MonoBehaviour
         // t.transform.localScale = new Vector3(scale * 0.30f, scale * 0.30f, 1);
     }
 
-    void writeToFile(string LevelName)
-    {
-        string path = "Assets/Levels/" + LevelName + ".txt";
-        StreamWriter writer = new StreamWriter(path, true);
-        writer.WriteLine("width height gridlength");
-        writer.WriteLine($"{screenWidth},{screenHeight},{gridLength}");
-        writer.WriteLine("playerCoor");
-        writer.WriteLine($"{playerCoordinates[0]},{playerCoordinates[1]}");
-        writer.WriteLine("winBlock");
-        //Vector3 winBlockVector = new Vector3(winBlockCoor[0],winBlockCoor[1],target);
-        writer.WriteLine($"{winBlockCoor[0]},{winBlockCoor[1]},{target}");
-        writer.WriteLine("MazeWalls");
-        foreach (MazeWall tile in mazeWallsList)
-        {
-            if (tile.isWall())
-            {
-                writer.WriteLine($"{tile.x},{tile.y},1");
-            }else{
-                writer.WriteLine($"{tile.x},{tile.y},0");
-            }
-
-        }
-        writer.WriteLine("MazeBlocks");
-        foreach (Vector3 block in blockList)
-        {
-            writer.WriteLine($"{block[0]},{block[1]},{block[2]}");
-        }
-        writer.WriteLine("END");
-        writer.Close();
-
-        //ReadFile(path);
-
-    }
-    void ReadFile(string level)
-    {
-
-        string path = "Assets/Levels/" + level + ".txt";
-        using (StreamReader sr = new StreamReader(path))
-        {
-            string line;
-            // Read and display lines from the file until the end of
-            // the file is reached.
-            while ((line = sr.ReadLine()) != null)
-            {
-                if (line == "width height gridlength")
-                {
-                    line = sr.ReadLine();
-                    string[] values = line.Split(',');
-                    screenWidth = float.Parse(values[0]);
-                    screenHeight = float.Parse(values[1]);
-                    gridLength = float.Parse(values[2]);
-                }
-                if (line == "playerCoor")
-                {
-                    line = sr.ReadLine();
-                    string[] values = line.Split(',');
-                    playerCoordinates = new Vector2(float.Parse(values[0]), float.Parse(values[1]));
-                }
-                if (line == "winBlock")
-                {
-                    line = sr.ReadLine();
-                    string[] values = line.Split(',');
-                    winBlockCoor = new Vector2(float.Parse(values[0]), float.Parse(values[1]));
-                    target = Int32.Parse(values[2]);
-                }
-                if (line == "MazeWalls")
-                {
-
-                    while ((line = sr.ReadLine()) != "MazeBlocks")
-                    {
-                        string[] values = line.Split(',');
-                        MazeWall temp = new MazeWall(Int32.Parse(values[0]), Int32.Parse(values[1]));
-                        
-                        if(values[2] == "0"){
-                            temp.removeWall();
-                        }
-                        mazeWallsList.Add(temp);
-                    }
-
-                }
-                if (line == "MazeBlocks")
-                {
-
-                    while ((line = sr.ReadLine()) != "END")
-                    {
-                        string[] values = line.Split(',');
-                        blockList.Add(new Vector3(Int32.Parse(values[0]), Int32.Parse(values[1]), Int32.Parse(values[2])));
-                    }
-                }
-            }
-        }
-
-    }
+    
 
     void AddPowerUpWalkThru()
     {
@@ -594,6 +506,30 @@ public class GridManager : MonoBehaviour
         GameObject t = Instantiate(powerUpWalkThru, GetCameraCoordinates(x, y), Quaternion.identity);
         t.transform.localScale = new Vector3(scale * 0.5f, scale * 0.5f, 1);
         Debug.Log("Power Up Add");
+    }
+
+
+    void setFileClassVars(FileClass file)
+    {
+        screenHeight = file.screenHeight;
+        screenWidth = file.screenWidth;
+        gridLength = file.gridLength;
+        playerCoordinates = file.playerCooridantes;
+        winBlockCoor = file.winBlockCoor;
+        target = file.target;
+        mazeWallsList = new List<MazeWall>(file.mazeWallsList);
+        blockList = file.blockList;
+    }
+    void setWriteFileClassVars(FileClass file)
+    {
+        file.screenHeight = screenHeight;
+        file.screenWidth = screenWidth;
+        file.gridLength = gridLength;
+        file.playerCooridantes = playerCoordinates;
+        file.winBlockCoor = winBlockCoor;
+        file.target = target;
+        file.mazeWallsList = mazeWallsList;
+        file.blockList = blockList;
     }
 }
 

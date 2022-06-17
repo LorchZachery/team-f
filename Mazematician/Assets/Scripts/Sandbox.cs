@@ -94,6 +94,8 @@ public class Sandbox : MonoBehaviour
     private GameObject playerObject;
     private GameObject winBlockObject;
 
+    private FileClass fileObject = new FileClass();
+
     //adds win block script to winblock
     //calculates to see if the player is at the target
     void Awake()
@@ -130,8 +132,8 @@ public class Sandbox : MonoBehaviour
             //obsticles and walls should not be allow to generate. prevents crappy starting situations
             //for players
             playerCooridantes = new Vector2((int)gridLength - 2, (int)gridLength - 2);
-            for(int x =1; x < screenWidth; x++){
-            for(int y = 1; y < gridLength; y++){
+            for(int x =1; x < screenWidth+5; x++){
+            for(int y = 1; y < gridLength+5; y++){
                 MazeWall temp = new MazeWall(x,y);
                 temp.removeWall();
                 mazeWallsList.Add(temp);
@@ -143,7 +145,9 @@ public class Sandbox : MonoBehaviour
         //if the level name is a file load that verision
         else
         {
-            ReadFile(LevelName);
+            //ReadFile(LevelName);
+            fileObject.ReadFile(LevelName);
+            setFileClassVars(fileObject);
         }
 
         scale = Mathf.Min(screenWidth, screenHeight) / gridLength;
@@ -296,7 +300,8 @@ public class Sandbox : MonoBehaviour
         {
             Debug.Log("SAVING");
             File.Delete("Assets/Levels/" + LevelName + ".txt");
-            writeToFile(LevelName);
+            setWriteFileClassVars(fileObject);
+            fileObject.writeToFile(LevelName);
         }
         
         //adding tiles to map where user clicks
@@ -667,97 +672,28 @@ public class Sandbox : MonoBehaviour
 
     }
 
-    void writeToFile(string LevelName)
+    
+    void setFileClassVars(FileClass file)
     {
-        string path = "Assets/Levels/" + LevelName + ".txt";
-        StreamWriter writer = new StreamWriter(path, true);
-        writer.WriteLine("width height gridlength");
-        writer.WriteLine($"{screenWidth},{screenHeight},{gridLength}");
-        writer.WriteLine("playerCoor");
-        writer.WriteLine($"{playerCooridantes[0]},{playerCooridantes[1]}");
-        writer.WriteLine("winBlock");
-        //Vector3 winBlockVector = new Vector3(winBlockCoor[0],winBlockCoor[1],target);
-        writer.WriteLine($"{winBlockCoor[0]},{winBlockCoor[1]},{target}");
-        writer.WriteLine("MazeWalls");
-         foreach (MazeWall tile in mazeWallsList)
-        {
-            if (tile.isWall())
-            {
-                writer.WriteLine($"{tile.x},{tile.y},1");
-            }else{
-                writer.WriteLine($"{tile.x},{tile.y},0");
-            }
-
-        }
-        writer.WriteLine("MazeBlocks");
-        foreach(Vector3 block in blockList){
-            writer.WriteLine($"{block[0]},{block[1]},{block[2]}");
-        }
-        writer.WriteLine("END");
-        writer.Close();
-
-        
-       
+        screenHeight = file.screenHeight;
+        screenWidth = file.screenWidth;
+        gridLength = file.gridLength;
+        playerCooridantes = file.playerCooridantes;
+        winBlockCoor = file.winBlockCoor;
+        target = file.target;
+        mazeWallsList = new List<MazeWall>(file.mazeWallsList);
+        blockList = file.blockList;
     }
-    void ReadFile(string level)
+    void setWriteFileClassVars(FileClass file)
     {
-        
-        string path = "Assets/Levels/" + level + ".txt";
-        using (StreamReader sr = new StreamReader(path))
-        {
-                string line;
-                // Read and display lines from the file until the end of
-                // the file is reached.
-                while ((line = sr.ReadLine()) != null)
-                {
-                    if(line == "width height gridlength")
-                    {
-                        line = sr.ReadLine();
-                        string[] values = line.Split(',');
-                        screenWidth = float.Parse(values[0]);
-                        screenHeight = float.Parse(values[1]);
-                        gridLength = float.Parse(values[2]);
-                    }
-                    if(line == "playerCoor")
-                    {
-                       line = sr.ReadLine();
-                       string[] values = line.Split(',');
-                       playerCooridantes = new Vector2(float.Parse(values[0]),float.Parse(values[1]));
-                    }
-                    if(line == "winBlock")
-                    {
-                        line = sr.ReadLine();
-                       string[] values = line.Split(',');
-                       winBlockCoor = new Vector2(float.Parse(values[0]),float.Parse(values[1]));
-                       target = Int32.Parse(values[2]);
-                    }
-                    if(line == "MazeWalls")
-                    {
-                        
-                        while((line = sr.ReadLine()) != "MazeBlocks")
-                        {
-                             string[] values = line.Split(',');
-                            MazeWall temp = new MazeWall(Int32.Parse(values[0]), Int32.Parse(values[1]));
-                        
-                            if(values[2] == "0"){
-                                temp.removeWall();
-                            }
-                            mazeWallsList.Add(temp);
-                        }
-
-                    }
-                    if(line == "MazeBlocks")
-                    {
-                        
-                        while((line = sr.ReadLine()) != "END")
-                        {
-                            string[] values = line.Split(',');
-                            blockList.Add(new Vector3(Int32.Parse(values[0]),Int32.Parse(values[1]),Int32.Parse(values[2])));
-                        }
-                    }
-                }
-        }
-       
+        file.screenHeight = screenHeight;
+        file.screenWidth = screenWidth;
+        file.gridLength = gridLength;
+        file.playerCooridantes = playerCooridantes;
+        file.winBlockCoor = winBlockCoor;
+        file.target = target;
+        file.mazeWallsList = mazeWallsList;
+        file.blockList = blockList;
     }
 }
 
