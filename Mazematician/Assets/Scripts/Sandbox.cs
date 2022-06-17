@@ -568,6 +568,12 @@ public class Sandbox : MonoBehaviour
             textbox.transform.position = Camera.main.ScreenToWorldPoint( new Vector3(Screen.width/2, Screen.height/2, Camera.main.nearClipPlane) );
             textbox.gameObject.SetActive(true);
             yield return waitForInput();
+            while(!float.TryParse(blockInput, out _))
+            {
+                Debug.Log("ERROR IN ENTER VALUE TRY AGAIN");
+                blockInput = null;
+                yield return waitForInput();
+            }
             Debug.Log($"CREATE OBJ {blockPos} value {blockInput}");
             PlaceObstacle((int)blockPos[0], (int)blockPos[1], float.Parse(blockInput));
             
@@ -592,6 +598,12 @@ public class Sandbox : MonoBehaviour
             textbox.transform.position = Camera.main.ScreenToWorldPoint( new Vector3(Screen.width/2, Screen.height/2, Camera.main.nearClipPlane) );
             textbox.gameObject.SetActive(true);
             yield return waitForInput();
+            while(!int.TryParse(blockInput, out _))
+            {
+                Debug.Log("ERROR IN ENTER VALUE TRY AGAIN");
+                blockInput = null;
+                yield return waitForInput();
+            }
             Debug.Log($"CREATE WIN BLOCK {blockPos} value {blockInput}");
             PlaceWinBlock((int)blockPos[0], (int)blockPos[1], Int32.Parse(blockInput));
             winBlockCoor = new Vector2((int)blockPos[0], (int)blockPos[1]);
@@ -619,6 +631,12 @@ public class Sandbox : MonoBehaviour
             textbox.transform.position = Camera.main.ScreenToWorldPoint( new Vector3(Screen.width/2, Screen.height/2, Camera.main.nearClipPlane) );
             textbox.gameObject.SetActive(true);
             yield return waitForInput();
+            while(!int.TryParse(blockInput, out _))
+            {
+                Debug.Log("ERROR IN ENTER VALUE TRY AGAIN");
+                blockInput = null;
+                yield return waitForInput();
+            }
             Debug.Log($"CREATE BLOCK {blockPos} value {blockInput}");
             GenerateBlock((int)blockPos[0], (int)blockPos[1], Int32.Parse(blockInput));
             blockList.Add(new Vector3((int)blockPos[0], (int)blockPos[1], Int32.Parse(blockInput)));
