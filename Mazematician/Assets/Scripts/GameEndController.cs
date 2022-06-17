@@ -29,6 +29,8 @@ public class GameEndController : MonoBehaviour
         if (collision.gameObject.CompareTag("player"))
         {
             var script = collision.gameObject.GetComponent<PlayerController>();
+            targetScore = script.targetScore;
+
             if (script.score == targetScore)
             {
                 // script.NotifyPlayerWin();

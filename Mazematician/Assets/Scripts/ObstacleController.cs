@@ -25,11 +25,11 @@ public class ObstacleController : MonoBehaviour
             var script = collision.gameObject.GetComponent<PlayerController>();
             GameObject penaltyObj = gameObject.transform.GetChild(0).gameObject;
             TextMeshPro penaltyText = penaltyObj.GetComponent<TextMeshPro>();
-            if (script.score > 2 && penaltyText.text == "X 0.5")
+            if (penaltyText.text == "X 0.5")
             {
                 script.SetScore((int)(script.score * 0.5));
             }
-            else if (script.score > 4 && penaltyText.text == "X 0.25")
+            else if (penaltyText.text == "X 0.25")
             {
                 script.SetScore((int)(script.score * 0.25));
             }
