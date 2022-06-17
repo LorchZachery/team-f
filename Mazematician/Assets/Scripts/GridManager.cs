@@ -170,10 +170,13 @@ public class GridManager : MonoBehaviour
         InvokeRepeating("rotateGameRoutine", 7.0f, 7.0f);
 
         // hard placing spike obstacle for testing
-        PlaceSpikeObstacle(16, 16);
-
-        // hard placing decrease points obstacle for testing
-        PlaceObstacle(14, 14, 0.5f);
+        if(!read){
+            PlaceSpikeObstacle(16, 16);
+        }
+        if(!read){
+            // hard placing decrease points obstacle for testing
+            PlaceObstacle(14, 14, 0.5f);
+        }
     }
 
     // Update is called once per frame
@@ -484,7 +487,9 @@ public class GridManager : MonoBehaviour
         {
             if (tile.isWall())
             {
-                writer.WriteLine($"{tile.x},{tile.y}");
+                writer.WriteLine($"{tile.x},{tile.y},1");
+            }else{
+                writer.WriteLine($"{tile.x},{tile.y},0");
             }
 
         }
@@ -537,7 +542,12 @@ public class GridManager : MonoBehaviour
                     while ((line = sr.ReadLine()) != "MazeBlocks")
                     {
                         string[] values = line.Split(',');
-                        mazeWallsList.Add(new MazeWall(Int32.Parse(values[0]), Int32.Parse(values[1])));
+                        MazeWall temp = new MazeWall(Int32.Parse(values[0]), Int32.Parse(values[1]));
+                        
+                        if(values[2] == "0"){
+                            temp.removeWall();
+                        }
+                        mazeWallsList.Add(temp);
                     }
 
                 }
