@@ -7,6 +7,16 @@ using TMPro;
 using UnityEditor;
 using System.IO;
 
+
+
+static class OConst
+{
+    public const int normObj = 0;
+    public const int wallkThru = 1;
+    public const int spike = 2;
+    public const int coin = 3;
+}
+
 /**
  * This class deals with the logic of generating grid from prefabs
  * */
@@ -44,7 +54,8 @@ public class GridManager : MonoBehaviour
 
     //TODO work for reset of map (blocklist, mazeWallList, winblockcorr)
     public List<Vector3> blockList = new List<Vector3>();
-    public List<Vector3> powerUpList = new List<Vector3>();
+    public List<Vector4> objectList = new List<Vector4>();
+
     private FileClass fileObject = new FileClass();
 
 
@@ -118,9 +129,7 @@ public class GridManager : MonoBehaviour
 
         DrawGridLines();
 
-        //creating win block 
-        // AddWinBlock(target);
-        // noGoCorr.Add(winBlockCoor);
+        
 
         //creating player
         GeneratePlayer(playerCoordinates);
@@ -152,19 +161,38 @@ public class GridManager : MonoBehaviour
             PlaceBlocksInMaze();
         }
 
-        
+        //placing object (powerups spikes...)
+        if(objectList.Count != 0)
+        {
+             foreach(Vector4 obj in objectList)
+            {
+                if(obj[3] == OConst.normObj )
+                {
+                    PlaceObstacle((int)obj[0],(int)obj[1],obj[2]);
+                }
+                if(obj[3] == OConst.spike)
+                {
+                    PlaceSpikeObstacle((int)obj[0],(int)obj[1]);
+                }
+                if(obj[3] == OConst.wallkThru)
+                {
+                    PlacePowerUpWalkThru((int)obj[0],(int)obj[1]);
+                }
+                if(obj[3] == OConst.coin)
+                {
+                    GenerateCoin((int)obj[0],(int)obj[1]);
+                }
+
+            }
+        }
+        //if not read hardcode things for testing
         if(!read){
             AddPowerUpWalkThru();
+            PlaceSpikeObstacle(16, 16);
+            PlaceObstacle(14, 14, 0.5f);
         }
 
 
-
-        /*
-        if(!File.Exists("Assets/Levels/" + LevelName + ".txt"))
-        {
-            writeToFile(LevelName);
-        }
-       */
 
 
         //giving gavity to objects
@@ -173,14 +201,7 @@ public class GridManager : MonoBehaviour
         //invoking gravity to switch every 7 seconds, with a red screen flash before
         InvokeRepeating("rotateGameRoutine", 7.0f, 7.0f);
 
-        // hard placing spike obstacle for testing
-        if(!read){
-            PlaceSpikeObstacle(16, 16);
-        }
-        if(!read){
-            // hard placing decrease points obstacle for testing
-            PlaceObstacle(14, 14, 0.5f);
-        }
+        
     }
 
     // Update is called once per frame
@@ -519,6 +540,7 @@ public class GridManager : MonoBehaviour
         target = file.target;
         mazeWallsList = new List<MazeWall>(file.mazeWallsList);
         blockList = file.blockList;
+        objectList = file.objectList;
     }
     void setWriteFileClassVars(FileClass file)
     {
@@ -530,6 +552,7 @@ public class GridManager : MonoBehaviour
         file.target = target;
         file.mazeWallsList = mazeWallsList;
         file.blockList = blockList;
+        file.objectList = objectList;
     }
 }
 

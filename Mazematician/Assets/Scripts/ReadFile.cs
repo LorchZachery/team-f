@@ -10,6 +10,10 @@ using System.Linq;
 using System.Text;
 
 
+
+
+
+
 public class FileClass
 {
     public float screenHeight;
@@ -20,6 +24,8 @@ public class FileClass
     public int target;
     public List<MazeWall> mazeWallsList = new List<MazeWall>();
     public List<Vector3> blockList = new List<Vector3>();
+    //(x,y,penility,type)
+    public List<Vector4> objectList = new List<Vector4>();
 
 
    public void ReadFile(string level)
@@ -72,10 +78,18 @@ public class FileClass
                     if(line == "MazeBlocks")
                     {
                         
-                        while((line = sr.ReadLine()) != "END")
+                        while((line = sr.ReadLine()) != "Objects")
                         {
                             string[] values = line.Split(',');
                             blockList.Add(new Vector3(Int32.Parse(values[0]),Int32.Parse(values[1]),Int32.Parse(values[2])));
+                        }
+                    }
+                    if(line == "Objects")
+                    {
+                        while((line =sr.ReadLine()) != "END")
+                        {
+                            string[] values = line.Split(',');
+                            objectList.Add(new Vector4(Int32.Parse(values[0]),Int32.Parse(values[1]),float.Parse(values[2]),Int32.Parse(values[3])));
                         }
                     }
                 }
@@ -108,6 +122,10 @@ public class FileClass
         writer.WriteLine("MazeBlocks");
         foreach(Vector3 block in blockList){
             writer.WriteLine($"{block[0]},{block[1]},{block[2]}");
+        }
+        writer.WriteLine("Objects");
+        foreach(Vector4 obj in objectList){
+            writer.WriteLine($"{obj[0]},{obj[1]},{obj[2]},{obj[3]}");
         }
         writer.WriteLine("END");
         writer.Close();
