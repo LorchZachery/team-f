@@ -19,8 +19,8 @@ public class PlayerController : MonoBehaviour
     int ballSpeed = 7;
     public TMP_Text scoreText;
     private bool isIntangible = false;
-    private int intangibleTime = 5;
-    private int intangibleTimer = 0;
+    private float intangibleTime = 5;
+    private float intangibleTimer = 0;
     private List<Collider2D> collist;
     Color defaultColor;
 
@@ -83,7 +83,7 @@ public class PlayerController : MonoBehaviour
         {
             Destroy(collision.gameObject);
             isIntangible = true;
-            intangibleTimer = intangibleTime * 60;
+            intangibleTimer = intangibleTime;
             GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.5f);
             InvokeRepeating("Flash", intangibleTime - 2, 0.2f);
         }
@@ -111,8 +111,8 @@ public class PlayerController : MonoBehaviour
     {
         if (intangibleTimer > 0)
         {
-            intangibleTimer--;
-            if (intangibleTimer == 0)
+            intangibleTimer -= Time.deltaTime;
+            if (intangibleTimer <= 0)
             {
                 isIntangible = false;
                 foreach (Collider2D col in collist)
