@@ -1,0 +1,23 @@
+width height gridlength
+12,8.059183,8
+playerCoor
+6,6
+winBlock
+1,6,4
+MazeWalls
+0,3
+5,5
+5,4
+5,2
+5,3
+1,5
+2,5
+3,5
+4,2
+3,2
+2,2
+3,4
+4,5
+MazeBlocks
+4,4,2
+END

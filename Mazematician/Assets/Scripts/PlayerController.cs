@@ -14,6 +14,7 @@ using UnityEngine.SceneManagement;
 public class PlayerController : MonoBehaviour
 {
     public int score;
+    public int coins;
     float x;
     float y;
     int ballSpeed = 7;
@@ -28,6 +29,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        coins = 0;
         UpdateText(this.score.ToString());
         collist = new List<Collider2D>();
         defaultColor = GetComponent<SpriteRenderer>().color;
@@ -66,14 +68,20 @@ public class PlayerController : MonoBehaviour
                 UpdateText(this.score.ToString());
             }
         }
-        else if (collision.gameObject.CompareTag("spikeObstacle"))
+        if (collision.gameObject.CompareTag("spikeObstacle"))
         {
             SceneManager.LoadScene("GameOver");
         }
-        else if (collision.gameObject.CompareTag("tile") && isIntangible)
+        if (collision.gameObject.CompareTag("coin"))
+        {
+            coins++;
+            Destroy(collision.gameObject);
+        }
+        if (collision.gameObject.CompareTag("tile") && isIntangible)
         {
             Physics2D.IgnoreCollision(collision.gameObject.GetComponent<BoxCollider2D>(), GetComponent<CircleCollider2D>());
             collist.Add(collision.gameObject.GetComponent<BoxCollider2D>());
+
         }
     }
 
