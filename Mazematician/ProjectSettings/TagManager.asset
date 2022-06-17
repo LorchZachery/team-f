@@ -11,6 +11,12 @@ TagManager:
   - target
   - platform
   - spikeObstacle
+  - lowerBound
+  - upperBound
+  - coin
+  - rewardsText
+  - outerTile
+  - powerUpWalkThru
   layers:
   - Default
   - TransparentFX
