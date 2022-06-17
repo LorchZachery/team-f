@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
  * This class deals with below logics:
  * 1. Player movement
  * 2. Updating text on player
- * 3. Collision detections and handling accourding to game plan.
+ * 3. Collisioㄋn detections and handling accourding to game plan.
  */
 
 public class PlayerController : MonoBehaviour
@@ -111,6 +111,8 @@ public class PlayerController : MonoBehaviour
         this.score = score;
         UpdateText(this.score.ToString());
         //Debug.Log("Score updated");
+
+        
         if (this.score < 2)
         {
             SceneManager.LoadScene("GameOver");
@@ -130,6 +132,42 @@ public class PlayerController : MonoBehaviour
     void UpdateText(string message)
     {
         scoreText.text = message;
+        UpdateColor();
+    }
+    void UpdateColor()
+    {
+        if (score == 2)
+        {
+            gameObject.GetComponent<Renderer>().material.color = new Color(255f / 255f, 153f / 255f, 153f / 255f);
+        }
+        if (score == 4)
+        {
+            gameObject.GetComponent<Renderer>().material.color = new Color(255f / 255f, 204f / 255f, 153f / 255f);
+        }
+        if (score == 8)
+        {
+            gameObject.GetComponent<Renderer>().material.color = new Color(255f / 255f, 255f / 255f, 153f / 255f);
+        }
+        if (score == 16)
+        {
+            gameObject.GetComponent<Renderer>().material.color = new Color(204f / 255f, 255f / 255f, 153f / 255f);
+        }
+        if (score == 32)
+        {
+            gameObject.GetComponent<Renderer>().material.color = new Color(153f / 255f, 255f / 255f, 255f / 255f);
+        }
+        if (score == 64)
+        {
+            gameObject.GetComponent<Renderer>().material.color = new Color(102f / 255f, 102f / 255f, 255f / 255f);
+        }
+        if (score == 128)
+        {
+            gameObject.GetComponent<Renderer>().material.color = new Color(204f / 255f, 153f / 255f, 255f / 255f);
+        }
+        if (score == 256)
+        {
+            gameObject.GetComponent<Renderer>().material.color = new Color(224f / 255f, 224f / 255f, 224f / 255f);
+        }
     }
 
     public void NotifyPlayerWin()

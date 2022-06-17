@@ -37,6 +37,7 @@ public class BlockController : MonoBehaviour
                 points += collision.gameObject.GetComponent<BlockController>().points;
                 Destroy(collision.gameObject);
                 UpdateText();
+                UpdateColor();
             }
             /*
             * Code to prevent diagonal movement
@@ -65,13 +66,50 @@ public class BlockController : MonoBehaviour
     public void SetPoints(int points)
     {
         this.points = points;
+        
         UpdateText();
         //Debug.Log("Point updated" + points);
+        UpdateColor();
     }
 
     void UpdateText()
     {
         pointsText.text = points.ToString();
+    }
+    void UpdateColor()
+    {
+        if (points == 2)
+        {
+            gameObject.GetComponent<Renderer>().material.color = new Color(255f / 255f, 153f / 255f, 153f / 255f);
+        }
+        if(points == 4)
+        {
+            gameObject.GetComponent<Renderer>().material.color = new Color(255f / 255f, 204f / 255f, 153f / 255f);
+        }
+        if(points == 8)
+        {
+            gameObject.GetComponent<Renderer>().material.color = new Color(255f / 255f, 255f / 255f, 153f / 255f);
+        }
+        if(points == 16)
+        {
+            gameObject.GetComponent<Renderer>().material.color = new Color(204f / 255f, 255f / 255f, 153f / 255f);
+        }
+        if(points == 32)
+        {
+            gameObject.GetComponent<Renderer>().material.color = new Color(153f / 255f, 255f / 255f, 255f / 255f);
+        }
+        if(points == 64)
+        {
+            gameObject.GetComponent<Renderer>().material.color = new Color(102f / 255f, 102f / 255f, 255f / 255f);
+        }
+        if(points == 128)
+        {
+            gameObject.GetComponent<Renderer>().material.color = new Color(204f / 255f, 153f / 255f, 255f / 255f);
+        }
+        if(points == 256)
+        {
+            gameObject.GetComponent<Renderer>().material.color = new Color(224f / 255f, 224f / 255f, 224f / 255f);
+        }
     }
 
     private Vector2 getDirection(Vector2 velocity)
