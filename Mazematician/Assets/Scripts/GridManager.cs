@@ -44,7 +44,7 @@ public class GridManager : MonoBehaviour
 
     //TODO work for reset of map (blocklist, mazeWallList, winblockcorr)
     public List<Vector3> blockList = new List<Vector3>();
-
+    public List<Vector3> powerUpList = new List<Vector3>();
 
     private float rotation;
 
@@ -52,7 +52,7 @@ public class GridManager : MonoBehaviour
     public GameObject warningPrefab;
     private GameObject warning;
     
-
+    private bool read = false;
     public string LevelName; 
     //adds win block script to winblock
     //calculates to see if the player is at the target
@@ -65,9 +65,7 @@ public class GridManager : MonoBehaviour
     //Maze Generation, player, blocks and obsticle placement
     void Start()
     {   
-        // Setting screen length and height and translating it to a camera scale
-        screenWidth = 24;
-        screenHeight = Camera.main.orthographicSize * 2;
+        
 
         // Instantiate warning red flash creation to alert user to gravity switch
         warning = Instantiate(warningPrefab, new Vector2(Screen.width, Screen.height), Quaternion.identity);
@@ -77,7 +75,7 @@ public class GridManager : MonoBehaviour
         {
             //setting screen length and height and translating it to a camera scale
             screenWidth = 24;
-            screenHeight = Camera.main.orthographicSize * 2;
+            
             gridLength = 20; //10 + 2; // 8 x 8 grid + 1 top(left) wall + 1 bottom(right);
             /* We need to scale the the tiles such that grid fits in camera(screen) */
         
@@ -92,8 +90,10 @@ public class GridManager : MonoBehaviour
         else
         {
             ReadFile(LevelName);
+            read = true;
         }
 
+        screenHeight = Camera.main.orthographicSize * 2;
         scale = Mathf.Min(screenWidth, screenHeight) / gridLength;
         createNoGoCoorList();       
         GenerateWalls();
@@ -139,8 +139,9 @@ public class GridManager : MonoBehaviour
             PlaceBlocksInMaze();
         }
         
-        
-        AddPowerUpWalkThru();
+        if(!read){
+            AddPowerUpWalkThru();
+        }
 
         
         /*
