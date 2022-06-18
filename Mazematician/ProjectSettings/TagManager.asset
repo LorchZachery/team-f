@@ -17,6 +17,7 @@ TagManager:
   - rewardsText
   - outerTile
   - powerUpWalkThru
+  - freezeCount
   layers:
   - Default
   - TransparentFX
