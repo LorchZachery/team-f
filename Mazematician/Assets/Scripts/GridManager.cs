@@ -414,7 +414,6 @@ public class GridManager : MonoBehaviour
 
     void ApplyGravity(GameObject[] gameObjects)
     {
-        Debug.Log(gameObjects[0].transform.eulerAngles.ToString());
         foreach (GameObject gameObject in gameObjects)
         {
             ConstantForce2D constantForce = gameObject.GetComponent<ConstantForce2D>();
