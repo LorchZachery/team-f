@@ -457,6 +457,8 @@ public class Sandbox : MonoBehaviour
             //todo change to find and add wall
             //mazeWallsList.Add(new MazeWall((int)tilePos[0],(int)tilePos[1]));
             MazeWall wall = mazeWallsList.Find(r=> r.x == (int)tilePos[0] && r.y == (int)tilePos[1]);
+           
+            
             wall.setWall();
         }
          //adding win block where user clicks
@@ -487,7 +489,9 @@ public class Sandbox : MonoBehaviour
             {
                 Debug.Log($"DELTING TILE");
                 tileList.Remove(tupleObject);
-                mazeWallsList.Remove(mazeWallsList.Find(r=> r.x == tilePos[0] && r.y == tilePos[1]));
+                //mazeWallsList.Remove(mazeWallsList.Find(r=> r.x == tilePos[0] && r.y == tilePos[1]));
+                MazeWall temp = mazeWallsList.Find(r=> r.x == tilePos[0] && r.y == tilePos[1]);
+                temp.removeWall();
                 Destroy(tupleObject.Item1);
                 
 
