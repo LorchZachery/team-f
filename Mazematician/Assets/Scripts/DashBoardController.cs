@@ -60,6 +60,9 @@ public class DashBoardController : MonoBehaviour
                 Debug.Log("Time remaining: " + remainingTime);
                 remainingTime -= Time.deltaTime;
                 DisplayBonusIcon();
+                //The Bonus Time icon.
+                //Adds 10 seconds to the timer.
+                //Can be activated by pressing the "B" key
                 if (player.GetComponent<PlayerController>().coins >= 3)
                 {
                     if (Input.GetKeyDown(KeyCode.B))
