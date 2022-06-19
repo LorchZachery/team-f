@@ -15,7 +15,6 @@ public class DashBoardController : MonoBehaviour
     int target;
     float flashTimer;
     float flashDuration = 1f;
-    bool freezeTime = false;
     bool bonusTime = false;
     int bonusCount = 0;
 
@@ -63,19 +62,23 @@ public class DashBoardController : MonoBehaviour
                 //The Bonus Time icon.
                 //Adds 10 seconds to the timer.
                 //Can be activated by pressing the "B" key
-                if (player.GetComponent<PlayerController>().coins >= 3)
+                if (player != null)
                 {
-                    if (Input.GetKeyDown(KeyCode.B))
+                    if (player.GetComponent<PlayerController>().coins >= 3)
                     {
-                        bonusTime = false;
-                        remainingTime += 11;
-                        if (!bonusTime)
+                        if (Input.GetKeyDown(KeyCode.B))
                         {
-                            player.GetComponent<PlayerController>().coins -= 3;
-                            bonusTime = true;
+                            bonusTime = false;
+                            remainingTime += 11;
+                            if (!bonusTime)
+                            {
+                                player.GetComponent<PlayerController>().coins -= 3;
+                                bonusTime = true;
+                            }
                         }
                     }
                 }
+                timerText.color = Color.black;
                 DisplayTime(remainingTime);
                 if (remainingTime < 5)
                 {
@@ -146,16 +149,17 @@ public class DashBoardController : MonoBehaviour
     void DisplayBonusIcon()
     {
         GameObject targetObject = gameObject.transform.GetChild(4).gameObject;
-        if (player.GetComponent<PlayerController>().coins < 3)
+        if (player != null)
         {
-            targetObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("no bonus time");
+            if (player.GetComponent<PlayerController>().coins < 3)
+            {
+                targetObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("no bonus time");
+            }
+            else if (player.GetComponent<PlayerController>().coins >= 3)
+            {
+                targetObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("bonus time");
+            }
         }
-        else if(player.GetComponent<PlayerController>().coins >= 3)
-        {
-            targetObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("bonus time");
-        }
-        
-        //image = Resources.Load<Image>("image-removebg-preview (6)");
     }
 
     private void Flash()
