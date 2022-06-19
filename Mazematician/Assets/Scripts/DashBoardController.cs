@@ -16,7 +16,8 @@ public class DashBoardController : MonoBehaviour
     float flashTimer;
     float flashDuration = 1f;
     bool freezeTime = false;
-    int freezeCount = 0;
+    bool bonusTime = false;
+    int bonusCount = 0;
 
     public TextMeshProUGUI rewardsText;
     public TextMeshProUGUI timerText;
@@ -57,21 +58,42 @@ public class DashBoardController : MonoBehaviour
             if (remainingTime > 0)
             {
                 Debug.Log("Time remaining: " + remainingTime);
-                if (player.GetComponent<PlayerController>().coins == 3)
+                remainingTime -= Time.deltaTime;
+                DisplayBonusIcon();
+                if (player.GetComponent<PlayerController>().coins >= 3)
                 {
-                    freezeCount = 1;
-                    StartCoroutine("Freeze");
-                    DisplayFreezeCount();
-                }
-                else
-                {
-                    remainingTime -= Time.deltaTime;
-                    DisplayTime(remainingTime);
-                    if (remainingTime < 5)
+                    if (Input.GetKeyDown(KeyCode.B))
                     {
-                        Flash();
+                        bonusTime = false;
+                        remainingTime += 11;
+                        if (!bonusTime)
+                        {
+                            player.GetComponent<PlayerController>().coins -= 3;
+                            bonusTime = true;
+                        }
                     }
-                }  
+                }
+                DisplayTime(remainingTime);
+                if (remainingTime < 5)
+                {
+                    Flash();
+                }
+                //if (player.GetComponent<PlayerController>().coins == 3)
+                //{
+                //    freezeCount = 1;
+                //    StartCoroutine("Freeze");
+                //    DisplayFreezeCount();
+                //    remainingTime += 10 * Time.deltaTime;
+                //}
+                //else
+                //{
+                //    remainingTime -= Time.deltaTime;
+                //    DisplayTime(remainingTime);
+                //    if (remainingTime < 5)
+                //    {
+                //        Flash();
+                //    }
+                //}  
             }
             else
             {
@@ -111,11 +133,26 @@ public class DashBoardController : MonoBehaviour
         targetText.text = "Target: " + this.target;
     }
 
-    void DisplayFreezeCount()
+    void DisplayBonusCount()
     {
         GameObject targetObject = gameObject.transform.GetChild(5).gameObject;
         TextMeshProUGUI targetText = targetObject.GetComponent<TextMeshProUGUI>();
-        targetText.text = freezeCount.ToString();
+        targetText.text = bonusCount.ToString();
+    }
+
+    void DisplayBonusIcon()
+    {
+        GameObject targetObject = gameObject.transform.GetChild(4).gameObject;
+        if (player.GetComponent<PlayerController>().coins < 3)
+        {
+            targetObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("no bonus time");
+        }
+        else if(player.GetComponent<PlayerController>().coins >= 3)
+        {
+            targetObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("bonus time");
+        }
+        
+        //image = Resources.Load<Image>("image-removebg-preview (6)");
     }
 
     private void Flash()
@@ -138,21 +175,21 @@ public class DashBoardController : MonoBehaviour
         }
     }
 
-    IEnumerator Freeze()
-    {
-        {
-            freezeTime = false;
-            timerText.color = Color.cyan;
-            yield return new WaitForSecondsRealtime(5);
-            if (!freezeTime)
-            {
-                player.GetComponent<PlayerController>().coins -= 3;
-                freezeCount -= 1;
-                DisplayFreezeCount();
-                freezeTime = true;
-            }
-            timerText.color = Color.black;
-        }
+    //IEnumerator Freeze()
+    //{
+    //    {
+    //        freezeTime = false;
+    //        timerText.color = Color.cyan;
+    //        yield return new WaitForSecondsRealtime(5);
+    //        if (!freezeTime)
+    //        {
+    //            player.GetComponent<PlayerController>().coins -= 3;
+    //            freezeCount -= 1;
+    //            DisplayFreezeCount();
+    //            freezeTime = true;
+    //        }
+    //        timerText.color = Color.black;
+    //    }
         
-    }
+    //}
 }
