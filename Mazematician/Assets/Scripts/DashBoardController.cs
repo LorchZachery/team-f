@@ -71,6 +71,7 @@ public class DashBoardController : MonoBehaviour
                         {
                             bonusTime = false;
                             remainingTime += 11;
+                            StartCoroutine("BonusTime");
                             if (!bonusTime)
                             {
                                 player.GetComponent<PlayerController>().coins -= 3;
@@ -209,6 +210,13 @@ public class DashBoardController : MonoBehaviour
         yield return new WaitForSeconds(5f);
         player.transform.localScale = originalScale;
         Debug.Log("Local Scale before shrinking: " + player.transform.localScale);
+    }
+
+    IEnumerator BonusTime()
+    {
+        timerText.color = Color.green;
+        yield return new WaitForSeconds(10f);
+        timerText.color = Color.white;
     }
 
     //IEnumerator Freeze()
