@@ -78,6 +78,7 @@ public class PlayerController : MonoBehaviour
         else if (collision.gameObject.CompareTag("upperBound"))
         {
             Debug.Log("HIT TOP");
+            analyticsManager.RegisterEvent(GameEvent.COLLISION, collision.gameObject.tag);
             analyticsManager.Publish();
             SceneManager.LoadScene("GameOver");
         }

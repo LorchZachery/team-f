@@ -29,6 +29,8 @@ public class AnalyticsManager
 
     public void RegisterEvent(GameEvent gameEvent, object data)
     {
+
+        Debug.Log("Event registered");
         switch (gameEvent)
         {
             case GameEvent.COINS_COLLECTED:
@@ -74,6 +76,7 @@ public class AnalyticsManager
                 }
             case GameEvent.COLLISION:
                 {
+                    Debug.Log("Registeded collision");
                     string powerUp = (string)data;
                     int count = 1;
                     if (collidedObstacles.ContainsKey(powerUp))
@@ -117,14 +120,20 @@ public class AnalyticsManager
         AnalyticsResult analyticsResult = Analytics.CustomEvent("userData", analytics);
         Debug.Log(analyticsResult);
 
-        analyticsResult = Analytics.CustomEvent("userData", powerUpPurchased);
+        analyticsResult = Analytics.CustomEvent("powerUpPurchased", powerUpPurchased);
         Debug.Log(analyticsResult);
 
-        analyticsResult = Analytics.CustomEvent("userData", powerUpSpent);
+        analyticsResult = Analytics.CustomEvent("powerUpSpent", powerUpSpent);
         Debug.Log(analyticsResult);
 
-        analyticsResult = Analytics.CustomEvent("userData", collidedObstacles);
+        analyticsResult = Analytics.CustomEvent("collidedObstacles", collidedObstacles);
         Debug.Log(analyticsResult);
+
+        Debug.Log(JsonUtility.ToJson(analytics));
+        Debug.Log(JsonUtility.ToJson(powerUpPurchased));
+        Debug.Log(JsonUtility.ToJson(powerUpSpent));
+        Debug.Log(JsonUtility.ToJson(collidedObstacles));
+
     }
 
 }
