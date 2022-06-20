@@ -16,6 +16,7 @@ public class DashBoardController : MonoBehaviour
     float flashTimer;
     float flashDuration = 1f;
     bool bonusTime = false;
+    bool shrinkTime = false;
     int bonusCount = 0;
 
     public TextMeshProUGUI rewardsText;
@@ -59,13 +60,13 @@ public class DashBoardController : MonoBehaviour
                 Debug.Log("Time remaining: " + remainingTime);
                 remainingTime -= Time.deltaTime;
                 DisplayBonusIcon();
-                //The Bonus Time icon.
-                //Adds 10 seconds to the timer.
-                //Can be activated by pressing the "B" key
                 if (player != null)
                 {
                     if (player.GetComponent<PlayerController>().coins >= 3)
                     {
+                        //The Bonus Time icon.
+                        //Adds 10 seconds to the timer.
+                        //Can be activated by pressing the "B" key
                         if (Input.GetKeyDown(KeyCode.B))
                         {
                             bonusTime = false;
@@ -76,9 +77,23 @@ public class DashBoardController : MonoBehaviour
                                 bonusTime = true;
                             }
                         }
+                        //The Shrink Player icon.
+                        //Shrinks the size of the player for 5 seconds.
+                        //Can be activated by pressing the "B" key
+                        else if (Input.GetKeyDown(KeyCode.N))
+                        {
+                            shrinkTime = false;
+                            StartCoroutine("Shrink");
+                            
+                            if (!shrinkTime)
+                            {
+                                player.GetComponent<PlayerController>().coins -= 3;
+                                shrinkTime = true;
+                            }
+                        }
                     }
+                    
                 }
-                timerText.color = Color.black;
                 DisplayTime(remainingTime);
                 if (remainingTime < 5)
                 {
@@ -148,16 +163,19 @@ public class DashBoardController : MonoBehaviour
 
     void DisplayBonusIcon()
     {
-        GameObject targetObject = gameObject.transform.GetChild(4).gameObject;
+        GameObject bonusIconObject = gameObject.transform.GetChild(4).gameObject;
+        GameObject shrinkIconObject = gameObject.transform.GetChild(5).gameObject;
         if (player != null)
         {
             if (player.GetComponent<PlayerController>().coins < 3)
             {
-                targetObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("no bonus time");
+                bonusIconObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("no bonus time");
+                shrinkIconObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("no resize");
             }
             else if (player.GetComponent<PlayerController>().coins >= 3)
             {
-                targetObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("bonus time");
+                bonusIconObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("bonus time");
+                shrinkIconObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("shrink");
             }
         }
     }
@@ -182,6 +200,17 @@ public class DashBoardController : MonoBehaviour
         }
     }
 
+    IEnumerator Shrink()
+    {
+        float myScale = 0.19f;
+        Vector3 originalScale = player.transform.localScale;
+        player.transform.localScale = new Vector3(myScale, myScale, 1.0f);
+        Debug.Log("Local Scale after shrinking: " + player.transform.localScale);
+        yield return new WaitForSeconds(5f);
+        player.transform.localScale = originalScale;
+        Debug.Log("Local Scale before shrinking: " + player.transform.localScale);
+    }
+
     //IEnumerator Freeze()
     //{
     //    {
@@ -197,6 +226,7 @@ public class DashBoardController : MonoBehaviour
     //        }
     //        timerText.color = Color.black;
     //    }
-        
+
+
     //}
 }
