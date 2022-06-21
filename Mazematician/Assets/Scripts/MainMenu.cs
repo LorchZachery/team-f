@@ -9,7 +9,7 @@ public class MainMenu : MonoBehaviour
 
     public void PlayButton()
     {
-        SceneManager.LoadScene("SampleGrid");
+        SceneManager.LoadScene("Levels");
     }
 
 }
