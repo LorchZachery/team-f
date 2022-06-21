@@ -8,6 +8,11 @@ public class LevelsController : MonoBehaviour
 {
     public static string LevelName;
 
+    public void BackButton()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+    }
+
     public void Level1Button()
     {
         LevelName = "null";
