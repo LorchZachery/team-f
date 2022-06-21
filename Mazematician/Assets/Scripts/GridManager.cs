@@ -15,6 +15,7 @@ static class OConst
     public const int wallkThru = 1;
     public const int spike = 2;
     public const int coin = 3;
+    public const int oneway = 4;
 }
 
 /**
@@ -183,6 +184,10 @@ public class GridManager : MonoBehaviour
                 if(obj[3] == OConst.coin)
                 {
                     GenerateCoin((int)obj[0],(int)obj[1]);
+                }
+                if(obj[3] == OConst.oneway)
+                {
+                    PlaceOneWayDoor((int)obj[0],(int)obj[1]);
                 }
 
             }

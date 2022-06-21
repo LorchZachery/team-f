@@ -28,7 +28,7 @@ public class OneWayDirection : MonoBehaviour
 
         GetComponent<SpriteRenderer>().color = color;
 
-        Debug.Log("flash::" + GetComponent<SpriteRenderer>().color.a);
+        //Debug.Log("flash::" + GetComponent<SpriteRenderer>().color.a);
 
     }
 }
