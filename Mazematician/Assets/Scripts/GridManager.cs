@@ -44,6 +44,8 @@ public class GridManager : MonoBehaviour
     public GameObject spikeObstacle;
     public GameObject coin;
     public GameObject powerUpWalkThru;
+    public GameObject oneWayDoor;
+    public GameObject oneWayDirection;
 
     public int target = 32;
     public Generator generator;
@@ -188,8 +190,9 @@ public class GridManager : MonoBehaviour
         //if not read hardcode things for testing
         if(!read){
             AddPowerUpWalkThru();
-            PlaceSpikeObstacle(16, 16);
-            PlaceObstacle(14, 14, 0.5f);
+            PlaceOneWayDoor(16, 16);
+            //PlaceSpikeObstacle(16, 16);
+            //PlaceObstacle(14, 14, 0.5f);
         }
 
 
@@ -300,6 +303,13 @@ public class GridManager : MonoBehaviour
     }
 
     Vector2 GetCameraCoordinates(int x, int y)
+    {
+        float cartesianX = ((y + 1) - (gridLength + 1) / 2) * scale;
+        float cartesianY = (-(x + 1) + (gridLength + 1) / 2) * scale;
+        return new Vector3(cartesianX, cartesianY);
+    }
+
+    Vector2 GetCameraCoordinates(float x, float y)
     {
         float cartesianX = ((y + 1) - (gridLength + 1) / 2) * scale;
         float cartesianY = (-(x + 1) + (gridLength + 1) / 2) * scale;
@@ -529,6 +539,43 @@ public class GridManager : MonoBehaviour
         Debug.Log("Power Up Add");
     }
 
+    // placing a one way door up, take place from (x,y-1) to (x, y+1)
+    void PlaceOneWayDoor(int x, int y)
+    {
+        // left wall
+        GameObject t1 = Instantiate(tile, GetCameraCoordinates(x, y-1), Quaternion.identity);
+        t1.transform.localScale = new Vector3(scale, scale, 1);
+        // right wall
+        GameObject t2 = Instantiate(tile, GetCameraCoordinates(x, y+1), Quaternion.identity);
+        t2.transform.localScale = new Vector3(scale, scale, 1);
+
+        // left door
+        GameObject t = Instantiate(oneWayDoor, GetCameraCoordinates(x, y-0.5f), Quaternion.identity);
+        t.transform.localScale = new Vector3(scale*0.95f, scale * 0.1f, 1);
+        t.GetComponent<HingeJoint2D>().autoConfigureConnectedAnchor = true;
+        t.GetComponent<HingeJoint2D>().connectedAnchor = new Vector2(0f, 0f);
+        t.GetComponent<HingeJoint2D>().connectedBody = t1.GetComponent<Rigidbody2D>();
+
+        // right door
+        GameObject tt = Instantiate(oneWayDoor, GetCameraCoordinates(x, y+0.5f), Quaternion.identity);
+        tt.transform.localScale = new Vector3(scale*0.95f, scale * 0.1f, 1);
+        tt.GetComponent<HingeJoint2D>().autoConfigureConnectedAnchor = true;
+        tt.GetComponent<HingeJoint2D>().connectedAnchor = new Vector2(0f, 0f);
+        tt.GetComponent<HingeJoint2D>().connectedBody = t2.GetComponent<Rigidbody2D>();
+        // changing the rotation direction and force
+        JointAngleLimits2D limit = tt.GetComponent<HingeJoint2D>().limits;
+        limit.min = 270;
+        limit.max = 180;
+        tt.GetComponent<HingeJoint2D>().limits = limit;
+        JointMotor2D motor = tt.GetComponent<HingeJoint2D>().motor;
+        motor.motorSpeed = -1000;
+        tt.GetComponent<HingeJoint2D>().motor = motor;
+        Physics2D.IgnoreCollision(tt.GetComponent<BoxCollider2D>(), t2.GetComponent<BoxCollider2D>());
+
+        // direction img
+        GameObject direction = Instantiate(oneWayDirection, GetCameraCoordinates(x, y), Quaternion.identity);
+
+    }
 
     void setFileClassVars(FileClass file)
     {
