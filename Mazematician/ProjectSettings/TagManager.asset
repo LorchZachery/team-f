@@ -19,6 +19,7 @@ TagManager:
   - powerUpWalkThru
   - freezeCount
   - bonusTime
+  - oneWayDoor
   layers:
   - Default
   - TransparentFX
