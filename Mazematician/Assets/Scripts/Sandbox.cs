@@ -130,7 +130,15 @@ public class Sandbox : MonoBehaviour
             //obsticles and walls should not be allow to generate. prevents crappy starting situations
             //for players
             playerCooridantes = new Vector2((int)gridLength - 2, (int)gridLength - 2);
-            
+            for(int x =1; x < screenWidth; x++){
+            for(int y = 1; y < gridLength; y++){
+                MazeWall temp = new MazeWall(x,y);
+                temp.removeWall();
+                mazeWallsList.Add(temp);
+                 
+            }
+        }
+        
         }
         //if the level name is a file load that verision
         else
@@ -142,6 +150,7 @@ public class Sandbox : MonoBehaviour
         //createNoGoCoorList();       
         GenerateWalls();
         
+
         //adding walls if we are loading a level
         foreach (var wall in mazeWallsList)
         {
@@ -298,7 +307,10 @@ public class Sandbox : MonoBehaviour
             Vector2 tilePos = GetTileCoordinates(mousePos[0],mousePos[1]);
             Debug.Log($"CREATE TILE {tilePos}");
             GenerateTile((int)tilePos[0],(int)tilePos[1]);
-            mazeWallsList.Add(new MazeWall((int)tilePos[0],(int)tilePos[1]));
+            //todo change to find and add wall
+            //mazeWallsList.Add(new MazeWall((int)tilePos[0],(int)tilePos[1]));
+            MazeWall wall = mazeWallsList.Find(r=> r.x == (int)tilePos[0] && r.y == (int)tilePos[1]);
+            wall.setWall();
         }
          //adding win block where user clicks
          if( Input.GetMouseButtonDown(0) && mode == Constants.win)
@@ -667,11 +679,15 @@ public class Sandbox : MonoBehaviour
         //Vector3 winBlockVector = new Vector3(winBlockCoor[0],winBlockCoor[1],target);
         writer.WriteLine($"{winBlockCoor[0]},{winBlockCoor[1]},{target}");
         writer.WriteLine("MazeWalls");
-        foreach(MazeWall tile in mazeWallsList){
-            if(tile.isWall()){
-                writer.WriteLine($"{tile.x},{tile.y}");
+         foreach (MazeWall tile in mazeWallsList)
+        {
+            if (tile.isWall())
+            {
+                writer.WriteLine($"{tile.x},{tile.y},1");
+            }else{
+                writer.WriteLine($"{tile.x},{tile.y},0");
             }
-            
+
         }
         writer.WriteLine("MazeBlocks");
         foreach(Vector3 block in blockList){
@@ -720,8 +736,13 @@ public class Sandbox : MonoBehaviour
                         
                         while((line = sr.ReadLine()) != "MazeBlocks")
                         {
-                            string[] values = line.Split(',');
-                            mazeWallsList.Add(new MazeWall(Int32.Parse(values[0]),Int32.Parse(values[1])));
+                             string[] values = line.Split(',');
+                            MazeWall temp = new MazeWall(Int32.Parse(values[0]), Int32.Parse(values[1]));
+                        
+                            if(values[2] == "0"){
+                                temp.removeWall();
+                            }
+                            mazeWallsList.Add(temp);
                         }
 
                     }

@@ -310,4 +310,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   score: 0
+  targetScore: 0
+  coins: 0
   scoreText: {fileID: 646721742207440632}
