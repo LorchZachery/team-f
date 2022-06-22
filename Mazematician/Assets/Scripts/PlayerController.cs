@@ -92,12 +92,22 @@ public class PlayerController : MonoBehaviour
         }
         else if (collision.gameObject.CompareTag("upperBound"))
         {
-            Debug.Log("HIT TOP");
-            SceneManager.LoadScene("GameOver");
+            if (playerShield.activeInHierarchy) {
+                Physics2D.IgnoreCollision(collision.gameObject.GetComponent<PolygonCollider2D>(), GetComponent<CircleCollider2D>());
+                collist.Add(collision.gameObject.GetComponent<PolygonCollider2D>());
+            }
+            else {
+                Debug.Log("HIT TOP");
+                SceneManager.LoadScene("GameOver");
+            }
         }
         else if (collision.gameObject.CompareTag("lowerBound"))
         {
             Debug.Log("HIT BOTTOM");
+            if (playerShield.activeInHierarchy) {
+                Physics2D.IgnoreCollision(collision.gameObject.GetComponent<PolygonCollider2D>(), GetComponent<CircleCollider2D>());
+                collist.Add(collision.gameObject.GetComponent<PolygonCollider2D>());
+            }
         }
         if (collision.gameObject.CompareTag("coin"))
         {

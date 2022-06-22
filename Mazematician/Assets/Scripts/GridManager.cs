@@ -195,9 +195,9 @@ public class GridManager : MonoBehaviour
         //if not read hardcode things for testing
         if(!read){
             AddPowerUpWalkThru();
-            PlaceOneWayDoor(16, 16);
-            //PlaceSpikeObstacle(16, 16);
-            //PlaceObstacle(14, 14, 0.5f);
+            // PlaceOneWayDoor(16, 16);
+            PlaceSpikeObstacle(16, 16);
+            PlaceObstacle(14, 14, 0.5f);
         }
 
 
