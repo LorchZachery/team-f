@@ -127,14 +127,7 @@ public class PlayerController : MonoBehaviour
 
         }
 
-        if(collision.gameObject.CompareTag("target")) {
-            var script = collision.gameObject.GetComponent<GameEndController>();
-            if(script.targetScore == score)
-            {
-                PublishGameData(true, "won");
-                SceneManager.LoadScene("GameOver");
-            }
-        }
+        
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -147,6 +140,15 @@ public class PlayerController : MonoBehaviour
             intangibleTimer = intangibleTime;
             GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.5f);
             InvokeRepeating("Flash", intangibleTime - 2, 0.2f);
+        }
+        
+        if (collision.gameObject.CompareTag("target"))
+        {
+            if (targetScore == score)
+            {
+                PublishGameData(true, "won");
+                SceneManager.LoadScene("GameOver");
+            }
         }
     }
 
@@ -271,4 +273,5 @@ public class PlayerController : MonoBehaviour
         analyticsManager.RegisterEvent(GameEvent.COINS_SPENT, coins);
         analyticsManager.Publish();
     }
+
 }

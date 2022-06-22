@@ -96,8 +96,10 @@ public class GridManager : MonoBehaviour
         // Instantiate warning red flash creation to alert user to gravity switch
         warning = Instantiate(warningPrefab, new Vector2(Screen.width, Screen.height), Quaternion.identity);
         warning.gameObject.SetActive(false);
+        TextAsset levelFile = Resources.Load<TextAsset>("Levels/" + LevelName);
+        Debug.Log(levelFile);
 
-        if (!File.Exists("Assets/Levels/" + LevelName + ".txt"))
+        if (levelFile == null)
         {
             //setting screen length and height and translating it to a camera scale
             screenWidth = 24;
@@ -115,7 +117,9 @@ public class GridManager : MonoBehaviour
         }
         else
         {
-            fileObject.ReadFile(LevelName);
+            string[] levelData = levelFile.text.Split("\n");
+            Debug.Log(levelData.Length);
+            fileObject.ReadTextAsset(levelData);
             setFileClassVars(fileObject);
 
             read = true;
