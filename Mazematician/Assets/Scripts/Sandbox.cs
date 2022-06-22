@@ -30,6 +30,7 @@ static class Constants
     public const int onewayDown = 12;
     public const int onewayLeft = 13;
     public const int onewayRight = 14;
+    public const int breakableTile = 15;
 }
 
 
@@ -78,6 +79,7 @@ public class Sandbox : MonoBehaviour
     public GameObject coin;
     public GameObject powerUpWalkThru;
     public GameObject oneWayDoorSet;
+    public GameObject breakableWall;
 
 
     //value player must reach to win
@@ -236,6 +238,10 @@ public class Sandbox : MonoBehaviour
                 {
                     PlaceOneWayDoor((int)obj[0],(int)obj[1], (int)obj[2]);
                 }
+                if (obj[3] == OConst.breakableTile)
+                {
+                    PlaceBreakableWall((int)obj[0], (int)obj[1]);
+                }
 
             }
         }
@@ -332,6 +338,10 @@ public class Sandbox : MonoBehaviour
                 {
                     PlaceOneWayDoor((int)objTuple.Item2[0],(int)objTuple.Item2[1], (int)objTuple.Item2[2]);
                 }
+                if (objTuple.Item2[3] == OConst.breakableTile)
+                {
+                    PlaceBreakableWall((int)objTuple.Item2[0], (int)objTuple.Item2[1]);
+                }
             objectList.Add(new Vector4(objTuple.Item2[0],objTuple.Item2[1],objTuple.Item2[2],objTuple.Item2[3]));
         }
 
@@ -417,11 +427,16 @@ public class Sandbox : MonoBehaviour
             mode = Constants.obstacle;
         }
 
+        //press V to enter breakable tile mode
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            Debug.Log("Place breakable tile");
+            mode = Constants.breakableTile;
+        }
 
-        
 
         //press W to enter obstacle mode
-        if(Input.GetKeyDown(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.W))
         {
             Debug.Log("Place power Walk Thru");
             mode = Constants.powerWalkThru;
@@ -471,6 +486,18 @@ public class Sandbox : MonoBehaviour
             PlaceSpikeObstacle((int)tilePos[0],(int)tilePos[1]);
             
            objectList.Add(new Vector4(tilePos[0],tilePos[1],-1,OConst.spike));
+        }
+
+        //adding breakable tile to map where user clicks
+        if (Input.GetMouseButtonDown(0) && mode == Constants.breakableTile)
+        {
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+            Vector2 tilePos = GetTileCoordinates(mousePos[0], mousePos[1]);
+            Debug.Log($"CREATE BREAKABLE TILE {tilePos}");
+            PlaceBreakableWall((int)tilePos[0], (int)tilePos[1]);
+
+            objectList.Add(new Vector4(tilePos[0], tilePos[1], -1, OConst.breakableTile));
         }
 
 
@@ -933,6 +960,15 @@ public class Sandbox : MonoBehaviour
         List<GameObject> oneWayDoorObj = new List<GameObject>{oneway};
         objectListObjects.Add(new Tuple<List<GameObject>,Vector4>(oneWayDoorObj,new Vector4(x,y,dir,OConst.oneway)));
 
+
+    }
+
+    void PlaceBreakableWall(int x, int y)
+    {
+        GameObject t = Instantiate(breakableWall, GetCameraCoordinates(x, y), Quaternion.identity);
+        // t.transform.localScale = new Vector3(scale * 0.30f, scale * 0.30f, 1);
+        List<GameObject> breakList = new List<GameObject> { t };
+        objectListObjects.Add(new Tuple<List<GameObject>, Vector4>(breakList, new Vector4(x, y, 0, OConst.breakableTile)));
 
     }
 
