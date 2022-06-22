@@ -23,15 +23,17 @@ public class ObstacleController : MonoBehaviour
         if (collision.gameObject.CompareTag("player"))
         {
             var script = collision.gameObject.GetComponent<PlayerController>();
-            GameObject penaltyObj = gameObject.transform.GetChild(0).gameObject;
-            TextMeshPro penaltyText = penaltyObj.GetComponent<TextMeshPro>();
-            if (penaltyText.text == "X 0.5")
-            {
-                script.SetScore((int)(script.score * 0.5));
-            }
-            else if (penaltyText.text == "X 0.25")
-            {
-                script.SetScore((int)(script.score * 0.25));
+            if (!script.playerShield) {
+                GameObject penaltyObj = gameObject.transform.GetChild(0).gameObject;
+                TextMeshPro penaltyText = penaltyObj.GetComponent<TextMeshPro>();
+                if (penaltyText.text == "X 0.5")
+                {
+                    script.SetScore((int)(script.score * 0.5));
+                }
+                else if (penaltyText.text == "X 0.25")
+                {
+                    script.SetScore((int)(script.score * 0.25));
+                }
             }
         }
     }

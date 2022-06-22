@@ -29,6 +29,8 @@ public class PlayerController : MonoBehaviour
     private float intangibleTimer = 0;
     private List<Collider2D> collist;
     Color defaultColor;
+    public GameObject playerShield;
+    private bool isCoroutine = false;
 
 
     // Start is called before the first frame update
@@ -54,7 +56,23 @@ public class PlayerController : MonoBehaviour
         y = (dir1 + dir2).y;
         GetComponent<Rigidbody2D>().velocity = new Vector2(x * ballSpeed * isDiagonal, y * ballSpeed * isDiagonal);
 
+        if (Input.GetKeyDown(KeyCode.P) && coins > 0f) {
+            playerShield.SetActive(true);
+            if (!isCoroutine) {
+                isCoroutine = true;
+                StartCoroutine(handleShield());
+            }
+        }
+
         UpdateIntagibleTimer();
+    }
+
+    private IEnumerator handleShield()
+    {
+        coins--;
+        yield return new WaitForSeconds(5.0f);
+        playerShield.SetActive(false);
+        isCoroutine = false;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
