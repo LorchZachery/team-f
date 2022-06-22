@@ -5,13 +5,18 @@ using TMPro;
 
 public class ObstacleController : MonoBehaviour
 {
+    AnalyticsManager analyticsManager;
 
     private List<Collider2D> collist;
 
     // Start is called before the first frame update
     void Start()
     {
+
         collist = new List<Collider2D>();
+
+        analyticsManager = AnalyticsManager.GetAnalyticsManager();
+
     }
 
     // Update is called once per frame
@@ -24,6 +29,7 @@ public class ObstacleController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("player"))
         {
+            analyticsManager.RegisterEvent(GameEvent.COLLISION, tag);
             var script = collision.gameObject.GetComponent<PlayerController>();
             if (!script.playerShield.activeInHierarchy) {
                 GameObject penaltyObj = gameObject.transform.GetChild(0).gameObject;

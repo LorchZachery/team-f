@@ -140,8 +140,8 @@ GameObject:
   - component: {fileID: 3433183404888401086}
   - component: {fileID: 5914922755042781071}
   m_Layer: 0
-  m_Name: lowerBound
-  m_TagString: lowerBound
+  m_Name: SpikeBottom
+  m_TagString: SpikeBottom
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -276,8 +276,8 @@ GameObject:
   - component: {fileID: 1934931758313882161}
   - component: {fileID: 6676948531533418393}
   m_Layer: 0
-  m_Name: upperBound
-  m_TagString: upperBound
+  m_Name: SpikeTop
+  m_TagString: SpikeTop
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -17,7 +17,11 @@ TagManager:
   - rewardsText
   - outerTile
   - powerUpWalkThru
+  - freezeCount
+  - bonusTime
   - oneWayDoor
+  - SpikeTop
+  - SpikeBottom
   layers:
   - Default
   - TransparentFX
