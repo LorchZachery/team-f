@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /*
- * This class deals with the effect of executing power up: break wall
+ * This class deals with the effect of executing power up through key code "V": break wall
  */
 
 public class BreakableTile : MonoBehaviour
@@ -34,9 +34,9 @@ public class BreakableTile : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionStay2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("player") && Input.GetKey(KeyCode.B))
+        if (collision.gameObject.CompareTag("player") && Input.GetKey(KeyCode.V))
         {
             StartCoroutine(Break());
         }
