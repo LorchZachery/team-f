@@ -454,7 +454,6 @@ public class GridManager : MonoBehaviour
 
     void ApplyGravity(GameObject[] gameObjects)
     {
-        Debug.Log(gameObjects[0].transform.eulerAngles.ToString());
         foreach (GameObject gameObject in gameObjects)
         {
             ConstantForce2D constantForce = gameObject.GetComponent<ConstantForce2D>();
@@ -540,7 +539,7 @@ public class GridManager : MonoBehaviour
     void PlacePowerUpWalkThru(int x, int y)
     {
         GameObject t = Instantiate(powerUpWalkThru, GetCameraCoordinates(x, y), Quaternion.identity);
-        t.transform.localScale = new Vector3(scale * 0.5f, scale * 0.5f, 1);
+        t.transform.localScale = new Vector3(scale , scale, 1);
         Debug.Log("Power Up Add");
     }
 
