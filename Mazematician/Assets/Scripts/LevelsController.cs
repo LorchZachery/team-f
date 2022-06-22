@@ -21,25 +21,25 @@ public class LevelsController : MonoBehaviour
 
     public void Level2Button()
     {
-        LevelName = "tutorial_lorch";
-        SceneManager.LoadScene("SampleGrid");
+        // LevelName = "tutorial_lorch";
+        // SceneManager.LoadScene("SampleGrid");
     }
 
     public void Level3Button()
     {
-        LevelName = "level1_lorch";
-        SceneManager.LoadScene("SampleGrid");
+        // LevelName = "level1_lorch";
+        // SceneManager.LoadScene("SampleGrid");
     }
 
     public void Level4Button()
     {
-        LevelName = "level2_lorch";
-        SceneManager.LoadScene("SampleGrid");
+        // LevelName = "level2_lorch";
+        // SceneManager.LoadScene("SampleGrid");
     }
 
     public void Level5Button()
     {
-        LevelName = "level3_lorch";
-        SceneManager.LoadScene("SampleGrid");
+        // LevelName = "level3_lorch";
+        // SceneManager.LoadScene("SampleGrid");
     }
 }
