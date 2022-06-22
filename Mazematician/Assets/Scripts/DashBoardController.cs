@@ -15,6 +15,9 @@ public class DashBoardController : MonoBehaviour
     int target;
     float flashTimer;
     float flashDuration = 1f;
+    bool bonusTime = false;
+    bool shrinkTime = false;
+    int bonusCount = 0;
 
     private AnalyticsManager analyticsManager;
 
@@ -57,12 +60,65 @@ public class DashBoardController : MonoBehaviour
         {
             if (remainingTime > 0)
             {
+                //Debug.Log("Time remaining: " + remainingTime);
                 remainingTime -= Time.deltaTime;
+                DisplayBonusIcon();
+                if (player != null)
+                {
+                    if (player.GetComponent<PlayerController>().coins >= 3)
+                    {
+                        //The Bonus Time icon.
+                        //Adds 10 seconds to the timer.
+                        //Can be activated by pressing the "B" key
+                        if (Input.GetKeyDown(KeyCode.B))
+                        {
+                            bonusTime = false;
+                            remainingTime += 11;
+                            StartCoroutine("BonusTime");
+                            if (!bonusTime)
+                            {
+                                player.GetComponent<PlayerController>().coins -= 3;
+                                bonusTime = true;
+                            }
+                        }
+                        //The Shrink Player icon.
+                        //Shrinks the size of the player for 5 seconds.
+                        //Can be activated by pressing the "B" key
+                        else if (Input.GetKeyDown(KeyCode.N))
+                        {
+                            shrinkTime = false;
+                            StartCoroutine("Shrink");
+                            
+                            if (!shrinkTime)
+                            {
+                                player.GetComponent<PlayerController>().coins -= 3;
+                                shrinkTime = true;
+                            }
+                        }
+                    }
+                    
+                }
                 DisplayTime(remainingTime);
                 if (remainingTime < 5)
                 {
                     Flash();
                 }
+                //if (player.GetComponent<PlayerController>().coins == 3)
+                //{
+                //    freezeCount = 1;
+                //    StartCoroutine("Freeze");
+                //    DisplayFreezeCount();
+                //    remainingTime += 10 * Time.deltaTime;
+                //}
+                //else
+                //{
+                //    remainingTime -= Time.deltaTime;
+                //    DisplayTime(remainingTime);
+                //    if (remainingTime < 5)
+                //    {
+                //        Flash();
+                //    }
+                //}  
             }
             else
             {
@@ -103,6 +159,32 @@ public class DashBoardController : MonoBehaviour
         targetText.text = "Target: " + this.target;
     }
 
+    void DisplayBonusCount()
+    {
+        GameObject targetObject = gameObject.transform.GetChild(5).gameObject;
+        TextMeshProUGUI targetText = targetObject.GetComponent<TextMeshProUGUI>();
+        targetText.text = bonusCount.ToString();
+    }
+
+    void DisplayBonusIcon()
+    {
+        GameObject bonusIconObject = gameObject.transform.GetChild(4).gameObject;
+        GameObject shrinkIconObject = gameObject.transform.GetChild(5).gameObject;
+        if (player != null)
+        {
+            if (player.GetComponent<PlayerController>().coins < 3)
+            {
+                bonusIconObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("no bonus time");
+                shrinkIconObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("no resize");
+            }
+            else if (player.GetComponent<PlayerController>().coins >= 3)
+            {
+                bonusIconObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("bonus time");
+                shrinkIconObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("shrink");
+            }
+        }
+    }
+
     private void Flash()
     {
         timerText.color = Color.red;
@@ -122,4 +204,41 @@ public class DashBoardController : MonoBehaviour
             timerText.enabled = true;
         }
     }
+
+    IEnumerator Shrink()
+    {
+        float myScale = 0.19f;
+        Vector3 originalScale = player.transform.localScale;
+        player.transform.localScale = new Vector3(myScale, myScale, 1.0f);
+        Debug.Log("Local Scale after shrinking: " + player.transform.localScale);
+        yield return new WaitForSeconds(5f);
+        player.transform.localScale = originalScale;
+        Debug.Log("Local Scale before shrinking: " + player.transform.localScale);
+    }
+
+    IEnumerator BonusTime()
+    {
+        timerText.color = Color.green;
+        yield return new WaitForSeconds(10f);
+        timerText.color = Color.white;
+    }
+
+    //IEnumerator Freeze()
+    //{
+    //    {
+    //        freezeTime = false;
+    //        timerText.color = Color.cyan;
+    //        yield return new WaitForSecondsRealtime(5);
+    //        if (!freezeTime)
+    //        {
+    //            player.GetComponent<PlayerController>().coins -= 3;
+    //            freezeCount -= 1;
+    //            DisplayFreezeCount();
+    //            freezeTime = true;
+    //        }
+    //        timerText.color = Color.black;
+    //    }
+
+
+    //}
 }
