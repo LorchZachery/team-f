@@ -60,7 +60,7 @@ public class DashBoardController : MonoBehaviour
         {
             if (remainingTime > 0)
             {
-                Debug.Log("Time remaining: " + remainingTime);
+                //Debug.Log("Time remaining: " + remainingTime);
                 remainingTime -= Time.deltaTime;
                 DisplayBonusIcon();
                 if (player != null)
