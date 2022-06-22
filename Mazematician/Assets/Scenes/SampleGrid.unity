@@ -296,14 +296,15 @@ MonoBehaviour:
   spikeObstacle: {fileID: 2927829571682668071, guid: 3c606bbb02d784689b305601a99fbd0b, type: 3}
   coin: {fileID: 2483983227542680485, guid: d6f7d26c050c74901a8743d57ecbb8ef, type: 3}
   powerUpWalkThru: {fileID: 6968998894726097684, guid: c99ccf159be3f4f4594ccc88063d0161, type: 3}
+  breakableWall: {fileID: 3790120316791274753, guid: 74d701d78a3224f3e892233604486ea1, type: 3}
   target: 32
   playerCoordinates: {x: 0, y: 0}
   winBlockCoor: {x: 0, y: 0}
   noGoCorr: []
   blockList: []
-  powerUpList: []
+  objectList: []
   warningPrefab: {fileID: 3725297818231593299, guid: f4e79fe507a8e174bbd06bda189a76c7, type: 3}
-  LevelName: tutorial_lorch
+  LevelName: 
 --- !u!4 &79570880
 Transform:
   m_ObjectHideFlags: 0

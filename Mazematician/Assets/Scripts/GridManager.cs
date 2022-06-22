@@ -44,6 +44,7 @@ public class GridManager : MonoBehaviour
     public GameObject spikeObstacle;
     public GameObject coin;
     public GameObject powerUpWalkThru;
+    public GameObject breakableWall;
 
     public int target = 32;
     public Generator generator;
@@ -190,6 +191,7 @@ public class GridManager : MonoBehaviour
             AddPowerUpWalkThru();
             PlaceSpikeObstacle(16, 16);
             PlaceObstacle(14, 14, 0.5f);
+            PlaceBreakableWall(12, 12);
         }
 
 
@@ -423,7 +425,9 @@ public class GridManager : MonoBehaviour
         TransformGameObjects(GameObject.FindGameObjectsWithTag("target"), angle);
         TransformGameObjects(GameObject.FindGameObjectsWithTag("coin"), angle);
         TransformGameObjects(GameObject.FindGameObjectsWithTag("powerUpWalkThru"), angle);
+        TransformGameObjects(GameObject.FindGameObjectsWithTag("breakableTile"), angle);
         ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
+        ApplyGravity(GameObject.FindGameObjectsWithTag("breakableTileParticle"));
     }
 
     void TransformGameObjects(GameObject[] gameObjects, float z)
@@ -496,7 +500,11 @@ public class GridManager : MonoBehaviour
         // t.transform.localScale = new Vector3(scale * 0.30f, scale * 0.30f, 1);
     }
 
-    
+    void PlaceBreakableWall(int x, int y)
+    {
+        GameObject t = Instantiate(breakableWall, GetCameraCoordinates(x, y), Quaternion.identity);
+        // t.transform.localScale = new Vector3(scale * 0.30f, scale * 0.30f, 1);
+    }
 
     void AddPowerUpWalkThru()
     {
