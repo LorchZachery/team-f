@@ -21,8 +21,8 @@ public class LevelsController : MonoBehaviour
 
     public void Level2Button()
     {
-        // LevelName = "tutorial_lorch";
-        // SceneManager.LoadScene("SampleGrid");
+        LevelName = "lorch_1";
+        SceneManager.LoadScene("SampleGrid");
     }
 
     public void Level3Button()

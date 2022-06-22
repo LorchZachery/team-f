@@ -18,6 +18,8 @@ TagManager:
   - outerTile
   - powerUpWalkThru
   - oneWayDoor
+  - SpikeTop
+  - SpikeBottom
   layers:
   - Default
   - TransparentFX

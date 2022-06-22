@@ -12,4 +12,14 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene("Levels");
     }
 
+    public void TutorialButton()
+    {
+        // Put tutorial scene here
+    }
+
+    public void StoreButton()
+    {
+        // Put store scene here
+    }
+
 }
