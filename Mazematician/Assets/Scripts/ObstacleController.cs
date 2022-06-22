@@ -5,11 +5,12 @@ using TMPro;
 
 public class ObstacleController : MonoBehaviour
 {
+    AnalyticsManager analyticsManager;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        analyticsManager = AnalyticsManager.GetAnalyticsManager();
     }
 
     // Update is called once per frame
@@ -22,6 +23,7 @@ public class ObstacleController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("player"))
         {
+            analyticsManager.RegisterEvent(GameEvent.COLLISION, tag);
             var script = collision.gameObject.GetComponent<PlayerController>();
             GameObject penaltyObj = gameObject.transform.GetChild(0).gameObject;
             TextMeshPro penaltyText = penaltyObj.GetComponent<TextMeshPro>();
