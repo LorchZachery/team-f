@@ -9,7 +9,7 @@ public class OneWayDirection : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        InvokeRepeating("Flash", 0, 0.1f);
+        InvokeRepeating("Flash", 0, 0.05f);
 
     }
 
