@@ -6,10 +6,20 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-
+    // Loads levels screen
     public void PlayButton()
     {
-        SceneManager.LoadScene("SampleGrid");
+        SceneManager.LoadScene("Levels");
+    }
+
+    public void TutorialButton()
+    {
+        // Put tutorial scene here
+    }
+
+    public void StoreButton()
+    {
+        // Put store scene here
     }
 
 }

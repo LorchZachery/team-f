@@ -88,7 +88,7 @@ public class DashBoardController : MonoBehaviour
                         {
                             shrinkTime = false;
                             StartCoroutine("Shrink");
-                            
+
                             if (!shrinkTime)
                             {
                                 player.GetComponent<PlayerController>().coins -= 3;
@@ -96,7 +96,7 @@ public class DashBoardController : MonoBehaviour
                             }
                         }
                     }
-                    
+
                 }
                 DisplayTime(remainingTime);
                 if (remainingTime < 5)
@@ -205,6 +205,10 @@ public class DashBoardController : MonoBehaviour
         }
     }
 
+    public void QuitButton()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
     IEnumerator Shrink()
     {
         float myScale = 0.19f;

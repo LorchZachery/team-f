@@ -75,14 +75,14 @@ public class PlayerController : MonoBehaviour
                 SetScore(this.score + script.points);
             }
         }
-        else if (collision.gameObject.CompareTag("upperBound"))
+        else if (collision.gameObject.CompareTag("SpikeTop"))
         {
             Debug.Log("HIT TOP");
             analyticsManager.RegisterEvent(GameEvent.COLLISION, collision.gameObject.tag);
             analyticsManager.Publish();
             SceneManager.LoadScene("GameOver");
         }
-        else if (collision.gameObject.CompareTag("lowerBound"))
+        else if (collision.gameObject.CompareTag("SpikeBottom"))
         {
             Debug.Log("HIT BOTTOM");
         }
@@ -119,7 +119,7 @@ public class PlayerController : MonoBehaviour
         UpdateText(this.score.ToString());
         //Debug.Log("Score updated");
 
-        
+
         if (this.score < 2)
         {
             analyticsManager.Publish();
