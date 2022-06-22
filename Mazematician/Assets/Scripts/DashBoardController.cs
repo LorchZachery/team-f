@@ -30,6 +30,7 @@ public class DashBoardController : MonoBehaviour
         timerRunning = true;
         UpdateScore(0);
         DisplayTargetText();
+        DisplayLevelText();
         analyticsManager = AnalyticsManager.GetAnalyticsManager();
     }
 
@@ -245,4 +246,16 @@ public class DashBoardController : MonoBehaviour
 
 
     //}
+
+    void DisplayLevelText()
+    {
+        GameObject levelObject = gameObject.transform.GetChild(18).gameObject;
+        TextMeshProUGUI levelText = levelObject.GetComponent<TextMeshProUGUI>();
+        levelText.text = "Level: " + LevelsController.LevelNumber;
+    }
+
+    public void RestartButton()
+    {
+        SceneManager.LoadScene("SampleGrid");
+    }
 }
