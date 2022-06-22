@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 186661475670420783}
   - component: {fileID: 2733886101703378083}
   - component: {fileID: 719754003414301760}
+  - component: {fileID: -3062388033269916159}
   m_Layer: 0
   m_Name: oneWayDoor
   m_TagString: Untagged
@@ -27,14 +28,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2990647758066503346}
-  m_LocalRotation: {x: -0.0032938765, y: -0, z: -0, w: 0.9999946}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.035, y: -0.018, z: 0}
   m_LocalScale: {x: 1, y: 0.1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -0.377, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &767016258897135799
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -156,5 +157,17 @@ HingeJoint2D:
     m_MaximumMotorForce: 10
   m_UseLimits: 1
   m_AngleLimits:
-    m_LowerAngle: -90
-    m_UpperAngle: 0
+    m_LowerAngle: 180
+    m_UpperAngle: 90
+--- !u!114 &-3062388033269916159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2990647758066503346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d333b9b866dadc642ad51b7e666764a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

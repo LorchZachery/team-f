@@ -296,8 +296,7 @@ MonoBehaviour:
   spikeObstacle: {fileID: 2927829571682668071, guid: 3c606bbb02d784689b305601a99fbd0b, type: 3}
   coin: {fileID: 2483983227542680485, guid: d6f7d26c050c74901a8743d57ecbb8ef, type: 3}
   powerUpWalkThru: {fileID: 6968998894726097684, guid: c99ccf159be3f4f4594ccc88063d0161, type: 3}
-  oneWayDoor: {fileID: 2990647758066503346, guid: 208e66e65abb0e34bbc044a487bf6779, type: 3}
-  oneWayDirection: {fileID: 1162204128450476730, guid: c2fcf2e51833c914185f96f0fb44d0a1, type: 3}
+  oneWayDoorSet: {fileID: 7656152047234893126, guid: 9b7ed69081cde9147a0e164ae387fde7, type: 3}
   target: 32
   playerCoordinates: {x: 0, y: 0}
   winBlockCoor: {x: 0, y: 0}
@@ -305,7 +304,7 @@ MonoBehaviour:
   blockList: []
   objectList: []
   warningPrefab: {fileID: 3725297818231593299, guid: f4e79fe507a8e174bbd06bda189a76c7, type: 3}
-  LevelName: null
+  LevelName: oneway_test
 --- !u!4 &79570880
 Transform:
   m_ObjectHideFlags: 0
