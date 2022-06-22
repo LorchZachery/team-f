@@ -19,6 +19,11 @@ TagManager:
   - powerUpWalkThru
   - breakableTile
   - breakableTileParticle
+  - freezeCount
+  - bonusTime
+  - oneWayDoor
+  - SpikeTop
+  - SpikeBottom
   layers:
   - Default
   - TransparentFX

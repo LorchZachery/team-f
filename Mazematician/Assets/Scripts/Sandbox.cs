@@ -26,6 +26,10 @@ static class Constants
     public const int spike = 8;
     public const int obstacle = 9;
     public const int powerWalkThru = 10;
+    public const int onewayUp = 11;
+    public const int onewayDown = 12;
+    public const int onewayLeft = 13;
+    public const int onewayRight = 14;
 }
 
 
@@ -35,6 +39,10 @@ To use sandbox mode in unity inspect make sure to give level a name (or use leve
 you are currently designing)
 you also can change the screen width and gridlength in unity editor
 To add a tile press "t" and click somewhere
+to add a oneway wall UP press "1" and click somewhere
+to add a oneway wall DOWN press "2" and click somewhere
+to add a oneway wall LEFT press "3" and click somewhere
+to add a oneway wall RIGHT press "4" and click somewhere
 to add a block press "b", click where you want it and  provided a number in input box, press enter
 to add a win block press "g" click where you want it and provide the target number in the input box, press enter
 to add reducing obstacle press "O" and click where you want and provide reducing value (usually .5)
@@ -69,6 +77,9 @@ public class Sandbox : MonoBehaviour
     public GameObject spikeObstacle;
     public GameObject coin;
     public GameObject powerUpWalkThru;
+    public GameObject oneWayDoorSet;
+
+
     //value player must reach to win
     public int target = 32;
 
@@ -102,7 +113,7 @@ public class Sandbox : MonoBehaviour
     private string blockInput = null;
     public List<Tuple<GameObject,Vector2>> tileList = new List<Tuple<GameObject,Vector2>>();
     public List<Tuple<GameObject,Vector3>> blockListObjects = new List<Tuple<GameObject,Vector3>>();
-    public List<Tuple<GameObject,Vector4>> objectListObjects = new List<Tuple<GameObject,Vector4>>();
+    public List<Tuple<List<GameObject>,Vector4>> objectListObjects = new List<Tuple<List<GameObject>,Vector4>>();
     
     //to delete and reset player and win box
     private GameObject playerObject;
@@ -221,6 +232,10 @@ public class Sandbox : MonoBehaviour
                 {
                     GenerateCoin((int)obj[0],(int)obj[1]);
                 }
+                if(obj[3] == OConst.oneway)
+                {
+                    PlaceOneWayDoor((int)obj[0],(int)obj[1], (int)obj[2]);
+                }
 
             }
         }
@@ -287,12 +302,15 @@ public class Sandbox : MonoBehaviour
 
         }
 
-        List<Tuple<GameObject,Vector4>> tempObj = new List<Tuple<GameObject,Vector4>>(objectListObjects);
+        List<Tuple<List<GameObject>,Vector4>> tempObj = new List<Tuple<List<GameObject>,Vector4>>(objectListObjects);
         foreach( var objTuple in tempObj)
         {
             objectListObjects.Remove(objTuple);
-            objectList.Remove(blockList.Find(r => r[0] == objTuple.Item2[0] && r[1] == objTuple.Item2[1] && r[3] == objTuple.Item2[3]));
-            Destroy(objTuple.Item1);
+            objectList.Remove(objectList.Find(r => r[0] == objTuple.Item2[0] && r[1] == objTuple.Item2[1] && r[3] == objTuple.Item2[3]));
+            foreach(var gameobject in objTuple.Item1)
+            {
+                Destroy(gameobject);
+            }
 
                if(objTuple.Item2[3] == OConst.normObj )
                 {
@@ -309,6 +327,10 @@ public class Sandbox : MonoBehaviour
                 if(objTuple.Item2[3] == OConst.coin)
                 {
                     GenerateCoin((int)objTuple.Item2[0],(int)objTuple.Item2[1]);
+                }
+                if(objTuple.Item2[3] == OConst.oneway)
+                {
+                    PlaceOneWayDoor((int)objTuple.Item2[0],(int)objTuple.Item2[1], (int)objTuple.Item2[2]);
                 }
             objectList.Add(new Vector4(objTuple.Item2[0],objTuple.Item2[1],objTuple.Item2[2],objTuple.Item2[3]));
         }
@@ -332,8 +354,32 @@ public class Sandbox : MonoBehaviour
             Debug.Log("Place Tile Mode");
             mode = Constants.tile;
         }
+        //press 1 to enter oneway wall Up mode
+        if(Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            Debug.Log("Oneway Up Mode");
+            mode = Constants.onewayUp;
+        }
+        //press 2 to enter oneway wall Down mode
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            Debug.Log("Oneway Down Mode");
+            mode = Constants.onewayDown;
+        }
+        //press 3 to enter oneway wall Left mode
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            Debug.Log("Oneway Left Mode");
+            mode = Constants.onewayLeft;
+        }
+        //press 4 to enter oneway wall Right mode
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            Debug.Log("Oneway Right Mode");
+            mode = Constants.onewayRight;
+        }
         //press B to enter block creation mode
-         if(Input.GetKeyDown(KeyCode.B))
+        if (Input.GetKeyDown(KeyCode.B))
         {
             Debug.Log("Place Block mode");
             mode = Constants.block;
@@ -439,6 +485,19 @@ public class Sandbox : MonoBehaviour
            objectList.Add(new Vector4(tilePos[0],tilePos[1],-1,OConst.wallkThru));
         }
 
+
+        //adding oneway wall to map where user clicks
+        if (Input.GetMouseButtonDown(0) && mode >= Constants.onewayUp && mode <= Constants.onewayRight) {
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            
+            Vector2 tilePos = GetTileCoordinates(mousePos[0],mousePos[1]);
+            Debug.Log($"CREATE oneway {tilePos}");
+            int dir = mode - 10;
+            PlaceOneWayDoor((int)tilePos[0],(int)tilePos[1],dir);
+            
+           objectList.Add(new Vector4(tilePos[0],tilePos[1],dir,OConst.oneway));
+        }
+
          //adding obsticle to map where user clicks
         if (Input.GetMouseButtonDown(0) && mode == Constants.obstacle) {
             Debug.Log("starting obstcale co-r");
@@ -461,6 +520,10 @@ public class Sandbox : MonoBehaviour
             
             wall.setWall();
         }
+
+        
+
+
          //adding win block where user clicks
          if( Input.GetMouseButtonDown(0) && mode == Constants.win)
          {
@@ -508,13 +571,17 @@ public class Sandbox : MonoBehaviour
                 }
                 else
                 {
-                    Tuple<GameObject,Vector4> objTuple = objectListObjects.Find(r => r.Item2[0] == (int)tilePos[0] && r.Item2[1] == (int)tilePos[1]);
+                    Tuple<List<GameObject>,Vector4> objTuple = objectListObjects.Find(r => r.Item2[0] == (int)tilePos[0] && r.Item2[1] == (int)tilePos[1]);
                     if(objTuple != null)
                     {
                         Debug.Log($"Delete obj {objTuple.Item2[3]}");
                         objectListObjects.Remove(objTuple);
                         objectList.Remove(objectList.Find(r => r[0] == objTuple.Item2[0] && r[1] == objTuple.Item2[1]));
-                        Destroy(objTuple.Item1);
+                        foreach(var gameobject in objTuple.Item1)
+                        {
+                            Destroy(gameobject);
+                        }
+                        
                         
                     }
                     else{
@@ -765,7 +832,8 @@ public class Sandbox : MonoBehaviour
     {
         GameObject t = Instantiate(coin, GetCameraCoordinates(x, y), Quaternion.identity);
         t.transform.localScale = new Vector3(scale * 0.7f, scale * 0.7f, 1);
-        objectListObjects.Add(new Tuple<GameObject,Vector4>(t,new Vector4(x,y,0,OConst.coin)));
+        List<GameObject> coinObjList = new List<GameObject> {t};
+        objectListObjects.Add(new Tuple<List<GameObject>,Vector4>(coinObjList,new Vector4(x,y,0,OConst.coin)));
     }
 
     void moveBlock(int x, int y, GameObject t)
@@ -780,18 +848,18 @@ public class Sandbox : MonoBehaviour
         for (int i = 0; i < gridLength; i++)
         {
             //top : x = 0, y = i
-            GenerateTile(0, i);
+            GenerateOuterTile(0, i);
 
             //bottom: x = 9, y = i
-            GenerateTile((int)gridLength - 1, i);
+            GenerateOuterTile((int)gridLength - 1, i);
         }
 
         for (int i = 1; i < gridLength - 1; i++)
         {
             //left x = i, y = 0
-            GenerateTile(i, 0);
+            GenerateOuterTile(i, 0);
             //right x = i, y = 9
-            GenerateTile(i, (int)gridLength - 1);
+            GenerateOuterTile(i, (int)gridLength - 1);
         }
     }
 
@@ -813,7 +881,8 @@ public class Sandbox : MonoBehaviour
 
         var script = t.GetComponent<ObstacleController>();
         script.SetPenalty(penalty);
-        objectListObjects.Add(new Tuple<GameObject,Vector4>(t,new Vector4(x,y,penalty,OConst.normObj)));
+        List<GameObject> obstacleObjList = new List<GameObject> {t};
+        objectListObjects.Add(new Tuple<List<GameObject>,Vector4>(obstacleObjList,new Vector4(x,y,penalty,OConst.normObj)));
 
     }
 
@@ -821,7 +890,8 @@ public class Sandbox : MonoBehaviour
     {
         GameObject t = Instantiate(spikeObstacle, GetCameraCoordinates(x, y), Quaternion.identity);
         // t.transform.localScale = new Vector3(scale * 0.30f, scale * 0.30f, 1);
-        objectListObjects.Add(new Tuple<GameObject,Vector4>(t,new Vector4(x,y,0,OConst.spike)));
+        List<GameObject> spikeObjList = new List<GameObject> {t};
+        objectListObjects.Add(new Tuple<List<GameObject>,Vector4>(spikeObjList,new Vector4(x,y,0,OConst.spike)));
 
     }
 
@@ -839,7 +909,30 @@ public class Sandbox : MonoBehaviour
     {
         GameObject t = Instantiate(powerUpWalkThru, GetCameraCoordinates(x, y), Quaternion.identity);
         t.transform.localScale = new Vector3(scale * 0.5f, scale * 0.5f, 1);
-        objectListObjects.Add(new Tuple<GameObject,Vector4>(t,new Vector4(x,y,0,OConst.wallkThru)));
+        List<GameObject> powerWalkObjList = new List<GameObject> {t};
+        objectListObjects.Add(new Tuple<List<GameObject>,Vector4>(powerWalkObjList,new Vector4(x,y,0,OConst.wallkThru)));
+
+    }
+    //oneway in 4-direction, dir = 1:UP, 2:DOWN, 3:LEFT, 4:RIGHT
+    void PlaceOneWayDoor(int x, int y, int dir)
+    {
+        GameObject oneway = Instantiate(oneWayDoorSet, GetCameraCoordinates(x, y), Quaternion.identity);
+        oneway.transform.localScale = new Vector3(scale * 3, scale, 1);
+        switch (dir)
+        {
+            case 2:
+                oneway.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, 180f));
+                break;
+            case 3:
+                oneway.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, 90f));
+                break;
+            case 4:
+                oneway.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, 270f));
+                break;
+        }
+        List<GameObject> oneWayDoorObj = new List<GameObject>{oneway};
+        objectListObjects.Add(new Tuple<List<GameObject>,Vector4>(oneWayDoorObj,new Vector4(x,y,dir,OConst.oneway)));
+
 
     }
 
@@ -853,6 +946,14 @@ public class Sandbox : MonoBehaviour
         tileList.Add(new Tuple<GameObject,Vector2>(t,new Vector2(x,y)));
 
     }
+    //outer tiles for wall of map, prevents walkthruwalls from passing outside map area
+    void GenerateOuterTile(int x, int y)
+    {
+        GameObject t = Instantiate(tile, GetCameraCoordinates(x, y), Quaternion.identity);
+        t.transform.localScale = new Vector3(scale, scale, 1);
+        t.tag = "outerTile";
+
+    }
 
     Vector2 GetCameraCoordinates(int x, int y)
     {
@@ -861,7 +962,12 @@ public class Sandbox : MonoBehaviour
         return new Vector3(cartesianX, cartesianY);
     }
 
-    
+    Vector2 GetCameraCoordinates(float x, float y)
+    {
+        float cartesianX = ((y + 1) - (gridLength + 1) / 2) * scale;
+        float cartesianY = (-(x + 1) + (gridLength + 1) / 2) * scale;
+        return new Vector3(cartesianX, cartesianY);
+    }
 
     Vector2 GetCameraCoordinates(int x, int y, int z)
     {

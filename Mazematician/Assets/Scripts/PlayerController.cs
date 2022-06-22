@@ -30,6 +30,8 @@ public class PlayerController : MonoBehaviour
     private List<Collider2D> collist;
     Color defaultColor;
 
+    AnalyticsManager analyticsManager;
+
 
     // Start is called before the first frame update
     void Start()
@@ -38,6 +40,7 @@ public class PlayerController : MonoBehaviour
         UpdateText(this.score.ToString());
         collist = new List<Collider2D>();
         defaultColor = GetComponent<SpriteRenderer>().color;
+        analyticsManager = AnalyticsManager.GetAnalyticsManager();
     }
 
     // Update is called once per frame
@@ -72,18 +75,21 @@ public class PlayerController : MonoBehaviour
                 SetScore(this.score + script.points);
             }
         }
-        else if (collision.gameObject.CompareTag("upperBound"))
+        else if (collision.gameObject.CompareTag("SpikeTop"))
         {
             Debug.Log("HIT TOP");
+            analyticsManager.RegisterEvent(GameEvent.COLLISION, collision.gameObject.tag);
+            analyticsManager.Publish();
             SceneManager.LoadScene("GameOver");
         }
-        else if (collision.gameObject.CompareTag("lowerBound"))
+        else if (collision.gameObject.CompareTag("SpikeBottom"))
         {
             Debug.Log("HIT BOTTOM");
         }
         if (collision.gameObject.CompareTag("coin"))
         {
             coins++;
+            analyticsManager.RegisterEvent(GameEvent.COINS_COLLECTED, null);
             Destroy(collision.gameObject);
         }
         if (collision.gameObject.CompareTag("tile") && isIntangible)
@@ -98,6 +104,7 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("powerUpWalkThru"))
         {
+            analyticsManager.RegisterEvent(GameEvent.POWER_UP_USED, collision.gameObject.tag);
             Destroy(collision.gameObject);
             isIntangible = true;
             intangibleTimer = intangibleTime;
@@ -112,9 +119,10 @@ public class PlayerController : MonoBehaviour
         UpdateText(this.score.ToString());
         //Debug.Log("Score updated");
 
-        
+
         if (this.score < 2)
         {
+            analyticsManager.Publish();
             SceneManager.LoadScene("GameOver");
         }
         else if (this.score == this.targetScore)
@@ -173,6 +181,7 @@ public class PlayerController : MonoBehaviour
     public void NotifyPlayerWin()
     {
         this.score = 2;
+        analyticsManager.RegisterEvent(GameEvent.PLAYER_WON, 12);
         UpdateText("Player won");
     }
 
