@@ -29,6 +29,8 @@ public class PlayerController : MonoBehaviour
     private float intangibleTimer = 0;
     private List<Collider2D> collist;
     Color defaultColor;
+    public GameObject playerShield;
+    private bool isCoroutine = false;
 
     AnalyticsManager analyticsManager;
 
@@ -57,7 +59,23 @@ public class PlayerController : MonoBehaviour
         y = (dir1 + dir2).y;
         GetComponent<Rigidbody2D>().velocity = new Vector2(x * ballSpeed * isDiagonal, y * ballSpeed * isDiagonal);
 
+        if (Input.GetKeyDown(KeyCode.P) && coins > 0f) {
+            playerShield.SetActive(true);
+            if (!isCoroutine) {
+                isCoroutine = true;
+                StartCoroutine(handleShield());
+            }
+        }
+
         UpdateIntagibleTimer();
+    }
+
+    private IEnumerator handleShield()
+    {
+        coins--;
+        yield return new WaitForSeconds(5.0f);
+        playerShield.SetActive(false);
+        isCoroutine = false;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -77,14 +95,25 @@ public class PlayerController : MonoBehaviour
         }
         else if (collision.gameObject.CompareTag("SpikeTop"))
         {
-            Debug.Log("HIT TOP");
-            analyticsManager.RegisterEvent(GameEvent.COLLISION, collision.gameObject.tag);
-            analyticsManager.Publish();
-            SceneManager.LoadScene("GameOver");
+
+            if (playerShield.activeInHierarchy) {
+                Physics2D.IgnoreCollision(collision.gameObject.GetComponent<PolygonCollider2D>(), GetComponent<CircleCollider2D>());
+                collist.Add(collision.gameObject.GetComponent<PolygonCollider2D>());
+            }
+            else {
+              Debug.Log("HIT TOP");
+              analyticsManager.RegisterEvent(GameEvent.COLLISION, collision.gameObject.tag);
+              analyticsManager.Publish();
+              SceneManager.LoadScene("GameOver");
+            }
         }
         else if (collision.gameObject.CompareTag("SpikeBottom"))
         {
             Debug.Log("HIT BOTTOM");
+            if (playerShield.activeInHierarchy) {
+                Physics2D.IgnoreCollision(collision.gameObject.GetComponent<PolygonCollider2D>(), GetComponent<CircleCollider2D>());
+                collist.Add(collision.gameObject.GetComponent<PolygonCollider2D>());
+            }
         }
         if (collision.gameObject.CompareTag("coin"))
         {
