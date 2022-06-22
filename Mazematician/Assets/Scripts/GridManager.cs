@@ -68,9 +68,9 @@ public class GridManager : MonoBehaviour
     public GameObject warningPrefab;
     private GameObject warning;
 
-    
+
     private bool read = false;
-    public string LevelName; 
+    public string LevelName;
 
     //adds win block script to winblock
     //calculates to see if the player is at the target
@@ -78,13 +78,14 @@ public class GridManager : MonoBehaviour
     {
         var script = winBlock.GetComponent<GameEndController>();
         script.targetScore = target;
+        LevelName = LevelsController.LevelName;
     }
 
     //Maze Generation, player, blocks and obsticle placement
     void Start()
 
-    {   
-        
+    {
+
 
         // Instantiate warning red flash creation to alert user to gravity switch
         warning = Instantiate(warningPrefab, new Vector2(Screen.width, Screen.height), Quaternion.identity);
@@ -94,7 +95,7 @@ public class GridManager : MonoBehaviour
         {
             //setting screen length and height and translating it to a camera scale
             screenWidth = 24;
-            
+
             gridLength = 20; //10 + 2; // 8 x 8 grid + 1 top(left) wall + 1 bottom(right);
             /* We need to scale the the tiles such that grid fits in camera(screen) */
 
@@ -110,7 +111,7 @@ public class GridManager : MonoBehaviour
         {
             fileObject.ReadFile(LevelName);
             setFileClassVars(fileObject);
-        
+
             read = true;
         }
 
@@ -132,7 +133,7 @@ public class GridManager : MonoBehaviour
 
         DrawGridLines();
 
-        
+
 
         //creating player
         GeneratePlayer(playerCoordinates);
@@ -165,36 +166,38 @@ public class GridManager : MonoBehaviour
         }
 
         //placing object (powerups spikes...)
-        if(objectList.Count != 0)
+        if (objectList.Count != 0)
         {
-             foreach(Vector4 obj in objectList)
+            foreach (Vector4 obj in objectList)
             {
-                if(obj[3] == OConst.normObj )
+                if (obj[3] == OConst.normObj)
                 {
-                    PlaceObstacle((int)obj[0],(int)obj[1],obj[2]);
+                    PlaceObstacle((int)obj[0], (int)obj[1], obj[2]);
                 }
-                if(obj[3] == OConst.spike)
+                if (obj[3] == OConst.spike)
                 {
-                    PlaceSpikeObstacle((int)obj[0],(int)obj[1]);
+                    PlaceSpikeObstacle((int)obj[0], (int)obj[1]);
                 }
-                if(obj[3] == OConst.wallkThru)
+                if (obj[3] == OConst.wallkThru)
                 {
-                    PlacePowerUpWalkThru((int)obj[0],(int)obj[1]);
+                    PlacePowerUpWalkThru((int)obj[0], (int)obj[1]);
                 }
-                if(obj[3] == OConst.coin)
+                if (obj[3] == OConst.coin)
                 {
-                    GenerateCoin((int)obj[0],(int)obj[1]);
+                    GenerateCoin((int)obj[0], (int)obj[1]);
                 }
-                if(obj[3] == OConst.oneway)
+                if (obj[3] == OConst.oneway)
                 {
-                    PlaceOneWayDoor((int)obj[0],(int)obj[1],(int)obj[2]);
+                    PlaceOneWayDoor((int)obj[0], (int)obj[1], (int)obj[2]);
                 }
 
             }
         }
         //if not read hardcode things for testing
-        if(!read){
+        if (!read)
+        {
             AddPowerUpWalkThru();
+            // PlaceOneWayDoor(16, 16);
             PlaceSpikeObstacle(16, 16);
             PlaceObstacle(14, 14, 0.5f);
         }
@@ -208,7 +211,7 @@ public class GridManager : MonoBehaviour
         //invoking gravity to switch every 7 seconds, with a red screen flash before
         InvokeRepeating("rotateGameRoutine", 7.0f, 7.0f);
 
-        
+
     }
 
     // Update is called once per frame
@@ -509,7 +512,7 @@ public class GridManager : MonoBehaviour
         // t.transform.localScale = new Vector3(scale * 0.30f, scale * 0.30f, 1);
     }
 
-    
+
 
     void AddPowerUpWalkThru()
     {
@@ -538,14 +541,13 @@ public class GridManager : MonoBehaviour
     void PlacePowerUpWalkThru(int x, int y)
     {
         GameObject t = Instantiate(powerUpWalkThru, GetCameraCoordinates(x, y), Quaternion.identity);
-        t.transform.localScale = new Vector3(scale , scale, 1);
+        t.transform.localScale = new Vector3(scale, scale, 1);
         Debug.Log("Power Up Add");
     }
-    
-    // dir (1:UP, 2:DOWN, 3:LEFT, 4:RIGHT)
-    void PlaceOneWayDoor(int x , int y, int dir)
-    {
 
+    // dir (1:UP, 2:DOWN, 3:LEFT, 4:RIGHT)
+    void PlaceOneWayDoor(int x, int y, int dir)
+    {
         GameObject oneway = Instantiate(oneWayDoorSet, GetCameraCoordinates(x, y), Quaternion.identity);
         oneway.transform.localScale = new Vector3(scale * 3, scale, 1);
         switch (dir)
