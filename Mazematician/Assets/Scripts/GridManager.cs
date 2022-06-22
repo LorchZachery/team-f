@@ -141,16 +141,16 @@ public class GridManager : MonoBehaviour
         GeneratePlayer(playerCoordinates);
 
         // Commenting this code because win block gets generated only when target score is reached
-        // if (winBlockCoor != new Vector2(0, 0))
-        // {
-        //     PlaceWinBlock((int)winBlockCoor[0], (int)winBlockCoor[1], target);
-        // }
-        // else
-        // {
-        //     //creating win block 
-        //     AddWinBlock(target);
-        //     noGoCorr.Add(winBlockCoor);
-        // }
+        if (winBlockCoor != new Vector2(0, 0))
+        {
+            PlaceWinBlock((int)winBlockCoor[0], (int)winBlockCoor[1], target);
+        }
+        else
+        {
+            //creating win block 
+            AddWinBlock(target);
+            noGoCorr.Add(winBlockCoor);
+        }
 
 
 
