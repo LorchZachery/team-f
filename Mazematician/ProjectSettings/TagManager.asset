@@ -17,6 +17,7 @@ TagManager:
   - rewardsText
   - outerTile
   - powerUpWalkThru
+  - oneWayDoor
   layers:
   - Default
   - TransparentFX

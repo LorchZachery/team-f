@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
  * This class deals with below logics:
  * 1. Player movement
  * 2. Updating text on player
- * 3. Collision detections and handling accourding to game plan.
+ * 3. Collisioㄋn detections and handling accourding to game plan.
  */
 
 public class PlayerController : MonoBehaviour
@@ -30,6 +30,8 @@ public class PlayerController : MonoBehaviour
     private List<Collider2D> collist;
     Color defaultColor;
 
+    AnalyticsManager analyticsManager;
+
 
     // Start is called before the first frame update
     void Start()
@@ -38,6 +40,7 @@ public class PlayerController : MonoBehaviour
         UpdateText(this.score.ToString());
         collist = new List<Collider2D>();
         defaultColor = GetComponent<SpriteRenderer>().color;
+        analyticsManager = AnalyticsManager.GetAnalyticsManager();
     }
 
     // Update is called once per frame
@@ -75,6 +78,8 @@ public class PlayerController : MonoBehaviour
         else if (collision.gameObject.CompareTag("upperBound"))
         {
             Debug.Log("HIT TOP");
+            analyticsManager.RegisterEvent(GameEvent.COLLISION, collision.gameObject.tag);
+            analyticsManager.Publish();
             SceneManager.LoadScene("GameOver");
         }
         else if (collision.gameObject.CompareTag("lowerBound"))
@@ -84,6 +89,7 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("coin"))
         {
             coins++;
+            analyticsManager.RegisterEvent(GameEvent.COINS_COLLECTED, null);
             Destroy(collision.gameObject);
         }
         if (collision.gameObject.CompareTag("tile") && isIntangible)
@@ -98,6 +104,7 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("powerUpWalkThru"))
         {
+            analyticsManager.RegisterEvent(GameEvent.POWER_UP_USED, collision.gameObject.tag);
             Destroy(collision.gameObject);
             isIntangible = true;
             intangibleTimer = intangibleTime;
@@ -111,8 +118,11 @@ public class PlayerController : MonoBehaviour
         this.score = score;
         UpdateText(this.score.ToString());
         //Debug.Log("Score updated");
+
+        
         if (this.score < 2)
         {
+            analyticsManager.Publish();
             SceneManager.LoadScene("GameOver");
         }
         else if (this.score == this.targetScore)
@@ -130,11 +140,48 @@ public class PlayerController : MonoBehaviour
     void UpdateText(string message)
     {
         scoreText.text = message;
+        UpdateColor();
+    }
+    void UpdateColor()
+    {
+        if (score == 2)
+        {
+            gameObject.GetComponent<Renderer>().material.color = new Color(255f / 255f, 153f / 255f, 153f / 255f);
+        }
+        if (score == 4)
+        {
+            gameObject.GetComponent<Renderer>().material.color = new Color(255f / 255f, 204f / 255f, 153f / 255f);
+        }
+        if (score == 8)
+        {
+            gameObject.GetComponent<Renderer>().material.color = new Color(255f / 255f, 255f / 255f, 153f / 255f);
+        }
+        if (score == 16)
+        {
+            gameObject.GetComponent<Renderer>().material.color = new Color(204f / 255f, 255f / 255f, 153f / 255f);
+        }
+        if (score == 32)
+        {
+            gameObject.GetComponent<Renderer>().material.color = new Color(153f / 255f, 255f / 255f, 255f / 255f);
+        }
+        if (score == 64)
+        {
+            gameObject.GetComponent<Renderer>().material.color = new Color(102f / 255f, 102f / 255f, 255f / 255f);
+        }
+        if (score == 128)
+        {
+            gameObject.GetComponent<Renderer>().material.color = new Color(204f / 255f, 153f / 255f, 255f / 255f);
+        }
+        if (score == 256)
+        {
+            gameObject.GetComponent<Renderer>().material.color = new Color(224f / 255f, 224f / 255f, 224f / 255f);
+        }
     }
 
     public void NotifyPlayerWin()
     {
         this.score = 2;
+        analyticsManager.RegisterEvent(GameEvent.PLAYER_WON, 12);
         UpdateText("Player won");
     }
 
