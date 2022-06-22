@@ -16,6 +16,7 @@ static class OConst
     public const int spike = 2;
     public const int coin = 3;
     public const int oneway = 4;
+    public const int breakableTile = 5;
 
 }
 
