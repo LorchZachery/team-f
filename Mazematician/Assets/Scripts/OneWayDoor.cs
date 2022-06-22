@@ -22,6 +22,10 @@ public class OneWayDoor : MonoBehaviour
         {
             Physics2D.IgnoreCollision(collision.gameObject.GetComponent<BoxCollider2D>(), GetComponent<BoxCollider2D>());
         }
+        if (collision.gameObject.CompareTag("outerTile"))
+        {
+            Physics2D.IgnoreCollision(collision.gameObject.GetComponent<BoxCollider2D>(), GetComponent<BoxCollider2D>());
+        }
         if (collision.gameObject.CompareTag("oneWayDoor"))
         {
             Physics2D.IgnoreCollision(collision.gameObject.GetComponent<BoxCollider2D>(), GetComponent<BoxCollider2D>());
