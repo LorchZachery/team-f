@@ -127,8 +127,8 @@ public class PlayerController : MonoBehaviour
         }
         else if (this.score == this.targetScore)
         {
-            grid.AddWinBlock(this.targetScore);
-            dashboardController.SetTime(20f);
+            //grid.AddWinBlock(this.targetScore);
+            //dashboardController.SetTime(20f);
         }
     }
 
