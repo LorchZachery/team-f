@@ -26,7 +26,10 @@ static class Constants
     public const int spike = 8;
     public const int obstacle = 9;
     public const int powerWalkThru = 10;
-    public const int oneway = 11;
+    public const int onewayUp = 11;
+    public const int onewayDown = 12;
+    public const int onewayLeft = 13;
+    public const int onewayRight = 14;
 }
 
 
@@ -37,6 +40,9 @@ you are currently designing)
 you also can change the screen width and gridlength in unity editor
 To add a tile press "t" and click somewhere
 to add a oneway wall UP press "1" and click somewhere
+to add a oneway wall DOWN press "2" and click somewhere
+to add a oneway wall LEFT press "3" and click somewhere
+to add a oneway wall RIGHT press "4" and click somewhere
 to add a block press "b", click where you want it and  provided a number in input box, press enter
 to add a win block press "g" click where you want it and provide the target number in the input box, press enter
 to add reducing obstacle press "O" and click where you want and provide reducing value (usually .5)
@@ -71,8 +77,7 @@ public class Sandbox : MonoBehaviour
     public GameObject spikeObstacle;
     public GameObject coin;
     public GameObject powerUpWalkThru;
-     public GameObject oneWayDoor;
-    public GameObject oneWayDirection;
+    public GameObject oneWayDoorSet;
 
 
     //value player must reach to win
@@ -229,7 +234,7 @@ public class Sandbox : MonoBehaviour
                 }
                 if(obj[3] == OConst.oneway)
                 {
-                    PlaceOneWayDoor((int)obj[0],(int)obj[1]);
+                    PlaceOneWayDoor((int)obj[0],(int)obj[1], (int)obj[2]);
                 }
 
             }
@@ -325,7 +330,7 @@ public class Sandbox : MonoBehaviour
                 }
                 if(objTuple.Item2[3] == OConst.oneway)
                 {
-                    PlaceOneWayDoor((int)objTuple.Item2[0],(int)objTuple.Item2[1]);
+                    PlaceOneWayDoor((int)objTuple.Item2[0],(int)objTuple.Item2[1], (int)objTuple.Item2[2]);
                 }
             objectList.Add(new Vector4(objTuple.Item2[0],objTuple.Item2[1],objTuple.Item2[2],objTuple.Item2[3]));
         }
@@ -349,14 +354,32 @@ public class Sandbox : MonoBehaviour
             Debug.Log("Place Tile Mode");
             mode = Constants.tile;
         }
-        //press 1 to enter oneway wall mode TODO add for direction (left,rigth,down)
+        //press 1 to enter oneway wall Up mode
         if(Input.GetKeyDown(KeyCode.Alpha1))
         {
-            Debug.Log("Oneway Wall Mode");
-            mode = Constants.oneway;
+            Debug.Log("Oneway Up Mode");
+            mode = Constants.onewayUp;
+        }
+        //press 2 to enter oneway wall Down mode
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            Debug.Log("Oneway Down Mode");
+            mode = Constants.onewayDown;
+        }
+        //press 3 to enter oneway wall Left mode
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            Debug.Log("Oneway Left Mode");
+            mode = Constants.onewayLeft;
+        }
+        //press 4 to enter oneway wall Right mode
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            Debug.Log("Oneway Right Mode");
+            mode = Constants.onewayRight;
         }
         //press B to enter block creation mode
-         if(Input.GetKeyDown(KeyCode.B))
+        if (Input.GetKeyDown(KeyCode.B))
         {
             Debug.Log("Place Block mode");
             mode = Constants.block;
@@ -464,14 +487,15 @@ public class Sandbox : MonoBehaviour
 
 
         //adding oneway wall to map where user clicks
-        if (Input.GetMouseButtonDown(0) && mode == Constants.oneway) {
+        if (Input.GetMouseButtonDown(0) && mode >= Constants.onewayUp && mode <= Constants.onewayRight) {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             
             Vector2 tilePos = GetTileCoordinates(mousePos[0],mousePos[1]);
             Debug.Log($"CREATE oneway {tilePos}");
-            PlaceOneWayDoor((int)tilePos[0],(int)tilePos[1]);
+            int dir = mode - 10;
+            PlaceOneWayDoor((int)tilePos[0],(int)tilePos[1],dir);
             
-           objectList.Add(new Vector4(tilePos[0],tilePos[1],-1,OConst.oneway));
+           objectList.Add(new Vector4(tilePos[0],tilePos[1],dir,OConst.oneway));
         }
 
          //adding obsticle to map where user clicks
@@ -824,18 +848,18 @@ public class Sandbox : MonoBehaviour
         for (int i = 0; i < gridLength; i++)
         {
             //top : x = 0, y = i
-            GenerateTile(0, i);
+            GenerateOuterTile(0, i);
 
             //bottom: x = 9, y = i
-            GenerateTile((int)gridLength - 1, i);
+            GenerateOuterTile((int)gridLength - 1, i);
         }
 
         for (int i = 1; i < gridLength - 1; i++)
         {
             //left x = i, y = 0
-            GenerateTile(i, 0);
+            GenerateOuterTile(i, 0);
             //right x = i, y = 9
-            GenerateTile(i, (int)gridLength - 1);
+            GenerateOuterTile(i, (int)gridLength - 1);
         }
     }
 
@@ -889,43 +913,25 @@ public class Sandbox : MonoBehaviour
         objectListObjects.Add(new Tuple<List<GameObject>,Vector4>(powerWalkObjList,new Vector4(x,y,0,OConst.wallkThru)));
 
     }
-    //oneway up (TODO wil be to add new directions)
-    void PlaceOneWayDoor(int x, int y)
+    //oneway in 4-direction, dir = 1:UP, 2:DOWN, 3:LEFT, 4:RIGHT
+    void PlaceOneWayDoor(int x, int y, int dir)
     {
-        // left wall
-        GameObject t1 = Instantiate(tile, GetCameraCoordinates(x, y-1), Quaternion.identity);
-        t1.transform.localScale = new Vector3(scale, scale, 1);
-        // right wall
-        GameObject t2 = Instantiate(tile, GetCameraCoordinates(x, y+1), Quaternion.identity);
-        t2.transform.localScale = new Vector3(scale, scale, 1);
-
-        // left door
-        GameObject t = Instantiate(oneWayDoor, GetCameraCoordinates(x, y-0.5f), Quaternion.identity);
-        t.transform.localScale = new Vector3(scale*0.95f, scale * 0.1f, 1);
-        t.GetComponent<HingeJoint2D>().autoConfigureConnectedAnchor = true;
-        t.GetComponent<HingeJoint2D>().connectedAnchor = new Vector2(0f, 0f);
-        t.GetComponent<HingeJoint2D>().connectedBody = t1.GetComponent<Rigidbody2D>();
-
-        // right door
-        GameObject tt = Instantiate(oneWayDoor, GetCameraCoordinates(x, y+0.5f), Quaternion.identity);
-        tt.transform.localScale = new Vector3(scale*0.95f, scale * 0.1f, 1);
-        tt.GetComponent<HingeJoint2D>().autoConfigureConnectedAnchor = true;
-        tt.GetComponent<HingeJoint2D>().connectedAnchor = new Vector2(0f, 0f);
-        tt.GetComponent<HingeJoint2D>().connectedBody = t2.GetComponent<Rigidbody2D>();
-        // changing the rotation direction and force
-        JointAngleLimits2D limit = tt.GetComponent<HingeJoint2D>().limits;
-        limit.min = 270;
-        limit.max = 180;
-        tt.GetComponent<HingeJoint2D>().limits = limit;
-        JointMotor2D motor = tt.GetComponent<HingeJoint2D>().motor;
-        motor.motorSpeed = -1000;
-        tt.GetComponent<HingeJoint2D>().motor = motor;
-        Physics2D.IgnoreCollision(tt.GetComponent<BoxCollider2D>(), t2.GetComponent<BoxCollider2D>());
-
-        // direction img
-        GameObject direction = Instantiate(oneWayDirection, GetCameraCoordinates(x, y), Quaternion.identity);
-        List<GameObject> oneWayDoorObj = new List<GameObject>{t1,t2,t,tt,direction};
-        objectListObjects.Add(new Tuple<List<GameObject>,Vector4>(oneWayDoorObj,new Vector4(x,y,0,OConst.oneway)));
+        GameObject oneway = Instantiate(oneWayDoorSet, GetCameraCoordinates(x, y), Quaternion.identity);
+        oneway.transform.localScale = new Vector3(scale * 3, scale, 1);
+        switch (dir)
+        {
+            case 2:
+                oneway.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, 180f));
+                break;
+            case 3:
+                oneway.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, 90f));
+                break;
+            case 4:
+                oneway.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, 270f));
+                break;
+        }
+        List<GameObject> oneWayDoorObj = new List<GameObject>{oneway};
+        objectListObjects.Add(new Tuple<List<GameObject>,Vector4>(oneWayDoorObj,new Vector4(x,y,dir,OConst.oneway)));
 
 
     }
@@ -938,6 +944,14 @@ public class Sandbox : MonoBehaviour
         GameObject t = Instantiate(tile, GetCameraCoordinates(x, y), Quaternion.identity);
         t.transform.localScale = new Vector3(scale, scale, 1);
         tileList.Add(new Tuple<GameObject,Vector2>(t,new Vector2(x,y)));
+
+    }
+    //outer tiles for wall of map, prevents walkthruwalls from passing outside map area
+    void GenerateOuterTile(int x, int y)
+    {
+        GameObject t = Instantiate(tile, GetCameraCoordinates(x, y), Quaternion.identity);
+        t.transform.localScale = new Vector3(scale, scale, 1);
+        t.tag = "outerTile";
 
     }
 

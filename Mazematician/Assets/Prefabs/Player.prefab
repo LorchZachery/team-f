@@ -311,5 +311,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   score: 0
   targetScore: 0
-  gridManager: {fileID: 4513361442820247049, guid: de7e607de0b7f42d1aa9efbb9bc16b21, type: 3}
+  coins: 0
   scoreText: {fileID: 646721742207440632}
