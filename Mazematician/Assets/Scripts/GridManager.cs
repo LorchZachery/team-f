@@ -445,7 +445,6 @@ public class GridManager : MonoBehaviour
         TransformGameObjects(GameObject.FindGameObjectsWithTag("powerUpWalkThru"), angle);
         TransformGameObjects(GameObject.FindGameObjectsWithTag("breakableTile"), angle);
         ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
-        ApplyGravity(GameObject.FindGameObjectsWithTag("breakableTileParticle"));
     }
 
     void TransformGameObjects(GameObject[] gameObjects, float z)
