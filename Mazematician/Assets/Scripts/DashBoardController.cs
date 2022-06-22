@@ -118,4 +118,9 @@ public class DashBoardController : MonoBehaviour
             timerText.enabled = true;
         }
     }
+
+    public void QuitButton()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
 }
