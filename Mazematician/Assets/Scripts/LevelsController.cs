@@ -7,6 +7,18 @@ using UnityEngine.SceneManagement;
 public class LevelsController : MonoBehaviour
 {
     public static string LevelName;
+    public static int LevelNumber;
+
+    // Initializing dictionary storing level numbers and level names
+    public static Dictionary<int, string> levelNumberToName = new Dictionary<int, string>
+    {
+        {1, "null"},
+        {2, "lorch_1"},
+        {3, "ashley_1"},
+        {4, "lorch_1"},
+        {5, "ashley_1"}
+    };
+
 
     public void BackButton()
     {
@@ -15,31 +27,36 @@ public class LevelsController : MonoBehaviour
 
     public void Level1Button()
     {
-        LevelName = "null";
+        LevelNumber = 1;
+        LevelName = levelNumberToName[LevelNumber];
         SceneManager.LoadScene("SampleGrid");
     }
 
     public void Level2Button()
     {
-        LevelName = "lorch_1";
+        LevelNumber = 2;
+        LevelName = levelNumberToName[LevelNumber];
         SceneManager.LoadScene("SampleGrid");
     }
 
     public void Level3Button()
     {
-        // LevelName = "level1_lorch";
-        // SceneManager.LoadScene("SampleGrid");
+        LevelNumber = 3;
+        LevelName = levelNumberToName[LevelNumber];
+        SceneManager.LoadScene("SampleGrid");
     }
 
     public void Level4Button()
     {
-        // LevelName = "level2_lorch";
-        // SceneManager.LoadScene("SampleGrid");
+        LevelNumber = 4;
+        LevelName = levelNumberToName[LevelNumber];
+        SceneManager.LoadScene("SampleGrid");
     }
 
     public void Level5Button()
     {
-        // LevelName = "level3_lorch";
-        // SceneManager.LoadScene("SampleGrid");
+        LevelNumber = 5;
+        LevelName = levelNumberToName[LevelNumber];
+        SceneManager.LoadScene("SampleGrid");
     }
 }
