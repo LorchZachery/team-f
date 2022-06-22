@@ -39,28 +39,7 @@ public class BlockController : MonoBehaviour
                 UpdateText();
                 UpdateColor();
             }
-            /*
-            * Code to prevent diagonal movement
-            */
-
-            
         }
-
-        
-        //Vector2 direction = rigidbody.velocity.normalized;
-        //float x = direction.x;
-        //float y = direction.y;
-        //if(Mathf.Abs(x) > Mathf.Abs(y))
-        //{
-        //    int dir = x > 0 ? 1 : -1;
-        //    rigidbody.velocity = new Vector2(1 * dir, 0);
-        //}
-        //else if(Mathf.Abs(x) < Mathf.Abs(y))
-        //{
-        //    int dir = y > 0 ? 1 : -1;
-        //    rigidbody.velocity = new Vector2(0, 1 * dir);
-        //}
-        
     }
 
     public void SetPoints(int points)
@@ -110,23 +89,5 @@ public class BlockController : MonoBehaviour
         {
             gameObject.GetComponent<Renderer>().material.color = new Color(224f / 255f, 224f / 255f, 224f / 255f);
         }
-    }
-
-    private Vector2 getDirection(Vector2 velocity)
-    {
-        float x = velocity.x;
-        float y = velocity.y;
-        if (Mathf.Abs(x) > Mathf.Abs(y))
-        {
-            int dir = x > 0 ? 1 : -1;
-            return new Vector2(1*dir, 0);
-        }
-        else if (Mathf.Abs(x) < Mathf.Abs(y))
-        {
-            int dir = y > 0 ? 1 : -1;
-            return new Vector2(0, 1*dir);
-        }
-
-        return new Vector2(0, 0);
     }
 }

@@ -74,6 +74,8 @@ public class GridManager : MonoBehaviour
     private bool read = false;
     public string LevelName;
 
+    AnalyticsManager analyticsManager;
+
     //adds win block script to winblock
     //calculates to see if the player is at the target
     void Awake()
@@ -81,6 +83,8 @@ public class GridManager : MonoBehaviour
         var script = winBlock.GetComponent<GameEndController>();
         script.targetScore = target;
         LevelName = LevelsController.LevelName;
+        analyticsManager = AnalyticsManager.GetAnalyticsManager();
+        analyticsManager.Reset(LevelName);
     }
 
     //Maze Generation, player, blocks and obsticle placement
@@ -445,7 +449,6 @@ public class GridManager : MonoBehaviour
         TransformGameObjects(GameObject.FindGameObjectsWithTag("powerUpWalkThru"), angle);
         TransformGameObjects(GameObject.FindGameObjectsWithTag("breakableTile"), angle);
         ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
-        ApplyGravity(GameObject.FindGameObjectsWithTag("breakableTileParticle"));
     }
 
     void TransformGameObjects(GameObject[] gameObjects, float z)

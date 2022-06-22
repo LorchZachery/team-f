@@ -101,10 +101,9 @@ public class PlayerController : MonoBehaviour
                 collist.Add(collision.gameObject.GetComponent<PolygonCollider2D>());
             }
             else {
-              Debug.Log("HIT TOP");
-              analyticsManager.RegisterEvent(GameEvent.COLLISION, collision.gameObject.tag);
-              analyticsManager.Publish();
-              SceneManager.LoadScene("GameOver");
+                Debug.Log("HIT TOP");
+                PublishGameData(false, "spike");
+                SceneManager.LoadScene("GameOver");
             }
         }
         else if (collision.gameObject.CompareTag("SpikeBottom"))
@@ -126,6 +125,15 @@ public class PlayerController : MonoBehaviour
             Physics2D.IgnoreCollision(collision.gameObject.GetComponent<BoxCollider2D>(), GetComponent<CircleCollider2D>());
             collist.Add(collision.gameObject.GetComponent<BoxCollider2D>());
 
+        }
+
+        if(collision.gameObject.CompareTag("target")) {
+            var script = collision.gameObject.GetComponent<GameEndController>();
+            if(script.targetScore == score)
+            {
+                PublishGameData(true, "won");
+                SceneManager.LoadScene("GameOver");
+            }
         }
     }
 
@@ -151,7 +159,7 @@ public class PlayerController : MonoBehaviour
 
         if (this.score < 2)
         {
-            analyticsManager.Publish();
+            PublishGameData(false, "obstacle");
             SceneManager.LoadScene("GameOver");
         }
         else if (this.score == this.targetScore)
@@ -207,13 +215,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void NotifyPlayerWin()
-    {
-        this.score = 2;
-        analyticsManager.RegisterEvent(GameEvent.PLAYER_WON, 12);
-        UpdateText("Player won");
-    }
-
     public void setGridManager(GameObject gm)
     {
         this.gridManager = gm;
@@ -254,5 +255,20 @@ public class PlayerController : MonoBehaviour
         {
             GetComponent<SpriteRenderer>().color = new Color(1, 1, 1);
         }
+    }
+
+    public void PublishGameData(bool won, string reason)
+    {
+        if(won)
+        {
+            analyticsManager.RegisterEvent(GameEvent.PLAYER_WON, dashboardController.GetRemainingTime());
+        } else
+        {
+            analyticsManager.RegisterEvent(GameEvent.PLAYER_LOST, (int) score);
+        }
+        analyticsManager.RegisterEvent(GameEvent.EXIT_REASON, reason);
+        analyticsManager.RegisterEvent(GameEvent.TIME_SPENT, dashboardController.GetRemainingTime());
+        analyticsManager.RegisterEvent(GameEvent.COINS_SPENT, coins);
+        analyticsManager.Publish();
     }
 }

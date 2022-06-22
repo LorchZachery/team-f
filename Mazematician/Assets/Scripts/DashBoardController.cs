@@ -19,8 +19,6 @@ public class DashBoardController : MonoBehaviour
     bool shrinkTime = false;
     int bonusCount = 0;
 
-    private AnalyticsManager analyticsManager;
-
     public TextMeshProUGUI rewardsText;
     public TextMeshProUGUI timerText;
     // Start is called before the first frame update
@@ -30,7 +28,6 @@ public class DashBoardController : MonoBehaviour
         timerRunning = true;
         UpdateScore(0);
         DisplayTargetText();
-        analyticsManager = AnalyticsManager.GetAnalyticsManager();
     }
 
     // Update is called once per frame
@@ -123,9 +120,8 @@ public class DashBoardController : MonoBehaviour
             else
             {
                 timerText.enabled = true;
-                analyticsManager.Publish();
-                Debug.Log("Out of time");
-                //TODO End Game ? or Use rewards?
+                var script = player.GetComponent<PlayerController>();
+                script.PublishGameData(false, "Out of Time");
                 SceneManager.LoadScene("GameOver");
                 timerRunning = false;
             }
@@ -207,6 +203,7 @@ public class DashBoardController : MonoBehaviour
 
     public void QuitButton()
     {
+        
         SceneManager.LoadScene("MainMenu");
     }
     IEnumerator Shrink()
@@ -227,6 +224,10 @@ public class DashBoardController : MonoBehaviour
         timerText.color = Color.white;
     }
 
+    public float GetRemainingTime()
+    {
+        return remainingTime;
+    }
     //IEnumerator Freeze()
     //{
     //    {
