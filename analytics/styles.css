@@ -1,0 +1,13 @@
+.container {
+  height: 400px;
+  width: 800px;
+  padding-top: 40px;
+}
+
+
+.content {
+  max-width: 800px;
+  margin: auto;
+}
+
+body{ margin:0 auto; }

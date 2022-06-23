@@ -147,7 +147,7 @@ public class PlayerController : MonoBehaviour
             if (targetScore == score)
             {
                 PublishGameData(true, "won");
-                SceneManager.LoadScene("GameOver");
+                SceneManager.LoadScene("GameOverWon");
             }
         }
     }
