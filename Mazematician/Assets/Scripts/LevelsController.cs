@@ -15,9 +15,9 @@ public class LevelsController : MonoBehaviour
     {
         {1, "null"},
         {2, "lorch_1"},
-        {3, "ashley_1"},
-        {4, "lorch_1"},
-        {5, "ashley_1"}
+        {3, "lorch_2"},
+        {4, "null"},
+        {5, "null"}
     };
 
 

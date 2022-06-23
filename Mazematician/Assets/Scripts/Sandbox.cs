@@ -917,6 +917,8 @@ public class Sandbox : MonoBehaviour
     {
         GameObject t = Instantiate(spikeObstacle, GetCameraCoordinates(x, y), Quaternion.identity);
         // t.transform.localScale = new Vector3(scale * 0.30f, scale * 0.30f, 1);
+        GameObject spiketop = t.transform.GetChild(3).gameObject;
+        spiketop.tag = "Untagged";
         List<GameObject> spikeObjList = new List<GameObject> {t};
         objectListObjects.Add(new Tuple<List<GameObject>,Vector4>(spikeObjList,new Vector4(x,y,0,OConst.spike)));
 
