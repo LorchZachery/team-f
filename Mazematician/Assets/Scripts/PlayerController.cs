@@ -59,7 +59,7 @@ public class PlayerController : MonoBehaviour
         y = (dir1 + dir2).y;
         GetComponent<Rigidbody2D>().velocity = new Vector2(x * ballSpeed * isDiagonal, y * ballSpeed * isDiagonal);
 
-        if (Input.GetKeyDown(KeyCode.P) && coins > 0f) {
+        if (Input.GetKeyDown(KeyCode.M) && coins >= 3f) {
             playerShield.SetActive(true);
             if (!isCoroutine) {
                 isCoroutine = true;
@@ -72,7 +72,7 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator handleShield()
     {
-        coins--;
+        coins -= 3;
         yield return new WaitForSeconds(5.0f);
         playerShield.SetActive(false);
         isCoroutine = false;
