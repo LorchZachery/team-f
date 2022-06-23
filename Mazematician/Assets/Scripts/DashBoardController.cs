@@ -28,6 +28,7 @@ public class DashBoardController : MonoBehaviour
         timerRunning = true;
         UpdateScore(0);
         DisplayTargetText();
+        DisplayLevelText();
     }
 
     // Update is called once per frame
@@ -60,7 +61,7 @@ public class DashBoardController : MonoBehaviour
             {
                 //Debug.Log("Time remaining: " + remainingTime);
                 remainingTime -= Time.deltaTime;
-                
+
                 if (player != null)
                 {
                     if (player.GetComponent<PlayerController>().coins >= 3)
@@ -216,7 +217,7 @@ public class DashBoardController : MonoBehaviour
 
     public void QuitButton()
     {
-        
+
         SceneManager.LoadScene("MainMenu");
     }
     IEnumerator Shrink()
@@ -260,12 +261,12 @@ public class DashBoardController : MonoBehaviour
 
     //}
 
-    //void DisplayLevelText()
-    //{
-    //    GameObject levelObject = gameObject.transform.GetChild(18).gameObject;
-    //    TextMeshProUGUI levelText = levelObject.GetComponent<TextMeshProUGUI>();
-    //    levelText.text = "Level: " + LevelsController.LevelNumber;
-    //}
+    void DisplayLevelText()
+    {
+        GameObject levelObject = gameObject.transform.GetChild(16).gameObject;
+        TextMeshProUGUI levelText = levelObject.GetComponent<TextMeshProUGUI>();
+        levelText.text = "Level: " + LevelsController.LevelNumber;
+    }
 
     public void RestartButton()
     {
