@@ -29,7 +29,7 @@ public class ObstacleController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("player"))
         {
-            analyticsManager.RegisterEvent(GameEvent.COLLISION, tag);
+            
             var script = collision.gameObject.GetComponent<PlayerController>();
             if (!script.playerShield.activeInHierarchy) {
                 GameObject penaltyObj = gameObject.transform.GetChild(0).gameObject;
@@ -42,6 +42,7 @@ public class ObstacleController : MonoBehaviour
                 {
                     script.SetScore((int)(script.score * 0.25));
                 }
+                analyticsManager.RegisterEvent(GameEvent.COLLISION, penaltyText.text);
             }
             else {
                 Physics2D.IgnoreCollision(collision.gameObject.GetComponent<CircleCollider2D>(), GetComponent<CircleCollider2D>());
