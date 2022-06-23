@@ -5,11 +5,13 @@ using UnityEngine.Analytics;
 
 public class AnalyticsManager
 {
-    int level;
+    string level;
     float coinsCollected;
     float coinsSpent;
     float timeToReachTarget;
     float pointsAtDeath;
+    string exitReason;
+    float remainingTime;
 
     IDictionary<string, object> powerUpPurchased;
     IDictionary<string, object> powerUpSpent;
@@ -22,7 +24,7 @@ public class AnalyticsManager
         if (instance == null)
         {
             instance = new AnalyticsManager();
-            instance.Reset(0);
+            instance.Reset("0");
         }
         return instance;
     }
@@ -40,7 +42,7 @@ public class AnalyticsManager
                 }
             case GameEvent.COINS_SPENT:
                 {
-                    coinsSpent += (float)data;
+                    coinsSpent = (int)data;
                     break;
                 }
             case GameEvent.PLAYER_WON:
@@ -50,14 +52,15 @@ public class AnalyticsManager
                 }
             case GameEvent.PLAYER_LOST:
                 {
-                    pointsAtDeath = (float)data;
+                    pointsAtDeath = (int)data;
                     break;
                 }
             case GameEvent.POWER_UP_PURCHASED:
                 {
                     string powerUp = (string)data;
                     int count = 1;
-                    if(powerUpPurchased.ContainsKey(powerUp)) {
+                    if (powerUpPurchased.ContainsKey(powerUp))
+                    {
                         count = ((int)powerUpPurchased[powerUp]) + 1;
                     }
                     powerUpPurchased[powerUp] = count;
@@ -86,13 +89,23 @@ public class AnalyticsManager
                     collidedObstacles[powerUp] = count;
                     break;
                 }
+            case GameEvent.EXIT_REASON:
+                {
+                    exitReason = (string)data;
+                    break;
+                }
+            case GameEvent.TIME_SPENT:
+                {
+                    remainingTime = (float)data;
+                    break;
+                }
 
             default: break;
 
         }
     }
 
-    public void Reset(int level)
+    public void Reset(string level)
     {
         this.level = level;
         coinsCollected = 0;
@@ -113,10 +126,12 @@ public class AnalyticsManager
         IDictionary<string, object> analytics = new Dictionary<string, object>();
         analytics.Add("level", level);
         analytics.Add("coinsCollected", coinsCollected);
-        analytics.Add("coinsSpent", coinsSpent);
+        analytics.Add("coinsSpent", coinsCollected - coinsSpent);
         analytics.Add("timeToReachTarget", timeToReachTarget);
         analytics.Add("pointsAtDeath", pointsAtDeath);
-    
+        analytics.Add("exitReason", exitReason);
+        analytics.Add("remainingTime", remainingTime);
+
         AnalyticsResult analyticsResult = Analytics.CustomEvent("userData", analytics);
         Debug.Log(analyticsResult);
 
@@ -128,12 +143,6 @@ public class AnalyticsManager
 
         analyticsResult = Analytics.CustomEvent("collidedObstacles", collidedObstacles);
         Debug.Log(analyticsResult);
-
-        Debug.Log(JsonUtility.ToJson(analytics));
-        Debug.Log(JsonUtility.ToJson(powerUpPurchased));
-        Debug.Log(JsonUtility.ToJson(powerUpSpent));
-        Debug.Log(JsonUtility.ToJson(collidedObstacles));
-
     }
 
 }
