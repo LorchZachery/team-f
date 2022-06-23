@@ -96,17 +96,17 @@ public class GridManager : MonoBehaviour
         // Instantiate warning red flash creation to alert user to gravity switch
         warning = Instantiate(warningPrefab, new Vector2(Screen.width, Screen.height), Quaternion.identity);
         warning.gameObject.SetActive(false);
-        TextAsset levelFile = Resources.Load<TextAsset>("Levels/" + LevelName);
-        Debug.Log(levelFile);
 
-        if (levelFile == null)
+        //TextAsset levelFile = Resources.Load<TextAsset>("Levels/" + LevelName);
+        //Debug.Log(levelFile);
+        if (!File.Exists("Assets/Levels/" + LevelName + ".txt"))
+        //if (levelFile == null)
         {
             //setting screen length and height and translating it to a camera scale
             screenWidth = 24;
 
             gridLength = 20; //10 + 2; // 8 x 8 grid + 1 top(left) wall + 1 bottom(right);
             /* We need to scale the the tiles such that grid fits in camera(screen) */
-
 
             //saving the player cooridantes and generating a list of cooridinates where blocks
             //obsticles and walls should not be allow to generate. prevents crappy starting situations
@@ -117,9 +117,10 @@ public class GridManager : MonoBehaviour
         }
         else
         {
-            string[] levelData = levelFile.text.Split("\n");
-            Debug.Log(levelData.Length);
-            fileObject.ReadTextAsset(levelData);
+            fileObject.ReadFile(LevelName);
+            //string[] levelData = levelFile.text.Split("\n");
+            //Debug.Log(levelData.Length);
+            //fileObject.ReadTextAsset(levelData);
             setFileClassVars(fileObject);
 
             read = true;
