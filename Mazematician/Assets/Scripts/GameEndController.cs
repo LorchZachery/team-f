@@ -24,18 +24,4 @@ public class GameEndController : MonoBehaviour
         this.targetScore = value;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("player"))
-        {
-            var script = collision.gameObject.GetComponent<PlayerController>();
-            targetScore = script.targetScore;
-
-            if (script.score == targetScore)
-            {
-                // script.NotifyPlayerWin();
-                SceneManager.LoadScene("GameOverWon");
-            }
-        }
-    }
 }
