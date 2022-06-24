@@ -482,6 +482,7 @@ MonoBehaviour:
   winBlock: {fileID: 2483983227542680485, guid: 6bb51171fc4084713befef5614528d83, type: 3}
   myCamera: {fileID: 534770649}
   spikeObstacle: {fileID: 2927829571682668071, guid: 3c606bbb02d784689b305601a99fbd0b, type: 3}
+  spikeObstacleTwoWide: {fileID: 843929278336598885, guid: 9bd3cdda2a71a410db07dd8c503b72cd, type: 3}
   coin: {fileID: 2483983227542680485, guid: d6f7d26c050c74901a8743d57ecbb8ef, type: 3}
   powerUpWalkThru: {fileID: 4918814534900967767, guid: c99ccf159be3f4f4594ccc88063d0161, type: 3}
   oneWayDoorSet: {fileID: 7656152047234893126, guid: 9b7ed69081cde9147a0e164ae387fde7, type: 3}
@@ -493,5 +494,5 @@ MonoBehaviour:
   blockList: []
   objectList: []
   warningPrefab: {fileID: 3725297818231593299, guid: f4e79fe507a8e174bbd06bda189a76c7, type: 3}
-  LevelName: lorch_1
+  LevelName: lorch_2
   textbox: {fileID: 1036459285}
