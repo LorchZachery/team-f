@@ -17,6 +17,7 @@ static class OConst
     public const int coin = 3;
     public const int oneway = 4;
     public const int breakableTile = 5;
+    public const int spikeTwo = 6;
 
 }
 
@@ -45,6 +46,7 @@ public class GridManager : MonoBehaviour
     public GameObject winBlock;
     public GameObject myCamera;
     public GameObject spikeObstacle;
+    public GameObject spikeObstacleTwoWide;
     public GameObject coin;
     public GameObject powerUpWalkThru;
     public GameObject breakableWall;
@@ -537,6 +539,11 @@ public class GridManager : MonoBehaviour
     void PlaceSpikeObstacle(int x, int y)
     {
         GameObject t = Instantiate(spikeObstacle, GetCameraCoordinates(x, y), Quaternion.identity);
+        // t.transform.localScale = new Vector3(scale * 0.30f, scale * 0.30f, 1);
+    }
+     void PlaceSpikeObstacleTwoWide(int x, int y)
+    {
+        GameObject t = Instantiate(spikeObstacleTwoWide, GetCameraCoordinates(x, y), Quaternion.identity);
         // t.transform.localScale = new Vector3(scale * 0.30f, scale * 0.30f, 1);
     }
 
