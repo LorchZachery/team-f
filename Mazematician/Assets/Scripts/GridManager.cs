@@ -74,6 +74,8 @@ public class GridManager : MonoBehaviour
     private bool read = false;
     public string LevelName;
 
+    AnalyticsManager analyticsManager;
+
     //adds win block script to winblock
     //calculates to see if the player is at the target
     void Awake()
@@ -81,6 +83,8 @@ public class GridManager : MonoBehaviour
         var script = winBlock.GetComponent<GameEndController>();
         script.targetScore = target;
         LevelName = LevelsController.LevelName;
+        analyticsManager = AnalyticsManager.GetAnalyticsManager();
+        analyticsManager.Reset(LevelName);
     }
 
     //Maze Generation, player, blocks and obsticle placement
@@ -93,14 +97,16 @@ public class GridManager : MonoBehaviour
         warning = Instantiate(warningPrefab, new Vector2(Screen.width, Screen.height), Quaternion.identity);
         warning.gameObject.SetActive(false);
 
+        //TextAsset levelFile = Resources.Load<TextAsset>("Levels/" + LevelName);
+        //Debug.Log(levelFile);
         if (!File.Exists("Assets/Levels/" + LevelName + ".txt"))
+        //if (levelFile == null)
         {
             //setting screen length and height and translating it to a camera scale
             screenWidth = 24;
 
             gridLength = 20; //10 + 2; // 8 x 8 grid + 1 top(left) wall + 1 bottom(right);
             /* We need to scale the the tiles such that grid fits in camera(screen) */
-
 
             //saving the player cooridantes and generating a list of cooridinates where blocks
             //obsticles and walls should not be allow to generate. prevents crappy starting situations
@@ -112,6 +118,9 @@ public class GridManager : MonoBehaviour
         else
         {
             fileObject.ReadFile(LevelName);
+            //string[] levelData = levelFile.text.Split("\n");
+            //Debug.Log(levelData.Length);
+            //fileObject.ReadTextAsset(levelData);
             setFileClassVars(fileObject);
 
             read = true;
@@ -212,9 +221,10 @@ public class GridManager : MonoBehaviour
         ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
 
         //invoking gravity to switch every 7 seconds, with a red screen flash before
-        InvokeRepeating("rotateGameRoutine", 7.0f, 7.0f);
-
-
+        if(LevelName != "ag_tutorial")
+        {
+            InvokeRepeating("rotateGameRoutine", 7.0f, 7.0f);
+        }
     }
 
     // Update is called once per frame
