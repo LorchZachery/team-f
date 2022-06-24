@@ -357,11 +357,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94c37dc3d287b19459b93041bf07bcf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &1036459285 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5244882066092618206, guid: 830d1c35077b66948aa1fb42235db78f, type: 3}
-  m_PrefabInstance: {fileID: 401732824}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1495555049
 GameObject:
   m_ObjectHideFlags: 0
@@ -494,11 +489,5 @@ MonoBehaviour:
   blockList: []
   objectList: []
   warningPrefab: {fileID: 3725297818231593299, guid: f4e79fe507a8e174bbd06bda189a76c7, type: 3}
-
-
-
-  LevelName: lorch_2
-
-
-
-  textbox: {fileID: 1036459285}
+  LevelName: 
+  textbox: {fileID: 5244882066092618206, guid: 830d1c35077b66948aa1fb42235db78f, type: 3}
