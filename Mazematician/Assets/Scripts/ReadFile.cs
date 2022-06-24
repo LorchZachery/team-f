@@ -171,7 +171,7 @@ public class FileClass
 
     public void writeToFile(string LevelName)
     {
-        string path = "Assets/Levels/" + LevelName + ".txt";
+        string path = "Assets/Resources/Levels/" + LevelName + ".txt";
         StreamWriter writer = new StreamWriter(path, true);
         writer.WriteLine("width height gridlength");
         writer.WriteLine($"{screenWidth},{screenHeight},{gridLength}");

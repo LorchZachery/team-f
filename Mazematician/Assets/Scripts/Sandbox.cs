@@ -460,7 +460,7 @@ public class Sandbox : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.S))
         {
             Debug.Log("SAVING");
-            File.Delete("Assets/Levels/" + LevelName + ".txt");
+            File.Delete("Assets/Resources/Levels/" + LevelName + ".txt");
             setWriteFileClassVars(fileObject);
             fileObject.writeToFile(LevelName);
         }
