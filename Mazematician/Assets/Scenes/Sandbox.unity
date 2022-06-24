@@ -123,6 +123,11 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &70108231 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5244882066092618206, guid: 830d1c35077b66948aa1fb42235db78f, type: 3}
+  m_PrefabInstance: {fileID: 401732824}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &401732824
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -468,8 +473,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43f48efd7beee2047a112ec827e191c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  screenWidth: 60
-  gridLength: 18
+  screenWidth: 15
+  gridLength: 12
   tile: {fileID: 2483983227542680485, guid: ed7b1c1c964724d7183b701b9faedfc0, type: 3}
   player: {fileID: 2483983227542680485, guid: 9e9aea2a167394a11a5da1040029dcd8, type: 3}
   block: {fileID: 2483983227542680485, guid: dc5534340b8d6492d8d4f4d5d63a4441, type: 3}
@@ -489,5 +494,5 @@ MonoBehaviour:
   blockList: []
   objectList: []
   warningPrefab: {fileID: 3725297818231593299, guid: f4e79fe507a8e174bbd06bda189a76c7, type: 3}
-  LevelName: 
-  textbox: {fileID: 5244882066092618206, guid: 830d1c35077b66948aa1fb42235db78f, type: 3}
+  LevelName: lorch_3
+  textbox: {fileID: 70108231}
