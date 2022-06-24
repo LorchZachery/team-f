@@ -212,6 +212,7 @@ public class GridManager : MonoBehaviour
                 {
                     PlaceSpikeObstacleTwoWide((int)obj[0], (int)obj[1]);
 
+                }
                  if (obj[3] == OConst.breakableTile)
                 {
                     PlaceBreakableWall((int)obj[0], (int)obj[1]);
@@ -360,7 +361,7 @@ public class GridManager : MonoBehaviour
         return new Vector3(cartesianX + (0.5f * scale), cartesianY - (0.5f * scale), z);
     }
 
-    public void AddWinBlock(int value)
+    void AddWinBlock(int value)
     {
         Debug.Log("IN ADD WIN BLOCK");
         bool end = false;
