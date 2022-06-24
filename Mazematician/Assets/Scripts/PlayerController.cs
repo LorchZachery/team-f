@@ -60,6 +60,7 @@ public class PlayerController : MonoBehaviour
         GetComponent<Rigidbody2D>().velocity = new Vector2(x * ballSpeed * isDiagonal, y * ballSpeed * isDiagonal);
 
         if (Input.GetKeyDown(KeyCode.M) && coins >= 3f) {
+            analyticsManager.RegisterEvent(GameEvent.POWER_UP_USED, "shield");
             playerShield.SetActive(true);
             if (!isCoroutine) {
                 isCoroutine = true;
@@ -102,7 +103,8 @@ public class PlayerController : MonoBehaviour
             }
             else {
                 Debug.Log("HIT TOP");
-                PublishGameData(false, "spike");
+                analyticsManager.RegisterEvent(GameEvent.COLLISION, "spike");
+                PublishGameData(false, "obstacle");
                 SceneManager.LoadScene("GameOver");
             }
         }
@@ -270,7 +272,7 @@ public class PlayerController : MonoBehaviour
         }
         analyticsManager.RegisterEvent(GameEvent.EXIT_REASON, reason);
         analyticsManager.RegisterEvent(GameEvent.TIME_SPENT, dashboardController.GetRemainingTime());
-        analyticsManager.RegisterEvent(GameEvent.COINS_SPENT, coins);
+        analyticsManager.RegisterEvent(GameEvent.COINS_REMAINING, coins);
         analyticsManager.Publish();
     }
 

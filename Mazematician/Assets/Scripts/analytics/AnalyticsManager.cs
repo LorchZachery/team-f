@@ -6,15 +6,16 @@ using UnityEngine.Analytics;
 public class AnalyticsManager
 {
     string level;
+    float totalCoins;
     float coinsCollected;
-    float coinsSpent;
+    float coinsRemaining;
     float timeToReachTarget;
     float pointsAtDeath;
     string exitReason;
     float remainingTime;
+    float totalTime;
 
-    IDictionary<string, object> powerUpPurchased;
-    IDictionary<string, object> powerUpSpent;
+    IDictionary<string, object> powerUpUsed;
     IDictionary<string, object> collidedObstacles;
 
     private static AnalyticsManager instance;
@@ -36,48 +37,56 @@ public class AnalyticsManager
         switch (gameEvent)
         {
             case GameEvent.COINS_COLLECTED:
+                // Player Controller: when player collides with coin
                 {
                     coinsCollected++;
                     break;
                 }
-            case GameEvent.COINS_SPENT:
+            case GameEvent.COINS_REMAINING:
+                // Player Controller: End of game
                 {
-                    coinsSpent = (int)data;
+                    coinsRemaining = (int)data;
+                    break;
+                }
+            case GameEvent.COINS_TOTAL:
+                // Grid Manager: Initalize data
+                {
+                    totalCoins = (int)data;
                     break;
                 }
             case GameEvent.PLAYER_WON:
+                // Player Controller: Won
                 {
                     timeToReachTarget = (float)data;
                     break;
                 }
             case GameEvent.PLAYER_LOST:
+                // Player Controller: Lost
                 {
                     pointsAtDeath = (int)data;
                     break;
                 }
-            case GameEvent.POWER_UP_PURCHASED:
-                {
-                    string powerUp = (string)data;
-                    int count = 1;
-                    if (powerUpPurchased.ContainsKey(powerUp))
-                    {
-                        count = ((int)powerUpPurchased[powerUp]) + 1;
-                    }
-                    powerUpPurchased[powerUp] = count;
-                    break;
-                }
             case GameEvent.POWER_UP_USED:
+                /* PowerUpWalkthrough: Player controller
+                 * Shield: Player controller
+                 * Shrink: Dashboard controller
+                 * Extra time: Dashboard controller
+                 */
                 {
                     string powerUp = (string)data;
                     int count = 1;
-                    if (powerUpSpent.ContainsKey(powerUp))
+                    if (powerUpUsed.ContainsKey(powerUp))
                     {
-                        count = ((int)powerUpSpent[powerUp]) + 1;
+                        count = ((int)powerUpUsed[powerUp]) + 1;
                     }
-                    powerUpSpent[powerUp] = count;
+                    powerUpUsed[powerUp] = count;
                     break;
                 }
             case GameEvent.COLLISION:
+                /* Player controller: Spike
+                 * Obstacle controller: X0.5 , X 0.25
+                 * TODO One way door;
+                 */
                 {
                     Debug.Log("Registeded collision");
                     string powerUp = (string)data;
@@ -90,13 +99,30 @@ public class AnalyticsManager
                     break;
                 }
             case GameEvent.EXIT_REASON:
+                /* Time Loss: DashBoard controller
+                 * Obstacle Loss: Player Controller
+                 * Spike Loss: Player Controller
+                 * Quit: Dashboard controller
+                 * Restart: Dashboard controller
+                 * Win: Player Controller
+                 */
                 {
                     exitReason = (string)data;
                     break;
                 }
             case GameEvent.TIME_SPENT:
                 {
+                    /* At end of level: Player Controller
+                     */
                     remainingTime = (float)data;
+                    break;
+                }
+            case GameEvent.TOTAL_TIME:
+                /* Initialize: Grid Manager
+                 * Extra time power up: Dashboard controller
+                 */
+                {
+                    totalTime += (float)data;
                     break;
                 }
 
@@ -109,13 +135,14 @@ public class AnalyticsManager
     {
         this.level = level;
         coinsCollected = 0;
-        coinsSpent = 0;
+        coinsRemaining = 0;
         timeToReachTarget = 0;
         pointsAtDeath = 0;
-        powerUpSpent = new Dictionary<string, object>();
-        powerUpSpent["level"] = level;
-        powerUpPurchased = new Dictionary<string, object>();
-        powerUpPurchased["level"] = level;
+        totalTime = 0;
+        remainingTime = 0;
+        totalCoins = 0;
+        powerUpUsed = new Dictionary<string, object>();
+        powerUpUsed["level"] = level;
         collidedObstacles = new Dictionary<string, object>();
         collidedObstacles["level"] = level;
     }
@@ -126,19 +153,20 @@ public class AnalyticsManager
         IDictionary<string, object> analytics = new Dictionary<string, object>();
         analytics.Add("level", level);
         analytics.Add("coinsCollected", coinsCollected);
-        analytics.Add("coinsSpent", coinsCollected - coinsSpent);
+        analytics.Add("coinsSpent", coinsCollected - coinsRemaining);
+        analytics.Add("totalCoins", totalCoins);
+
         analytics.Add("timeToReachTarget", timeToReachTarget);
+        analytics.Add("remainingTime", remainingTime);
+        analytics.Add("totalTime", totalTime);
+
         analytics.Add("pointsAtDeath", pointsAtDeath);
         analytics.Add("exitReason", exitReason);
-        analytics.Add("remainingTime", remainingTime);
 
         AnalyticsResult analyticsResult = Analytics.CustomEvent("userData", analytics);
         Debug.Log(analyticsResult);
 
-        analyticsResult = Analytics.CustomEvent("powerUpPurchased", powerUpPurchased);
-        Debug.Log(analyticsResult);
-
-        analyticsResult = Analytics.CustomEvent("powerUpSpent", powerUpSpent);
+        analyticsResult = Analytics.CustomEvent("powerUpUsed", powerUpUsed);
         Debug.Log(analyticsResult);
 
         analyticsResult = Analytics.CustomEvent("collidedObstacles", collidedObstacles);

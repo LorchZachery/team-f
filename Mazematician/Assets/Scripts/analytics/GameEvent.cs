@@ -5,12 +5,13 @@ using UnityEngine;
 public enum GameEvent
 {
     COINS_COLLECTED,
-    COINS_SPENT,
+    COINS_REMAINING,
+    COINS_TOTAL,
     PLAYER_WON,
     PLAYER_LOST,
     EXIT_REASON,
-    POWER_UP_PURCHASED,
     POWER_UP_USED,
     COLLISION,
-    TIME_SPENT
+    TIME_SPENT,
+    TOTAL_TIME
 }
