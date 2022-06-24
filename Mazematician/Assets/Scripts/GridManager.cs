@@ -233,8 +233,23 @@ public class GridManager : MonoBehaviour
         {
             InvokeRepeating("rotateGameRoutine", 7.0f, 7.0f);
         }
+
+        InitAnalyticsData();
     }
 
+
+    void InitAnalyticsData()
+    {
+        int totalCoins = 0;
+        foreach(var obj in objectList)
+        {
+            if(obj[3] == OConst.coin)
+            {
+                totalCoins++;
+            }
+        }
+        analyticsManager.RegisterEvent(GameEvent.COINS_TOTAL, totalCoins);
+    }
     // Update is called once per frame
     //on update there is a create to rotate the screen slowly
     void Update()

@@ -18,6 +18,7 @@ public class DashBoardController : MonoBehaviour
     bool bonusTime = false;
     bool shrinkTime = false;
     int bonusCount = 0;
+    AnalyticsManager analyticsManager;
 
     public TextMeshProUGUI rewardsText;
     public TextMeshProUGUI timerText;
@@ -28,6 +29,8 @@ public class DashBoardController : MonoBehaviour
         timerRunning = true;
         UpdateScore(0);
         DisplayTargetText();
+        analyticsManager = AnalyticsManager.GetAnalyticsManager();
+        analyticsManager.RegisterEvent(GameEvent.TOTAL_TIME, remainingTime);
     }
 
     // Update is called once per frame
@@ -72,6 +75,8 @@ public class DashBoardController : MonoBehaviour
                         {
                             bonusTime = false;
                             remainingTime += 11;
+                            analyticsManager.RegisterEvent(GameEvent.TOTAL_TIME, 11);
+                            analyticsManager.RegisterEvent(GameEvent.POWER_UP_USED, "bonusTime");
                             StartCoroutine("BonusTime");
                             if (!bonusTime)
                             {
@@ -86,7 +91,7 @@ public class DashBoardController : MonoBehaviour
                         {
                             shrinkTime = false;
                             StartCoroutine("Shrink");
-
+                            analyticsManager.RegisterEvent(GameEvent.POWER_UP_USED, "shrink");
                             if (!shrinkTime)
                             {
                                 player.GetComponent<PlayerController>().coins -= 3;
@@ -214,11 +219,7 @@ public class DashBoardController : MonoBehaviour
         }
     }
 
-    public void QuitButton()
-    {
-        
-        SceneManager.LoadScene("MainMenu");
-    }
+
     IEnumerator Shrink()
     {
         float myScale = 0.16f;
@@ -267,8 +268,29 @@ public class DashBoardController : MonoBehaviour
     //    levelText.text = "Level: " + LevelsController.LevelNumber;
     //}
 
+    public void QuitButton()
+    {
+        UpdateAnalytics("quit");
+        SceneManager.LoadScene("MainMenu");
+    }
+
     public void RestartButton()
     {
+        UpdateAnalytics("restart");
         SceneManager.LoadScene("SampleGrid");
+    }
+
+
+    private void UpdateAnalytics(string reason)
+    {
+        if (player != null)
+        {
+            var script = player.GetComponent<PlayerController>();
+            script.PublishGameData(false, reason);
+        }
+        else
+        {
+            Debug.LogError("Some thing is wrong, player not found");
+        }
     }
 }
