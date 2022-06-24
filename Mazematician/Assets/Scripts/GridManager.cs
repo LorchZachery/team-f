@@ -17,7 +17,6 @@ static class OConst
     public const int coin = 3;
     public const int oneway = 4;
     public const int breakableTile = 5;
-    public const int spikeTwo = 6;
 
 }
 
@@ -46,7 +45,6 @@ public class GridManager : MonoBehaviour
     public GameObject winBlock;
     public GameObject myCamera;
     public GameObject spikeObstacle;
-    public GameObject spikeObstacleTwoWide;
     public GameObject coin;
     public GameObject powerUpWalkThru;
     public GameObject breakableWall;
@@ -207,15 +205,9 @@ public class GridManager : MonoBehaviour
                 {
                     PlaceOneWayDoor((int)obj[0], (int)obj[1], (int)obj[2]);
                 }
-
-                if (obj[3] == OConst.spikeTwo)
-                {
-                    PlaceSpikeObstacleTwoWide((int)obj[0], (int)obj[1]);
-
                  if (obj[3] == OConst.breakableTile)
                 {
                     PlaceBreakableWall((int)obj[0], (int)obj[1]);
-
                 }
 
             }
@@ -225,9 +217,8 @@ public class GridManager : MonoBehaviour
         {
             AddPowerUpWalkThru();
             // PlaceOneWayDoor(16, 16);
-            // PlaceSpikeObstacle(16, 16);
-            PlaceSpikeObstacleTwoWide(16, 16);
-            // PlaceObstacle(14, 14, 0.5f);
+            PlaceSpikeObstacle(16, 16);
+            PlaceObstacle(14, 14, 0.5f);
             PlaceBreakableWall(12, 12);
         }
 
@@ -238,7 +229,7 @@ public class GridManager : MonoBehaviour
         ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
 
         //invoking gravity to switch every 7 seconds, with a red screen flash before
-        if (LevelName != "ag_tutorial")
+        if(LevelName != "ag_tutorial")
         {
             InvokeRepeating("rotateGameRoutine", 7.0f, 7.0f);
         }
@@ -540,12 +531,6 @@ public class GridManager : MonoBehaviour
     void PlaceSpikeObstacle(int x, int y)
     {
         GameObject t = Instantiate(spikeObstacle, GetCameraCoordinates(x, y), Quaternion.identity);
-        // t.transform.localScale = new Vector3(scale * 0.30f, scale * 0.30f, 1);
-    }
-
-    void PlaceSpikeObstacleTwoWide(int x, int y)
-    {
-        GameObject t = Instantiate(spikeObstacleTwoWide, GetCameraCoordinates(x, y), Quaternion.identity);
         // t.transform.localScale = new Vector3(scale * 0.30f, scale * 0.30f, 1);
     }
 
