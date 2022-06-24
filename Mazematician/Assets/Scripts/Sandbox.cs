@@ -143,7 +143,7 @@ public class Sandbox : MonoBehaviour
         textbox.gameObject.SetActive(false);
 
         //if the level name is not a file create a new map
-        if(!File.Exists("Assets/Levels/" + LevelName + ".txt") || new FileInfo("Assets/Levels/" + LevelName + ".txt").Length == 0)
+        if(!File.Exists("Assets/Resources/Levels/" + LevelName + ".txt") || new FileInfo("Assets/Resources/Levels/" + LevelName + ".txt").Length == 0)
         {
             //setting screen length and height and translating it to a camera scale
             if(screenWidth == 0){

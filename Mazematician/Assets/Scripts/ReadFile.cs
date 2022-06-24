@@ -31,7 +31,7 @@ public class FileClass
    public void ReadFile(string level)
     {
         
-        string path = "Assets/Levels/" + level + ".txt";
+        string path = "Assets/Resources/Levels/" + level + ".txt";
         using (StreamReader sr = new StreamReader(path))
         {
                 string line;
