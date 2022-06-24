@@ -16,6 +16,8 @@ static class OConst
     public const int spike = 2;
     public const int coin = 3;
     public const int oneway = 4;
+    public const int breakableTile = 5;
+    public const int spikeTwo = 6;
 
 }
 
@@ -44,6 +46,7 @@ public class GridManager : MonoBehaviour
     public GameObject winBlock;
     public GameObject myCamera;
     public GameObject spikeObstacle;
+    public GameObject spikeObstacleTwoWide;
     public GameObject coin;
     public GameObject powerUpWalkThru;
     public GameObject breakableWall;
@@ -73,6 +76,8 @@ public class GridManager : MonoBehaviour
     private bool read = false;
     public string LevelName;
 
+    AnalyticsManager analyticsManager;
+
     //adds win block script to winblock
     //calculates to see if the player is at the target
     void Awake()
@@ -80,6 +85,8 @@ public class GridManager : MonoBehaviour
         var script = winBlock.GetComponent<GameEndController>();
         script.targetScore = target;
         LevelName = LevelsController.LevelName;
+        analyticsManager = AnalyticsManager.GetAnalyticsManager();
+        analyticsManager.Reset(LevelsController.LevelName);
     }
 
     //Maze Generation, player, blocks and obsticle placement
@@ -91,15 +98,17 @@ public class GridManager : MonoBehaviour
         // Instantiate warning red flash creation to alert user to gravity switch
         warning = Instantiate(warningPrefab, new Vector2(Screen.width, Screen.height), Quaternion.identity);
         warning.gameObject.SetActive(false);
+        TextAsset levelFile = Resources.Load<TextAsset>("Levels/" + LevelName);
+        Debug.Log(levelFile);
 
-        if (!File.Exists("Assets/Levels/" + LevelName + ".txt"))
+        //if (!File.Exists("Assets/Resources/Levels/" + LevelName + ".txt")) 
+        if (levelFile == null)
         {
             //setting screen length and height and translating it to a camera scale
             screenWidth = 24;
 
             gridLength = 20; //10 + 2; // 8 x 8 grid + 1 top(left) wall + 1 bottom(right);
             /* We need to scale the the tiles such that grid fits in camera(screen) */
-
 
             //saving the player cooridantes and generating a list of cooridinates where blocks
             //obsticles and walls should not be allow to generate. prevents crappy starting situations
@@ -110,7 +119,14 @@ public class GridManager : MonoBehaviour
         }
         else
         {
-            fileObject.ReadFile(LevelName);
+            //fileObject.ReadFile(LevelName);
+            string fileData = levelFile.text;
+            fileData = fileData.Replace("\r", "");
+            string[] levelData = fileData.Split("\n");
+            Debug.Log(levelData.Length);
+            fileObject.ReadTextAsset(levelData);
+            setFileClassVars(fileObject);
+
             setFileClassVars(fileObject);
 
             read = true;
@@ -192,6 +208,16 @@ public class GridManager : MonoBehaviour
                     PlaceOneWayDoor((int)obj[0], (int)obj[1], (int)obj[2]);
                 }
 
+                if (obj[3] == OConst.spikeTwo)
+                {
+                    PlaceSpikeObstacleTwoWide((int)obj[0], (int)obj[1]);
+
+                 if (obj[3] == OConst.breakableTile)
+                {
+                    PlaceBreakableWall((int)obj[0], (int)obj[1]);
+
+                }
+
             }
         }
         //if not read hardcode things for testing
@@ -199,8 +225,9 @@ public class GridManager : MonoBehaviour
         {
             AddPowerUpWalkThru();
             // PlaceOneWayDoor(16, 16);
-            PlaceSpikeObstacle(16, 16);
-            PlaceObstacle(14, 14, 0.5f);
+            // PlaceSpikeObstacle(16, 16);
+            PlaceSpikeObstacleTwoWide(16, 16);
+            // PlaceObstacle(14, 14, 0.5f);
             PlaceBreakableWall(12, 12);
         }
 
@@ -211,9 +238,10 @@ public class GridManager : MonoBehaviour
         ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
 
         //invoking gravity to switch every 7 seconds, with a red screen flash before
-        InvokeRepeating("rotateGameRoutine", 7.0f, 7.0f);
-
-
+        if (LevelName != "ag_tutorial")
+        {
+            InvokeRepeating("rotateGameRoutine", 7.0f, 7.0f);
+        }
     }
 
     // Update is called once per frame
@@ -444,7 +472,6 @@ public class GridManager : MonoBehaviour
         TransformGameObjects(GameObject.FindGameObjectsWithTag("powerUpWalkThru"), angle);
         TransformGameObjects(GameObject.FindGameObjectsWithTag("breakableTile"), angle);
         ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
-        ApplyGravity(GameObject.FindGameObjectsWithTag("breakableTileParticle"));
     }
 
     void TransformGameObjects(GameObject[] gameObjects, float z)
@@ -513,6 +540,12 @@ public class GridManager : MonoBehaviour
     void PlaceSpikeObstacle(int x, int y)
     {
         GameObject t = Instantiate(spikeObstacle, GetCameraCoordinates(x, y), Quaternion.identity);
+        // t.transform.localScale = new Vector3(scale * 0.30f, scale * 0.30f, 1);
+    }
+
+    void PlaceSpikeObstacleTwoWide(int x, int y)
+    {
+        GameObject t = Instantiate(spikeObstacleTwoWide, GetCameraCoordinates(x, y), Quaternion.identity);
         // t.transform.localScale = new Vector3(scale * 0.30f, scale * 0.30f, 1);
     }
 

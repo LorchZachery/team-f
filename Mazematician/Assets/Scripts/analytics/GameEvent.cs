@@ -8,7 +8,9 @@ public enum GameEvent
     COINS_SPENT,
     PLAYER_WON,
     PLAYER_LOST,
+    EXIT_REASON,
     POWER_UP_PURCHASED,
     POWER_UP_USED,
-    COLLISION
+    COLLISION,
+    TIME_SPENT
 }

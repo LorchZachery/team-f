@@ -59,7 +59,7 @@ public class PlayerController : MonoBehaviour
         y = (dir1 + dir2).y;
         GetComponent<Rigidbody2D>().velocity = new Vector2(x * ballSpeed * isDiagonal, y * ballSpeed * isDiagonal);
 
-        if (Input.GetKeyDown(KeyCode.P) && coins > 0f) {
+        if (Input.GetKeyDown(KeyCode.M) && coins >= 3f) {
             playerShield.SetActive(true);
             if (!isCoroutine) {
                 isCoroutine = true;
@@ -72,7 +72,7 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator handleShield()
     {
-        coins--;
+        coins -= 3;
         yield return new WaitForSeconds(5.0f);
         playerShield.SetActive(false);
         isCoroutine = false;
@@ -101,10 +101,9 @@ public class PlayerController : MonoBehaviour
                 collist.Add(collision.gameObject.GetComponent<PolygonCollider2D>());
             }
             else {
-              Debug.Log("HIT TOP");
-              analyticsManager.RegisterEvent(GameEvent.COLLISION, collision.gameObject.tag);
-              analyticsManager.Publish();
-              SceneManager.LoadScene("GameOver");
+                Debug.Log("HIT TOP");
+                PublishGameData(false, "spike");
+                SceneManager.LoadScene("GameOver");
             }
         }
         else if (collision.gameObject.CompareTag("SpikeBottom"))
@@ -127,6 +126,8 @@ public class PlayerController : MonoBehaviour
             collist.Add(collision.gameObject.GetComponent<BoxCollider2D>());
 
         }
+
+        
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -140,6 +141,15 @@ public class PlayerController : MonoBehaviour
             GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.5f);
             InvokeRepeating("Flash", intangibleTime - 2, 0.2f);
         }
+        
+        if (collision.gameObject.CompareTag("target"))
+        {
+            if (targetScore == score)
+            {
+                PublishGameData(true, "won");
+                SceneManager.LoadScene("GameOverWon");
+            }
+        }
     }
 
     public void SetScore(int score)
@@ -151,7 +161,7 @@ public class PlayerController : MonoBehaviour
 
         if (this.score < 2)
         {
-            analyticsManager.Publish();
+            PublishGameData(false, "obstacle");
             SceneManager.LoadScene("GameOver");
         }
         else if (this.score == this.targetScore)
@@ -207,13 +217,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void NotifyPlayerWin()
-    {
-        this.score = 2;
-        analyticsManager.RegisterEvent(GameEvent.PLAYER_WON, 12);
-        UpdateText("Player won");
-    }
-
     public void setGridManager(GameObject gm)
     {
         this.gridManager = gm;
@@ -255,4 +258,20 @@ public class PlayerController : MonoBehaviour
             GetComponent<SpriteRenderer>().color = new Color(1, 1, 1);
         }
     }
+
+    public void PublishGameData(bool won, string reason)
+    {
+        if(won)
+        {
+            analyticsManager.RegisterEvent(GameEvent.PLAYER_WON, dashboardController.GetRemainingTime());
+        } else
+        {
+            analyticsManager.RegisterEvent(GameEvent.PLAYER_LOST, (int) score);
+        }
+        analyticsManager.RegisterEvent(GameEvent.EXIT_REASON, reason);
+        analyticsManager.RegisterEvent(GameEvent.TIME_SPENT, dashboardController.GetRemainingTime());
+        analyticsManager.RegisterEvent(GameEvent.COINS_SPENT, coins);
+        analyticsManager.Publish();
+    }
+
 }

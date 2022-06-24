@@ -19,8 +19,6 @@ public class DashBoardController : MonoBehaviour
     bool shrinkTime = false;
     int bonusCount = 0;
 
-    private AnalyticsManager analyticsManager;
-
     public TextMeshProUGUI rewardsText;
     public TextMeshProUGUI timerText;
     // Start is called before the first frame update
@@ -30,13 +28,14 @@ public class DashBoardController : MonoBehaviour
         timerRunning = true;
         UpdateScore(0);
         DisplayTargetText();
-        analyticsManager = AnalyticsManager.GetAnalyticsManager();
+        DisplayLevelText();
     }
 
     // Update is called once per frame
     void Update()
     {
         UpdateTime();
+        DisplayPowerupIcons();
         if (player != null)
         {
             var playerScript = player.GetComponent<PlayerController>();
@@ -62,7 +61,7 @@ public class DashBoardController : MonoBehaviour
             {
                 //Debug.Log("Time remaining: " + remainingTime);
                 remainingTime -= Time.deltaTime;
-                DisplayBonusIcon();
+
                 if (player != null)
                 {
                     if (player.GetComponent<PlayerController>().coins >= 3)
@@ -99,7 +98,7 @@ public class DashBoardController : MonoBehaviour
 
                 }
                 DisplayTime(remainingTime);
-                if (remainingTime < 5)
+                if (remainingTime < 3)
                 {
                     Flash();
                 }
@@ -123,9 +122,8 @@ public class DashBoardController : MonoBehaviour
             else
             {
                 timerText.enabled = true;
-                analyticsManager.Publish();
-                Debug.Log("Out of time");
-                //TODO End Game ? or Use rewards?
+                var script = player.GetComponent<PlayerController>();
+                script.PublishGameData(false, "Out of Time");
                 SceneManager.LoadScene("GameOver");
                 timerRunning = false;
             }
@@ -166,21 +164,33 @@ public class DashBoardController : MonoBehaviour
         targetText.text = bonusCount.ToString();
     }
 
-    void DisplayBonusIcon()
+    void DisplayPowerupIcons()
     {
         GameObject bonusIconObject = gameObject.transform.GetChild(4).gameObject;
         GameObject shrinkIconObject = gameObject.transform.GetChild(5).gameObject;
+        GameObject shieldObject = gameObject.transform.GetChild(6).gameObject;
+        GameObject indicator1 = gameObject.transform.GetChild(7).gameObject;
+        GameObject indicator2 = gameObject.transform.GetChild(8).gameObject;
+        GameObject indicator3 = gameObject.transform.GetChild(9).gameObject;
         if (player != null)
         {
             if (player.GetComponent<PlayerController>().coins < 3)
             {
                 bonusIconObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("no bonus time");
                 shrinkIconObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("no resize");
+                shieldObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("no shield");
+                indicator1.SetActive(false);
+                indicator2.SetActive(false);
+                indicator3.SetActive(false);
             }
             else if (player.GetComponent<PlayerController>().coins >= 3)
             {
                 bonusIconObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("bonus time");
                 shrinkIconObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("shrink");
+                shieldObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("shield 1");
+                indicator1.SetActive(true);
+                indicator2.SetActive(true);
+                indicator3.SetActive(true);
             }
         }
     }
@@ -207,11 +217,12 @@ public class DashBoardController : MonoBehaviour
 
     public void QuitButton()
     {
+
         SceneManager.LoadScene("MainMenu");
     }
     IEnumerator Shrink()
     {
-        float myScale = 0.19f;
+        float myScale = 0.16f;
         Vector3 originalScale = player.transform.localScale;
         player.transform.localScale = new Vector3(myScale, myScale, 1.0f);
         Debug.Log("Local Scale after shrinking: " + player.transform.localScale);
@@ -227,6 +238,10 @@ public class DashBoardController : MonoBehaviour
         timerText.color = Color.white;
     }
 
+    public float GetRemainingTime()
+    {
+        return remainingTime;
+    }
     //IEnumerator Freeze()
     //{
     //    {
@@ -245,4 +260,16 @@ public class DashBoardController : MonoBehaviour
 
 
     //}
+
+    void DisplayLevelText()
+    {
+        GameObject levelObject = gameObject.transform.GetChild(16).gameObject;
+        TextMeshProUGUI levelText = levelObject.GetComponent<TextMeshProUGUI>();
+        levelText.text = "Level: " + LevelsController.LevelNumber;
+    }
+
+    public void RestartButton()
+    {
+        SceneManager.LoadScene("SampleGrid");
+    }
 }

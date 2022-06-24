@@ -507,7 +507,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1400955391}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 814e561c8ddd4467d8e9ef190c01abef, type: 3}
+  m_Script: {fileID: 11500000, guid: bcd4baee8599f49a58c2a28aa94a928f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1497156991
@@ -910,7 +910,7 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 0.96448624, b: 0, a: 1}
+    m_NormalColor: {r: 0.4862745, g: 0.6627451, b: 0.49019608, a: 1}
     m_HighlightedColor: {r: 0.5283019, g: 0.5283019, b: 0.5283019, a: 0.15686275}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.39215687}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -934,7 +934,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1400955394}
-        m_TargetAssemblyTypeName: GameOverScreen, Assembly-CSharp
+        m_TargetAssemblyTypeName: GameOverLost, Assembly-CSharp
         m_MethodName: RestartButton
         m_Mode: 1
         m_Arguments:
@@ -1195,7 +1195,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1400955394}
-        m_TargetAssemblyTypeName: GameOverScreen, Assembly-CSharp
+        m_TargetAssemblyTypeName: GameOverLost, Assembly-CSharp
         m_MethodName: MainMenuButton
         m_Mode: 1
         m_Arguments:

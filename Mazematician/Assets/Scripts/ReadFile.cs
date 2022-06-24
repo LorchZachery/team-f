@@ -31,7 +31,7 @@ public class FileClass
    public void ReadFile(string level)
     {
         
-        string path = "Assets/Levels/" + level + ".txt";
+        string path = "Assets/Resources/Levels/" + level + ".txt";
         using (StreamReader sr = new StreamReader(path))
         {
                 string line;
@@ -97,9 +97,81 @@ public class FileClass
        
     }
 
+    public void ReadTextAsset(string[] level)
+    {
+
+
+
+        int i = 0;
+        string line;
+        // Read and display lines from the file until the end of
+        // the file is reached.
+        while (i < level.Length)
+        {
+            line = level[i++];
+            if (line == "width height gridlength")
+            {
+                line = level[i++];
+                string[] values = line.Split(',');
+                screenWidth = float.Parse(values[0]);
+                screenHeight = float.Parse(values[1]);
+                gridLength = float.Parse(values[2]);
+            }
+            if (line == "playerCoor")
+            {
+                line = level[i++];
+                string[] values = line.Split(',');
+                playerCooridantes = new Vector2(float.Parse(values[0]), float.Parse(values[1]));
+            }
+            if (line == "winBlock")
+            {
+                line = level[i++];
+                string[] values = line.Split(',');
+                winBlockCoor = new Vector2(float.Parse(values[0]), float.Parse(values[1]));
+                target = Int32.Parse(values[2]);
+            }
+            if (line == "MazeWalls")
+            {
+
+                while ((line = level[i++]) != "MazeBlocks")
+                {
+
+                    string[] values = line.Split(',');
+                    MazeWall temp = new MazeWall(Int32.Parse(values[0]), Int32.Parse(values[1]));
+
+                    if (values[2] == "0")
+                    {
+                        temp.removeWall();
+                    }
+                    mazeWallsList.Add(temp);
+                }
+
+            }
+            if (line == "MazeBlocks")
+            {
+
+                while ((line = level[i++]) != "Objects")
+                {
+                    string[] values = line.Split(',');
+                    blockList.Add(new Vector3(Int32.Parse(values[0]), Int32.Parse(values[1]), Int32.Parse(values[2])));
+                }
+            }
+            if (line == "Objects")
+            {
+                while ((line = level[i++]) != "END")
+                {
+                    string[] values = line.Split(',');
+                    objectList.Add(new Vector4(Int32.Parse(values[0]), Int32.Parse(values[1]), float.Parse(values[2]), Int32.Parse(values[3])));
+                }
+            }
+
+        }
+
+    }
+
     public void writeToFile(string LevelName)
     {
-        string path = "Assets/Levels/" + LevelName + ".txt";
+        string path = "Assets/Resources/Levels/" + LevelName + ".txt";
         StreamWriter writer = new StreamWriter(path, true);
         writer.WriteLine("width height gridlength");
         writer.WriteLine($"{screenWidth},{screenHeight},{gridLength}");
