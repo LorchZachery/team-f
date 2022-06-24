@@ -17,6 +17,7 @@ static class OConst
     public const int coin = 3;
     public const int oneway = 4;
     public const int breakableTile = 5;
+    public const int spikeTwo = 6;
 
 }
 
@@ -45,6 +46,7 @@ public class GridManager : MonoBehaviour
     public GameObject winBlock;
     public GameObject myCamera;
     public GameObject spikeObstacle;
+    public GameObject spikeObstacleTwoWide;
     public GameObject coin;
     public GameObject powerUpWalkThru;
     public GameObject breakableWall;
@@ -84,7 +86,7 @@ public class GridManager : MonoBehaviour
         script.targetScore = target;
         LevelName = LevelsController.LevelName;
         analyticsManager = AnalyticsManager.GetAnalyticsManager();
-        analyticsManager.Reset(LevelsController.LevelName);
+        analyticsManager.Reset(LevelsController.LevelNumber.ToString());
     }
 
     //Maze Generation, player, blocks and obsticle placement
@@ -205,6 +207,12 @@ public class GridManager : MonoBehaviour
                 {
                     PlaceOneWayDoor((int)obj[0], (int)obj[1], (int)obj[2]);
                 }
+
+                if (obj[3] == OConst.spikeTwo)
+                {
+                    PlaceSpikeObstacleTwoWide((int)obj[0], (int)obj[1]);
+
+                }
                  if (obj[3] == OConst.breakableTile)
                 {
                     PlaceBreakableWall((int)obj[0], (int)obj[1]);
@@ -217,9 +225,10 @@ public class GridManager : MonoBehaviour
         {
             AddPowerUpWalkThru();
             // PlaceOneWayDoor(16, 16);
-            PlaceSpikeObstacle(16, 16);
+           // PlaceSpikeObstacle(16, 16);
             PlaceObstacle(14, 14, 0.5f);
             PlaceBreakableWall(12, 12);
+            PlaceSpikeObstacleTwoWide(16,16);
         }
 
 
@@ -233,8 +242,23 @@ public class GridManager : MonoBehaviour
         {
             InvokeRepeating("rotateGameRoutine", 7.0f, 7.0f);
         }
+
+        InitAnalyticsData();
     }
 
+
+    void InitAnalyticsData()
+    {
+        int totalCoins = 0;
+        foreach(var obj in objectList)
+        {
+            if(obj[3] == OConst.coin)
+            {
+                totalCoins++;
+            }
+        }
+        analyticsManager.RegisterEvent(GameEvent.COINS_TOTAL, totalCoins);
+    }
     // Update is called once per frame
     //on update there is a create to rotate the screen slowly
     void Update()
@@ -351,7 +375,7 @@ public class GridManager : MonoBehaviour
         return new Vector3(cartesianX + (0.5f * scale), cartesianY - (0.5f * scale), z);
     }
 
-    public void AddWinBlock(int value)
+    void AddWinBlock(int value)
     {
         Debug.Log("IN ADD WIN BLOCK");
         bool end = false;
@@ -531,6 +555,11 @@ public class GridManager : MonoBehaviour
     void PlaceSpikeObstacle(int x, int y)
     {
         GameObject t = Instantiate(spikeObstacle, GetCameraCoordinates(x, y), Quaternion.identity);
+        // t.transform.localScale = new Vector3(scale * 0.30f, scale * 0.30f, 1);
+    }
+     void PlaceSpikeObstacleTwoWide(int x, int y)
+    {
+        GameObject t = Instantiate(spikeObstacleTwoWide, GetCameraCoordinates(x, y), Quaternion.identity);
         // t.transform.localScale = new Vector3(scale * 0.30f, scale * 0.30f, 1);
     }
 
