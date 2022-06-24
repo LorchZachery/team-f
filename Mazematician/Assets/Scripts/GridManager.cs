@@ -118,7 +118,9 @@ public class GridManager : MonoBehaviour
         else
         {
             //fileObject.ReadFile(LevelName);
-            string[] levelData = levelFile.text.Split("\n");
+            string fileData = levelFile.text;
+            fileData = fileData.Replace("\r", "");
+            string[] levelData = fileData.Split("\n");
             Debug.Log(levelData.Length);
             fileObject.ReadTextAsset(levelData);
             setFileClassVars(fileObject);
