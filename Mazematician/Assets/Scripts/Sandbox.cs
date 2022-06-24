@@ -31,6 +31,7 @@ static class Constants
     public const int onewayLeft = 13;
     public const int onewayRight = 14;
     public const int breakableTile = 15;
+    public const int spikeTwo = 16;
 }
 
 
@@ -47,7 +48,7 @@ to add a oneway wall RIGHT press "4" and click somewhere
 to add a block press "b", click where you want it and  provided a number in input box, press enter
 to add a win block press "g" click where you want it and provide the target number in the input box, press enter
 to add reducing obstacle press "O" and click where you want and provide reducing value (usually .5)
-to add spike obstacle press "K" and click where you want it 
+to add spike obstacle press "K" and click where you want it press "L" for two spike
 to add the walk thru wall power up press "w" and place it where you want it
 to delete any object you added press "d" and click on that object
 to play the game press "p" 
@@ -76,6 +77,7 @@ public class Sandbox : MonoBehaviour
     public GameObject winBlock;
     public GameObject myCamera;
     public GameObject spikeObstacle;
+    public GameObject spikeObstacleTwoWide;
     public GameObject coin;
     public GameObject powerUpWalkThru;
     public GameObject oneWayDoorSet;
@@ -242,6 +244,11 @@ public class Sandbox : MonoBehaviour
                 {
                     PlaceBreakableWall((int)obj[0], (int)obj[1]);
                 }
+                 if (obj[3] == OConst.spikeTwo)
+                {
+                    PlaceSpikeObstacleTwoWide((int)obj[0], (int)obj[1]);
+
+                }
 
             }
         }
@@ -342,6 +349,11 @@ public class Sandbox : MonoBehaviour
                 {
                     PlaceBreakableWall((int)objTuple.Item2[0], (int)objTuple.Item2[1]);
                 }
+                 if (objTuple.Item2[3] == OConst.spikeTwo)
+                {
+                    PlaceSpikeObstacleTwoWide((int)objTuple.Item2[0], (int)objTuple.Item2[1]);
+
+                }
             objectList.Add(new Vector4(objTuple.Item2[0],objTuple.Item2[1],objTuple.Item2[2],objTuple.Item2[3]));
         }
 
@@ -419,6 +431,12 @@ public class Sandbox : MonoBehaviour
             Debug.Log("Place Spike");
             mode = Constants.spike;
         }
+        //press L to enter Twospike mode
+        if(Input.GetKeyDown(KeyCode.L))
+        {
+            Debug.Log("Place TwoSpike");
+            mode = Constants.spikeTwo;
+        }
 
         //press O to enter obstacle mode
         if(Input.GetKeyDown(KeyCode.O))
@@ -486,6 +504,16 @@ public class Sandbox : MonoBehaviour
             PlaceSpikeObstacle((int)tilePos[0],(int)tilePos[1]);
             
            objectList.Add(new Vector4(tilePos[0],tilePos[1],-1,OConst.spike));
+        }
+         //adding Two spike to map where user clicks
+        if (Input.GetMouseButtonDown(0) && mode == Constants.spikeTwo) {
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            
+            Vector2 tilePos = GetTileCoordinates(mousePos[0],mousePos[1]);
+            Debug.Log($"CREATE Two SPIKE {tilePos}");
+            PlaceSpikeObstacleTwoWide((int)tilePos[0],(int)tilePos[1]);
+            
+           objectList.Add(new Vector4(tilePos[0],tilePos[1],-1,OConst.spikeTwo));
         }
 
         //adding breakable tile to map where user clicks
@@ -922,6 +950,13 @@ public class Sandbox : MonoBehaviour
         List<GameObject> spikeObjList = new List<GameObject> {t};
         objectListObjects.Add(new Tuple<List<GameObject>,Vector4>(spikeObjList,new Vector4(x,y,0,OConst.spike)));
 
+    }
+    void PlaceSpikeObstacleTwoWide(int x, int y)
+    {
+        GameObject t = Instantiate(spikeObstacleTwoWide, GetCameraCoordinates(x, y), Quaternion.identity);
+        // t.transform.localScale = new Vector3(scale * 0.30f, scale * 0.30f, 1);
+        List<GameObject> spikeObjList = new List<GameObject> {t};
+        objectListObjects.Add(new Tuple<List<GameObject>,Vector4>(spikeObjList,new Vector4(x,y,0,OConst.spikeTwo)));
     }
 
     void PlaceWinBlock(int x, int y, int value)

@@ -225,9 +225,10 @@ public class GridManager : MonoBehaviour
         {
             AddPowerUpWalkThru();
             // PlaceOneWayDoor(16, 16);
-            PlaceSpikeObstacle(16, 16);
+           // PlaceSpikeObstacle(16, 16);
             PlaceObstacle(14, 14, 0.5f);
             PlaceBreakableWall(12, 12);
+            PlaceSpikeObstacleTwoWide(16,16);
         }
 
 
