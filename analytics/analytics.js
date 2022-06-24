@@ -17,7 +17,10 @@ function plotGraph(container, title, subtitle, xCategories, yTitle, seriesData) 
 	        min: 0,
 	        title: {
 	            text: yTitle
-	        }
+	        },
+	        labels: {
+	            enabled: true
+        	}
 	    },
 	    tooltip: {
 	        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
@@ -30,7 +33,10 @@ function plotGraph(container, title, subtitle, xCategories, yTitle, seriesData) 
 	    plotOptions: {
 	        column: {
 	            pointPadding: 0.0,
-	            borderWidth: 0
+	            borderWidth: 0,
+	            dataLabels: {
+	                enabled: true
+	            }
 	        }
 	    },
 	    series: seriesData
