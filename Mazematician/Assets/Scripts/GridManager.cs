@@ -84,7 +84,7 @@ public class GridManager : MonoBehaviour
         script.targetScore = target;
         LevelName = LevelsController.LevelName;
         analyticsManager = AnalyticsManager.GetAnalyticsManager();
-        analyticsManager.Reset(LevelsController.LevelName);
+        analyticsManager.Reset(LevelsController.LevelNumber.ToString());
     }
 
     //Maze Generation, player, blocks and obsticle placement

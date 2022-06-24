@@ -155,10 +155,13 @@ public class AnalyticsManager
         analytics.Add("coinsCollected", coinsCollected);
         analytics.Add("coinsSpent", coinsCollected - coinsRemaining);
         analytics.Add("totalCoins", totalCoins);
+
         analytics.Add("timeToReachTarget", timeToReachTarget);
+        analytics.Add("remainingTime", remainingTime);
+        analytics.Add("totalTime", totalTime);
+
         analytics.Add("pointsAtDeath", pointsAtDeath);
         analytics.Add("exitReason", exitReason);
-        analytics.Add("remainingTime", remainingTime);
 
         AnalyticsResult analyticsResult = Analytics.CustomEvent("userData", analytics);
         Debug.Log(analyticsResult);
