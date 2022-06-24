@@ -45,6 +45,7 @@ to add a oneway wall UP press "1" and click somewhere
 to add a oneway wall DOWN press "2" and click somewhere
 to add a oneway wall LEFT press "3" and click somewhere
 to add a oneway wall RIGHT press "4" and click somewhere
+to add a breakable tile, press "V" and click somewhere
 to add a block press "b", click where you want it and  provided a number in input box, press enter
 to add a win block press "g" click where you want it and provide the target number in the input box, press enter
 to add reducing obstacle press "O" and click where you want and provide reducing value (usually .5)
