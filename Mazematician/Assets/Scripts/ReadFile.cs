@@ -31,7 +31,7 @@ public class FileClass
    public void ReadFile(string level)
     {
         
-        string path = "Assets/Levels/" + level + ".txt";
+        string path = "Assets/Resources/Levels/" + level + ".txt";
         using (StreamReader sr = new StreamReader(path))
         {
                 string line;
@@ -171,7 +171,7 @@ public class FileClass
 
     public void writeToFile(string LevelName)
     {
-        string path = "Assets/Levels/" + LevelName + ".txt";
+        string path = "Assets/Resources/Levels/" + LevelName + ".txt";
         StreamWriter writer = new StreamWriter(path, true);
         writer.WriteLine("width height gridlength");
         writer.WriteLine($"{screenWidth},{screenHeight},{gridLength}");

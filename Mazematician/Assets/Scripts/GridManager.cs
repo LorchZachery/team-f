@@ -84,7 +84,7 @@ public class GridManager : MonoBehaviour
         script.targetScore = target;
         LevelName = LevelsController.LevelName;
         analyticsManager = AnalyticsManager.GetAnalyticsManager();
-        analyticsManager.Reset(LevelName);
+        analyticsManager.Reset(LevelsController.LevelName);
     }
 
     //Maze Generation, player, blocks and obsticle placement
@@ -99,6 +99,7 @@ public class GridManager : MonoBehaviour
         TextAsset levelFile = Resources.Load<TextAsset>("Levels/" + LevelName);
         Debug.Log(levelFile);
 
+        //if (!File.Exists("Assets/Resources/Levels/" + LevelName + ".txt")) 
         if (levelFile == null)
         {
             //setting screen length and height and translating it to a camera scale
@@ -106,7 +107,6 @@ public class GridManager : MonoBehaviour
 
             gridLength = 20; //10 + 2; // 8 x 8 grid + 1 top(left) wall + 1 bottom(right);
             /* We need to scale the the tiles such that grid fits in camera(screen) */
-
 
             //saving the player cooridantes and generating a list of cooridinates where blocks
             //obsticles and walls should not be allow to generate. prevents crappy starting situations
@@ -117,9 +117,14 @@ public class GridManager : MonoBehaviour
         }
         else
         {
-            string[] levelData = levelFile.text.Split("\n");
+            //fileObject.ReadFile(LevelName);
+            string fileData = levelFile.text;
+            fileData = fileData.Replace("\r", "");
+            string[] levelData = fileData.Split("\n");
             Debug.Log(levelData.Length);
             fileObject.ReadTextAsset(levelData);
+            setFileClassVars(fileObject);
+
             setFileClassVars(fileObject);
 
             read = true;
@@ -200,6 +205,10 @@ public class GridManager : MonoBehaviour
                 {
                     PlaceOneWayDoor((int)obj[0], (int)obj[1], (int)obj[2]);
                 }
+                 if (obj[3] == OConst.breakableTile)
+                {
+                    PlaceBreakableWall((int)obj[0], (int)obj[1]);
+                }
 
             }
         }
@@ -220,9 +229,10 @@ public class GridManager : MonoBehaviour
         ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
 
         //invoking gravity to switch every 7 seconds, with a red screen flash before
-        InvokeRepeating("rotateGameRoutine", 7.0f, 7.0f);
-
-
+        if(LevelName != "ag_tutorial")
+        {
+            InvokeRepeating("rotateGameRoutine", 7.0f, 7.0f);
+        }
     }
 
     // Update is called once per frame

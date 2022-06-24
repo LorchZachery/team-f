@@ -97,7 +97,7 @@ public class DashBoardController : MonoBehaviour
 
                 }
                 DisplayTime(remainingTime);
-                if (remainingTime < 5)
+                if (remainingTime < 3)
                 {
                     Flash();
                 }

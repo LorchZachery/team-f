@@ -14,7 +14,9 @@ public class MainMenu : MonoBehaviour
 
     public void TutorialButton()
     {
-        // Put tutorial scene here
+        LevelsController.LevelNumber += 0;
+        LevelsController.LevelName = "ag_tutorial";
+        SceneManager.LoadScene("SampleGrid");
     }
 
     public void StoreButton()
