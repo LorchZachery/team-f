@@ -205,6 +205,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 2796084852681462835}
     m_Modifications:
     - target: {fileID: 719754003414301760, guid: 208e66e65abb0e34bbc044a487bf6779, type: 3}
+      propertyPath: m_UseLimits
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 719754003414301760, guid: 208e66e65abb0e34bbc044a487bf6779, type: 3}
       propertyPath: m_ConnectedAnchor.x
       value: 0.5
       objectReference: {fileID: 0}
