@@ -24,6 +24,7 @@ TagManager:
   - oneWayDoor
   - SpikeTop
   - SpikeBottom
+  - help
   layers:
   - Default
   - TransparentFX
