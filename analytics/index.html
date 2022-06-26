@@ -21,7 +21,11 @@
 	<div id="obstacleDiv" class="container"></div>
 	<div id="lossTypeDiv" class="container"></div>
 	<script src="analytics.js"></script>
+	<script src="data.js"></script>
 	<script type="text/javascript">
+		setData(getAnalyticsData());
+		setLevels(getLevels());
+		processData();
 		plotNumberOfAttempts();
 		levelVsCoins();
 		levelVsTime();
