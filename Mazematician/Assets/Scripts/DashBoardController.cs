@@ -75,7 +75,7 @@ public class DashBoardController : MonoBehaviour
                         {
                             bonusTime = false;
                             remainingTime += 11;
-                            analyticsManager.RegisterEvent(GameEvent.TOTAL_TIME, 11);
+                            analyticsManager.RegisterEvent(GameEvent.TOTAL_TIME, 11f);
                             analyticsManager.RegisterEvent(GameEvent.POWER_UP_USED, "bonusTime");
                             StartCoroutine("BonusTime");
                             if (!bonusTime)

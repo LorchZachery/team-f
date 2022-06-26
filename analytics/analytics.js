@@ -1,3 +1,41 @@
+var data;
+var levels;
+var eventsData = {};
+var levelWisePlayerData;
+function setData(analyticsData) {
+	data = analyticsData;
+}
+
+function setLevels(analyticLevels) {
+	levels = analyticLevels;
+}
+
+
+const groupBy = (array, key) => {
+  // Return the end result
+  return array.reduce((result, currentValue) => {
+    // If an array already present for key, push it to the array. Else create an array and push the object
+    (result[currentValue[key]] = result[currentValue[key]] || []).push(
+      currentValue
+    );
+    // Return the current iteration `result` value, this will be taken as next iteration `result` value and accumulate
+    return result;
+  }, {}); // empty object is the initial value for result object
+};
+
+
+function processData() {
+	data = data.filter(d => levels.includes(d.custom_params.level));
+	var temp = groupBy(data, "name");
+	for (const key in temp){
+	    eventsData[key] = temp[key].map(e => e.custom_params)
+	}
+}
+
+function getAvg(arr) {
+	return arr.reduce((a, b) => a + b, 0) / arr.length;
+}
+
 function plotGraph(container, title, subtitle, xCategories, yTitle, seriesData) {
 	Highcharts.chart(container, {
 	    chart: {
@@ -44,56 +82,111 @@ function plotGraph(container, title, subtitle, xCategories, yTitle, seriesData) 
 }
 
 function plotNumberOfAttempts() {
+	if(!levelWisePlayerData) {
+		levelWisePlayerData = groupBy(eventsData.userData, "level");
+	}
+
 	var container = 'attemptsPerLevelDiv';
 	var title = 'Number of attempts per level'
 	var subtitle = 'blah blah blah'
 	var seriesData = [{
 		name: 'Attempts',
-		data: [5, 7, 9, 10, 12],
+		data: Object.values(levelWisePlayerData).map(e => e.length),
 		color: '#058DC7'
 	}]
-	var xCategories = ['Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5']
+	var xCategories = Object.keys(levelWisePlayerData)
 	var yTitle = 'Attempts'
 
 	plotGraph(container, title, subtitle, xCategories, yTitle, seriesData);
 }
 
+
+function getMetricsByName(metricsByLevel, metricNames, levelNames) {
+	var metricsByName = {};
+	metricNames.forEach(metric => {
+		var metricData = [];
+		levelNames.forEach(level => {
+			metricData.push(+metricsByLevel[level][metric] || 0)
+		});
+		metricsByName[metric] = metricData
+	});
+	return metricsByName;
+}
+
+function getMetricsByLevel(levelWiseData, metricNames, levelNames) {
+	var metricsByLevel = {};
+	for(const level in levelWiseData) {
+		var levelData = {};
+		metricNames.forEach(metric => {
+			if(!levelData[metric]) {
+				levelData[metric] = 0;
+			}
+			levelData[metric] = getAvg(levelWiseData[level].filter(e => e.hasOwnProperty(metric)).map(e => +e[metric]))
+		});
+		metricsByLevel[level] = levelData
+	}
+	return metricsByLevel;
+}
+
 function levelVsCoins() {
+
+	if(!levelWisePlayerData) {
+		levelWisePlayerData = groupBy(eventsData.userData, "level");
+	}
+	var metricNames = ["totalCoins", "coinsCollected", "coinsSpent"];
+	var coinMetricsByLevel = getMetricsByLevel(levelWisePlayerData, metricNames, Object.keys(levelWisePlayerData));
+	var coinMetricsByName = getMetricsByName(coinMetricsByLevel, metricNames, Object.keys(levelWisePlayerData));
+
+
 	var container = 'coinsDiv';
 	var title = 'Coins vs Level'
 	var subtitle = 'blah blah blah'
 	var seriesData = [{
 		name: 'Total Coins',
-		data: [10, 14, 19, 20, 15]
+		data: coinMetricsByName['totalCoins']
 	}, {
 		name: 'Coins collected',
-		data: [10, 12, 15, 20, 14],
+		data: coinMetricsByName['coinsCollected'],
 		color: '#64E572'
 	}, {
 		name: 'Coins spent',
-		data: [1, 6, 10, 20, 14],
+		data: coinMetricsByName['coinsSpent'],
 		color: '#FF0000'
 	}]
-	var xCategories = ['Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5']
+	var xCategories = Object.keys(levelWisePlayerData)
 	var yTitle = 'Coins'
 
 	plotGraph(container, title, subtitle, xCategories, yTitle, seriesData);
 }
 
 function levelVsTime() {
+	if(!levelWisePlayerData) {
+		levelWisePlayerData = groupBy(eventsData.userData, "level");
+	}
+
+	var metricsByLevel = getMetricsByLevel(levelWisePlayerData, ['totalTime'], Object.keys(levelWisePlayerData));
+
+	for(const level in levelWisePlayerData) {
+		var levelData = metricsByLevel[level];
+		levelData['timeToReachTarget'] = getAvg(levelWisePlayerData[level].filter(e => e.hasOwnProperty('exitReason') && e['exitReason'] === 'won').map(e => +e['timeToReachTarget']))
+		metricsByLevel[level] = levelData
+	}
+	
+	var metricsByName = getMetricsByName(metricsByLevel, ['totalTime', 'timeToReachTarget'], Object.keys(levelWisePlayerData));
+
 	var container = 'timeDiv';
 	var title = 'Time vs Level'
 	var subtitle = 'blah blah blah'
 	var seriesData = [{
 		name: 'Total time',
-		data: [120, 120, 100, 90, 150],
+		data: metricsByName['totalTime'],
 		color: '#FF9655'
 	}, {
 		name: 'Time spent to complete level',
-		data: [50, 70, 70, 70, 145],
+		data: metricsByName['timeToReachTarget'],
 		
 	}]
-	var xCategories = ['Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5']
+	var xCategories = Object.keys(levelWisePlayerData)
 	var yTitle = 'Time(in seconds)'
 
 	plotGraph(container, title, subtitle, xCategories, yTitle, seriesData);
@@ -116,7 +209,7 @@ function powerUpsPerLevel() {
 		data: [1, 2, 2, 1, 1],
 		color: '#64E572'
 	}]
-	var xCategories = ['Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5']
+	var xCategories = Object.keys(levelWisePlayerData)
 	var yTitle = 'Number of power ups'
 
 	plotGraph(container, title, subtitle, xCategories, yTitle, seriesData);
@@ -146,6 +239,9 @@ function obstacleCollisionGraph() {
 }
 
 function levelVsLoss() {
+	if(!levelWisePlayerData) {
+		levelWisePlayerData = groupBy(eventsData.userData, "level");
+	}
 	var container = 'lossTypeDiv';
 	var title = 'Level Vs Loss Scenario'
 	var subtitle = 'blah blah blah'
@@ -169,6 +265,9 @@ function levelVsLoss() {
 }
 
 function startVsComplete() {
+	if(!levelWisePlayerData) {
+		levelWisePlayerData = groupBy(eventsData.userData, "level");
+	}
 	var container = 'startVsCompleteDiv';
 	var title = 'Start Vs Complete'
 	var subtitle = 'blah blah blah'
