@@ -485,7 +485,6 @@ public class GridManager : MonoBehaviour
         TransformGameObjects(GameObject.FindGameObjectsWithTag("target"), angle);
         TransformGameObjects(GameObject.FindGameObjectsWithTag("coin"), angle);
         TransformGameObjects(GameObject.FindGameObjectsWithTag("powerUpWalkThru"), angle);
-        TransformGameObjects(GameObject.FindGameObjectsWithTag("breakableTile"), angle);
         ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
     }
 
@@ -566,7 +565,7 @@ public class GridManager : MonoBehaviour
     void PlaceBreakableWall(int x, int y)
     {
         GameObject t = Instantiate(breakableWall, GetCameraCoordinates(x, y), Quaternion.identity);
-        // t.transform.localScale = new Vector3(scale * 0.30f, scale * 0.30f, 1);
+        t.transform.localScale = new Vector3(scale*2f, scale*2f, 1);
     }
 
     void AddPowerUpWalkThru()
