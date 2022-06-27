@@ -1004,7 +1004,7 @@ public class Sandbox : MonoBehaviour
     void PlaceBreakableWall(int x, int y)
     {
         GameObject t = Instantiate(breakableWall, GetCameraCoordinates(x, y), Quaternion.identity);
-        // t.transform.localScale = new Vector3(scale * 0.30f, scale * 0.30f, 1);
+        t.transform.localScale = new Vector3(scale*2f, scale*2f, 1);
         List<GameObject> breakList = new List<GameObject> { t };
         objectListObjects.Add(new Tuple<List<GameObject>, Vector4>(breakList, new Vector4(x, y, 0, OConst.breakableTile)));
 
