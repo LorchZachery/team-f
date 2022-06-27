@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
     public int coins;
     float x;
     float y;
-    int ballSpeed = 7;
+    int ballSpeed = 300;
     public TMP_Text scoreText;
     private bool isIntangible = false;
     private float intangibleTime = 5;
@@ -31,7 +31,7 @@ public class PlayerController : MonoBehaviour
     Color defaultColor;
     public GameObject playerShield;
     private bool isCoroutine = false;
-
+    Rigidbody2D rb;
     AnalyticsManager analyticsManager;
 
 
@@ -43,6 +43,7 @@ public class PlayerController : MonoBehaviour
         collist = new List<Collider2D>();
         defaultColor = GetComponent<SpriteRenderer>().color;
         analyticsManager = AnalyticsManager.GetAnalyticsManager();
+        rb = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
@@ -57,8 +58,10 @@ public class PlayerController : MonoBehaviour
         Vector2 dir2 = Camera.main.transform.up * y;
         x = (dir1 + dir2).x;
         y = (dir1 + dir2).y;
-        GetComponent<Rigidbody2D>().velocity = new Vector2(x * ballSpeed * isDiagonal, y * ballSpeed * isDiagonal);
 
+        Vector2 move = new Vector2(x * isDiagonal, y * isDiagonal);
+        rb.velocity = move * ballSpeed * Time.deltaTime;
+        
         if (Input.GetKeyDown(KeyCode.M) && coins >= 3f) {
             analyticsManager.RegisterEvent(GameEvent.POWER_UP_USED, "shield");
             playerShield.SetActive(true);
@@ -67,6 +70,7 @@ public class PlayerController : MonoBehaviour
                 StartCoroutine(handleShield());
             }
         }
+
 
         UpdateIntagibleTimer();
     }
