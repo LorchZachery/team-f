@@ -116,6 +116,10 @@ public class PlayerController : MonoBehaviour
         else if (collision.gameObject.CompareTag("SpikeBottom"))
         {
             Debug.Log("HIT BOTTOM");
+            if (playerShield.activeInHierarchy) {
+                Physics2D.IgnoreCollision(collision.gameObject.GetComponent<PolygonCollider2D>(), GetComponent<CircleCollider2D>());
+                collist.Add(collision.gameObject.GetComponent<PolygonCollider2D>());
+            }
         }
         if (collision.gameObject.CompareTag("coin"))
         {
