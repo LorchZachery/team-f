@@ -10,7 +10,7 @@ using TMPro;
 */
 public class GameOverWon : MonoBehaviour
 {
-
+    public static int tutorialLevel = 1;
     void Start()
     {
         DisplayLevelCompleteText();
@@ -43,10 +43,35 @@ public class GameOverWon : MonoBehaviour
         SceneManager.LoadScene("MainMenu");
     }
 
-    public void NextButton()
+    public void IncrementLevel()
     {
-        LevelsController.LevelNumber += 1;
-        LevelsController.LevelName = LevelsController.levelNumberToName[LevelsController.LevelNumber];
-        SceneManager.LoadScene("SampleGrid");
+        tutorialLevel += 1;
+    }
+
+    public void Update()
+    {
+        GameObject nextLevelButtonObject = gameObject.transform.GetChild(3).gameObject;
+        if (tutorialLevel >= LevelsController.tutorialLevels.Count)
+        {
+            nextLevelButtonObject.SetActive(false);
+        }
+    }
+
+    public void NextButton()
+    {        
+        if (LevelsController.tutorialLevels.ContainsValue(LevelsController.LevelName))
+        {
+            IncrementLevel();
+            LevelsController.LevelName = LevelsController.tutorialLevels[tutorialLevel];
+            SceneManager.LoadScene("SampleGrid");
+        }
+        else
+        {
+            LevelsController.LevelNumber += 1;
+            LevelsController.LevelName = LevelsController.levelNumberToName[LevelsController.LevelNumber];
+            SceneManager.LoadScene("SampleGrid");
+
+        }
+        
     }
 }
