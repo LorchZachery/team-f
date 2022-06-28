@@ -4,9 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-
+/*
+ * This class deals with navigation from levels screen
+*/
 public class LevelsController : MonoBehaviour
 {
+
+    // Variables to store level inforamation
     public static string LevelName;
     public static int LevelNumber;
 
@@ -24,7 +28,6 @@ public class LevelsController : MonoBehaviour
         {9, "null"},
         {10, "null"}
     };
-
 
     public void BackButton()
     {

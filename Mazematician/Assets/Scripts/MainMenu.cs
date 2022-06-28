@@ -4,9 +4,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+/*
+ * This class deals with navigation from main menu
+*/
 public class MainMenu : MonoBehaviour
 {
-    // Loads levels screen
     public void PlayButton()
     {
         SceneManager.LoadScene("Levels");

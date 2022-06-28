@@ -5,6 +5,9 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
 
+/*
+ * This class deals with navigation from game over won screen
+*/
 public class GameOverWon : MonoBehaviour
 {
 
@@ -12,6 +15,7 @@ public class GameOverWon : MonoBehaviour
     {
         DisplayLevelCompleteText();
         GameObject nextLevelButtonObject = gameObject.transform.GetChild(3).gameObject;
+        // Checking whether at last level in order to dispplay next button or not
         if (!LevelsController.levelNumberToName.ContainsKey(LevelsController.LevelNumber + 1))
         {
             nextLevelButtonObject.SetActive(false);
