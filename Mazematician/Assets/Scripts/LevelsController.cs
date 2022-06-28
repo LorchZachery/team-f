@@ -11,8 +11,8 @@ public class LevelsController : MonoBehaviour
 {
 
     // Variables to store level inforamation
-    public static string LevelName;
     public static int LevelNumber;
+    public static string LevelName;
 
     // Initializing dictionary storing level numbers and level names
     public static Dictionary<int, string> levelNumberToName = new Dictionary<int, string>
