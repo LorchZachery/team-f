@@ -487,6 +487,10 @@ MonoBehaviour:
   powerUpWalkThru: {fileID: 4918814534900967767, guid: c99ccf159be3f4f4594ccc88063d0161, type: 3}
   oneWayDoorSet: {fileID: 7656152047234893126, guid: 9b7ed69081cde9147a0e164ae387fde7, type: 3}
   breakableWall: {fileID: 3790120316791274753, guid: 74d701d78a3224f3e892233604486ea1, type: 3}
+  triangle_nw: {fileID: 2483983227542680485, guid: 59f9c030248e741f690d049af883710e, type: 3}
+  triangle_ne: {fileID: 2483983227542680485, guid: f154d6a26446f40d89a05b6b261c5ebb, type: 3}
+  triangle_sw: {fileID: 2483983227542680485, guid: 5758fceedbb594e3a9e29f8a71806e5e, type: 3}
+  triangle_se: {fileID: 2483983227542680485, guid: 144797e77d97f490a957f3cff1ef2aa5, type: 3}
   target: 32
   noGoCorr: []
   playerCooridantes: {x: 0, y: 0}
@@ -494,5 +498,5 @@ MonoBehaviour:
   blockList: []
   objectList: []
   warningPrefab: {fileID: 3725297818231593299, guid: f4e79fe507a8e174bbd06bda189a76c7, type: 3}
-  LevelName: lorch_3
+  LevelName: nic_1
   textbox: {fileID: 70108231}
