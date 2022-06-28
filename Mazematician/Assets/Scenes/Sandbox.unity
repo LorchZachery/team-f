@@ -494,5 +494,5 @@ MonoBehaviour:
   blockList: []
   objectList: []
   warningPrefab: {fileID: 3725297818231593299, guid: f4e79fe507a8e174bbd06bda189a76c7, type: 3}
-  LevelName: lorch_3
+  LevelName: "spike_test\xE5"
   textbox: {fileID: 70108231}
