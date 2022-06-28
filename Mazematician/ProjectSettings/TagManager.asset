@@ -25,6 +25,7 @@ TagManager:
   - SpikeTop
   - SpikeBottom
   - help
+  - levelText
   layers:
   - Default
   - TransparentFX

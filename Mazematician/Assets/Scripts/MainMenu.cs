@@ -18,10 +18,4 @@ public class MainMenu : MonoBehaviour
         LevelsController.LevelName = "ag_tutorial";
         SceneManager.LoadScene("SampleGrid");
     }
-
-    public void StoreButton()
-    {
-        // Put store scene here
-    }
-
 }

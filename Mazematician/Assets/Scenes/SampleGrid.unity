@@ -3079,7 +3079,7 @@ GameObject:
   - component: {fileID: 1544730713}
   m_Layer: 5
   m_Name: LevelText
-  m_TagString: Untagged
+  m_TagString: levelText
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3101,7 +3101,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 442, y: -44}
+  m_AnchoredPosition: {x: 272.3, y: -45}
   m_SizeDelta: {x: 160.40356, y: 50.000977}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1544730713
