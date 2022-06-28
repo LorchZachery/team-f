@@ -18,6 +18,11 @@ static class OConst
     public const int oneway = 4;
     public const int breakableTile = 5;
     public const int spikeTwo = 6;
+    
+    public const int TRIANGLE_NW = 7;
+    public const int TRIANGLE_NE = 8;
+    public const int TRIANGLE_SW = 9;
+    public const int TRIANGLE_SE = 10;
 
 }
 
@@ -51,6 +56,13 @@ public class GridManager : MonoBehaviour
     public GameObject powerUpWalkThru;
     public GameObject breakableWall;
     public GameObject oneWayDoorSet;
+
+    public GameObject triangle_nw;
+    public GameObject triangle_ne;
+    public GameObject triangle_sw;
+    public GameObject triangle_se;
+
+
 
     public int target = 32;
     public Generator generator;
@@ -211,6 +223,27 @@ public class GridManager : MonoBehaviour
                 if (obj[3] == OConst.spikeTwo)
                 {
                     PlaceSpikeObstacleTwoWide((int)obj[0], (int)obj[1]);
+
+                }
+                // Corners
+                if (obj[3] == OConst.TRIANGLE_NW)
+                {
+                    PlaceCornerNW((int)obj[0], (int)obj[1]);
+
+                }
+                if (obj[3] == OConst.TRIANGLE_NE)
+                {
+                    PlaceCornerNE((int)obj[0], (int)obj[1]);
+
+                }
+                if (obj[3] == OConst.TRIANGLE_SW)
+                {
+                    PlaceCornerSW((int)obj[0], (int)obj[1]);
+
+                }
+                if (obj[3] == OConst.TRIANGLE_SE)
+                {
+                    PlaceCornerSE((int)obj[0], (int)obj[1]);
 
                 }
                  if (obj[3] == OConst.breakableTile)
@@ -562,6 +595,32 @@ public class GridManager : MonoBehaviour
         GameObject t = Instantiate(spikeObstacleTwoWide, GetCameraCoordinates(x, y), Quaternion.identity);
         // t.transform.localScale = new Vector3(scale * 0.30f, scale * 0.30f, 1);
     }
+    // Corners
+    void PlaceCornerNW(int x, int y)
+    {
+        GameObject t = Instantiate(triangle_nw, GetCameraCoordinates(x, y), Quaternion.identity);
+        t.transform.localScale = new Vector3(scale * 0.50f, scale * 0.50f, 1);
+
+    }
+    void PlaceCornerNE(int x, int y)
+    {
+        GameObject t = Instantiate(triangle_ne, GetCameraCoordinates(x, y), Quaternion.identity);
+        t.transform.localScale = new Vector3(scale * 0.50f, scale * 0.50f, 1);
+
+    }
+    void PlaceCornerSW(int x, int y)
+    {
+        GameObject t = Instantiate(triangle_sw, GetCameraCoordinates(x, y), Quaternion.identity);
+        t.transform.localScale = new Vector3(scale * 0.50f, scale * 0.50f, 1);
+
+    }
+    void PlaceCornerSE(int x, int y)
+    {
+        GameObject t = Instantiate(triangle_se, GetCameraCoordinates(x, y), Quaternion.identity);
+        t.transform.localScale = new Vector3(scale * 0.50f, scale * 0.50f, 1);
+
+    }
+
 
     void PlaceBreakableWall(int x, int y)
     {

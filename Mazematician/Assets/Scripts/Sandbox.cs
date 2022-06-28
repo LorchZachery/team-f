@@ -32,6 +32,11 @@ static class Constants
     public const int onewayRight = 14;
     public const int breakableTile = 15;
     public const int spikeTwo = 16;
+
+    public const int TRIANGLE_NW = 17;
+    public const int TRIANGLE_NE = 18;
+    public const int TRIANGLE_SW = 19;
+    public const int TRIANGLE_SE = 20;
 }
 
 
@@ -41,6 +46,10 @@ To use sandbox mode in unity inspect make sure to give level a name (or use leve
 you are currently designing)
 you also can change the screen width and gridlength in unity editor
 To add a tile press "t" and click somewhere
+to add a corner NW press "Y" and click somewhere
+to add a corner NE press "U" and click somewhere
+to add a corner SW press "H" and click somewhere
+to add a corner SE press "J" and click somewhere
 to add a oneway wall UP press "1" and click somewhere
 to add a oneway wall DOWN press "2" and click somewhere
 to add a oneway wall LEFT press "3" and click somewhere
@@ -83,6 +92,11 @@ public class Sandbox : MonoBehaviour
     public GameObject powerUpWalkThru;
     public GameObject oneWayDoorSet;
     public GameObject breakableWall;
+
+    public GameObject triangle_nw;
+    public GameObject triangle_ne;
+    public GameObject triangle_sw;
+    public GameObject triangle_se;
 
 
     //value player must reach to win
@@ -250,6 +264,26 @@ public class Sandbox : MonoBehaviour
                     PlaceSpikeObstacleTwoWide((int)obj[0], (int)obj[1]);
 
                 }
+                 if (obj[3] == OConst.TRIANGLE_NW)
+                {
+                    PlaceCornerNW((int)obj[0], (int)obj[1]);
+
+                }
+                 if (obj[3] == OConst.TRIANGLE_NE)
+                {
+                    PlaceCornerNE((int)obj[0], (int)obj[1]);
+
+                }
+                 if (obj[3] == OConst.TRIANGLE_SW)
+                {
+                    PlaceCornerSW((int)obj[0], (int)obj[1]);
+
+                }
+                 if (obj[3] == OConst.TRIANGLE_SE)
+                {
+                    PlaceCornerSE((int)obj[0], (int)obj[1]);
+
+                }
 
             }
         }
@@ -350,11 +384,32 @@ public class Sandbox : MonoBehaviour
                 {
                     PlaceBreakableWall((int)objTuple.Item2[0], (int)objTuple.Item2[1]);
                 }
-                 if (objTuple.Item2[3] == OConst.spikeTwo)
+                if (objTuple.Item2[3] == OConst.spikeTwo)
                 {
                     PlaceSpikeObstacleTwoWide((int)objTuple.Item2[0], (int)objTuple.Item2[1]);
 
                 }
+                if (objTuple.Item2[3] == OConst.TRIANGLE_NW)
+                {
+                    PlaceCornerNW((int)objTuple.Item2[0], (int)objTuple.Item2[1]);
+
+                }
+                if (objTuple.Item2[3] == OConst.TRIANGLE_NE)
+                {
+                    PlaceCornerNE((int)objTuple.Item2[0], (int)objTuple.Item2[1]);
+
+                }
+                if (objTuple.Item2[3] == OConst.TRIANGLE_SW)
+                {
+                    PlaceCornerSW((int)objTuple.Item2[0], (int)objTuple.Item2[1]);
+
+                }
+                if (objTuple.Item2[3] == OConst.TRIANGLE_SE)
+                {
+                    PlaceCornerSE((int)objTuple.Item2[0], (int)objTuple.Item2[1]);
+
+                }
+
             objectList.Add(new Vector4(objTuple.Item2[0],objTuple.Item2[1],objTuple.Item2[2],objTuple.Item2[3]));
         }
 
@@ -438,6 +493,30 @@ public class Sandbox : MonoBehaviour
             Debug.Log("Place TwoSpike");
             mode = Constants.spikeTwo;
         }
+        //press Y to enter Corner NW mode
+        if(Input.GetKeyDown(KeyCode.Y))
+        {
+            Debug.Log("Place Corner NW");
+            mode = Constants.TRIANGLE_NW;
+        }
+        //press U to enter Corner NE mode
+        if(Input.GetKeyDown(KeyCode.U))
+        {
+            Debug.Log("Place Corner NE");
+            mode = Constants.TRIANGLE_NE;
+        }
+        //press H to enter Corner SW mode
+        if(Input.GetKeyDown(KeyCode.H))
+        {
+            Debug.Log("Place Corner SW");
+            mode = Constants.TRIANGLE_SW;
+        }
+        //press J to enter Corner SE mode
+        if(Input.GetKeyDown(KeyCode.J))
+        {
+            Debug.Log("Place Corner SE");
+            mode = Constants.TRIANGLE_SE;
+        }
 
         //press O to enter obstacle mode
         if(Input.GetKeyDown(KeyCode.O))
@@ -515,6 +594,46 @@ public class Sandbox : MonoBehaviour
             PlaceSpikeObstacleTwoWide((int)tilePos[0],(int)tilePos[1]);
             
            objectList.Add(new Vector4(tilePos[0],tilePos[1],-1,OConst.spikeTwo));
+        }
+         //Corner NW
+        if (Input.GetMouseButtonDown(0) && mode == Constants.TRIANGLE_NW) {
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            
+            Vector2 tilePos = GetTileCoordinates(mousePos[0],mousePos[1]);
+            Debug.Log($"CREATE corner nw {tilePos}");
+            PlaceCornerNW((int)tilePos[0],(int)tilePos[1]);
+            
+           objectList.Add(new Vector4(tilePos[0],tilePos[1],-1,OConst.TRIANGLE_NW));
+        }
+         //Corner NE
+        if (Input.GetMouseButtonDown(0) && mode == Constants.TRIANGLE_NE) {
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            
+            Vector2 tilePos = GetTileCoordinates(mousePos[0],mousePos[1]);
+            Debug.Log($"CREATE corner ne {tilePos}");
+            PlaceCornerNE((int)tilePos[0],(int)tilePos[1]);
+            
+           objectList.Add(new Vector4(tilePos[0],tilePos[1],-1,OConst.TRIANGLE_NE));
+        }
+         //Corner SW
+        if (Input.GetMouseButtonDown(0) && mode == Constants.TRIANGLE_SW) {
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            
+            Vector2 tilePos = GetTileCoordinates(mousePos[0],mousePos[1]);
+            Debug.Log($"CREATE corner sw {tilePos}");
+            PlaceCornerSW((int)tilePos[0],(int)tilePos[1]);
+            
+           objectList.Add(new Vector4(tilePos[0],tilePos[1],-1,OConst.TRIANGLE_SW));
+        }
+         //Corner SE
+        if (Input.GetMouseButtonDown(0) && mode == Constants.TRIANGLE_SE) {
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            
+            Vector2 tilePos = GetTileCoordinates(mousePos[0],mousePos[1]);
+            Debug.Log($"CREATE corner se {tilePos}");
+            PlaceCornerSE((int)tilePos[0],(int)tilePos[1]);
+            
+           objectList.Add(new Vector4(tilePos[0],tilePos[1],-1,OConst.TRIANGLE_SE));
         }
 
         //adding breakable tile to map where user clicks
@@ -958,6 +1077,35 @@ public class Sandbox : MonoBehaviour
         // t.transform.localScale = new Vector3(scale * 0.30f, scale * 0.30f, 1);
         List<GameObject> spikeObjList = new List<GameObject> {t};
         objectListObjects.Add(new Tuple<List<GameObject>,Vector4>(spikeObjList,new Vector4(x,y,0,OConst.spikeTwo)));
+    }
+    // Corners
+    void PlaceCornerNW(int x, int y)
+    {
+        GameObject t = Instantiate(triangle_nw, GetCameraCoordinates(x, y), Quaternion.identity);
+        t.transform.localScale = new Vector3(scale * 0.50f, scale * 0.50f, 1);
+        List<GameObject> spikeObjList = new List<GameObject> {t};
+        objectListObjects.Add(new Tuple<List<GameObject>,Vector4>(spikeObjList,new Vector4(x,y,0,OConst.TRIANGLE_NW)));
+    }
+    void PlaceCornerNE(int x, int y)
+    {
+        GameObject t = Instantiate(triangle_ne, GetCameraCoordinates(x, y), Quaternion.identity);
+        t.transform.localScale = new Vector3(scale * 0.50f, scale * 0.50f, 1);
+        List<GameObject> spikeObjList = new List<GameObject> {t};
+        objectListObjects.Add(new Tuple<List<GameObject>,Vector4>(spikeObjList,new Vector4(x,y,0,OConst.TRIANGLE_NE)));
+    }
+    void PlaceCornerSW(int x, int y)
+    {
+        GameObject t = Instantiate(triangle_sw, GetCameraCoordinates(x, y), Quaternion.identity);
+        t.transform.localScale = new Vector3(scale * 0.50f, scale * 0.50f, 1);
+        List<GameObject> spikeObjList = new List<GameObject> {t};
+        objectListObjects.Add(new Tuple<List<GameObject>,Vector4>(spikeObjList,new Vector4(x,y,0,OConst.TRIANGLE_SW)));
+    }
+    void PlaceCornerSE(int x, int y)
+    {
+        GameObject t = Instantiate(triangle_se, GetCameraCoordinates(x, y), Quaternion.identity);
+        t.transform.localScale = new Vector3(scale * 0.50f, scale * 0.50f, 1);
+        List<GameObject> spikeObjList = new List<GameObject> {t};
+        objectListObjects.Add(new Tuple<List<GameObject>,Vector4>(spikeObjList,new Vector4(x,y,0,OConst.TRIANGLE_SE)));
     }
 
     void PlaceWinBlock(int x, int y, int value)
