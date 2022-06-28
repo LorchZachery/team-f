@@ -30,6 +30,7 @@ public class DashBoardController : MonoBehaviour
         timerRunning = true;
         UpdateScore(0);
         DisplayTargetText();
+        DisplayLevelText();
         helpMenu = GameObject.FindGameObjectWithTag("help");
         helpMenu.SetActive(false);
         analyticsManager = AnalyticsManager.GetAnalyticsManager();
@@ -66,7 +67,7 @@ public class DashBoardController : MonoBehaviour
             {
                 //Debug.Log("Time remaining: " + remainingTime);
                 remainingTime -= Time.deltaTime;
-                
+
                 if (player != null)
                 {
                     if (player.GetComponent<PlayerController>().coins >= 3)
@@ -264,12 +265,13 @@ public class DashBoardController : MonoBehaviour
 
     //}
 
-    //void DisplayLevelText()
-    //{
-    //    GameObject levelObject = gameObject.transform.GetChild(18).gameObject;
-    //    TextMeshProUGUI levelText = levelObject.GetComponent<TextMeshProUGUI>();
-    //    levelText.text = "Level: " + LevelsController.LevelNumber;
-    //}
+    void DisplayLevelText()
+    {
+        GameObject[] levelObjectArray = GameObject.FindGameObjectsWithTag("levelText");
+        GameObject levelObject = levelObjectArray[0];
+        TextMeshProUGUI levelText = levelObject.GetComponent<TextMeshProUGUI>();
+        levelText.text = "Level: " + LevelsController.LevelNumber;
+    }
 
     public void QuitButton()
     {

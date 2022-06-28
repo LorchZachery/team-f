@@ -4,9 +4,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+/*
+ * This class deals with navigation from main menu
+*/
 public class MainMenu : MonoBehaviour
 {
-    // Loads levels screen
     public void PlayButton()
     {
         SceneManager.LoadScene("Levels");
@@ -14,15 +16,9 @@ public class MainMenu : MonoBehaviour
 
     public void TutorialButton()
     {
-        LevelsController.LevelNumber += 0;
+        LevelsController.LevelNumber = 0;
         LevelsController.LevelName = "ag_tutorial";
         // LevelsController.LevelName = "breakable_tile_tutorial";
         SceneManager.LoadScene("SampleGrid");
     }
-
-    public void StoreButton()
-    {
-        // Put store scene here
-    }
-
 }

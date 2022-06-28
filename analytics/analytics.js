@@ -12,15 +12,12 @@ function setLevels(analyticLevels) {
 
 
 const groupBy = (array, key) => {
-  // Return the end result
   return array.reduce((result, currentValue) => {
-    // If an array already present for key, push it to the array. Else create an array and push the object
     (result[currentValue[key]] = result[currentValue[key]] || []).push(
       currentValue
     );
-    // Return the current iteration `result` value, this will be taken as next iteration `result` value and accumulate
     return result;
-  }, {}); // empty object is the initial value for result object
+  }, {});
 };
 
 
@@ -48,7 +45,7 @@ function plotGraph(container, title, subtitle, xCategories, yTitle, seriesData) 
 	        text: subtitle
 	    },
 	    xAxis: {
-	        categories: xCategories,
+	        categories: xCategories.map(e => "Level " + e),
 	        crosshair: true
 	    },
 	    yAxis: {
@@ -73,7 +70,8 @@ function plotGraph(container, title, subtitle, xCategories, yTitle, seriesData) 
 	            pointPadding: 0.0,
 	            borderWidth: 0,
 	            dataLabels: {
-	                enabled: true
+	                enabled: true,
+	                format: '{y:.2f}'
 	            }
 	        }
 	    },
@@ -193,21 +191,29 @@ function levelVsTime() {
 }
 
 function powerUpsPerLevel() {
+	var powerUps = ['bonusTime', 'powerUpWalkThru', 'shield', 'shrink']
+	var powerUpsByLevel = groupBy(eventsData.powerUpUsed, "level");
+	powerUpsByLevel = getMetricsByLevel(powerUpsByLevel, powerUps, Object.keys(powerUpsByLevel));
+	var powerUpsByName = getMetricsByName(powerUpsByLevel, powerUps, Object.keys(powerUpsByLevel));
+
 	var container = 'powerUpsDiv';
 	var title = 'Power-Ups per level'
 	var subtitle = 'blah blah blah'
 	var seriesData = [{
 		name: 'Extra time',
-		data: [2, 3, 2, 5, 7],
+		data: powerUpsByName['bonusTime'] || [],
 		color: '#DDDF00'
 	}, {
 		name: 'Shield',
-		data: [1, 3, 3, 2, 3],
+		data: powerUpsByName['shield'],
 		color: '#FF0000'
 	}, {
 		name: 'Wall walk through',
-		data: [1, 2, 2, 1, 1],
+		data: powerUpsByName['powerUpWalkThru'],
 		color: '#64E572'
+	},{
+		name: 'Shrink',
+		data: powerUpsByName['shrink'],
 	}]
 	var xCategories = Object.keys(levelWisePlayerData)
 	var yTitle = 'Number of power ups'
@@ -216,23 +222,28 @@ function powerUpsPerLevel() {
 }
 
 function obstacleCollisionGraph() {
+	var obstacles = ['X 0.5', 'spike']
+	var obstaclesByLevel = groupBy(eventsData.collidedObstacles, "level");
+	obstaclesByLevel = getMetricsByLevel(obstaclesByLevel, obstacles, Object.keys(obstaclesByLevel));
+	var obstaclesByName = getMetricsByName(obstaclesByLevel, obstacles, Object.keys(obstaclesByLevel));
+
 	var container = 'obstacleDiv';
 	var title = 'Obstacle collision per level'
 	var subtitle = 'blah blah blah'
 	var seriesData = [{
 		name: 'X 0.5',
-		data: [2, 3, 2, 5, 5],
+		data: obstaclesByName['X 0.5'],
 		color: '#FF9655'
 	}, {
-		name: 'One way door',
-		data: [1, 3, 3, 2, 3],
+		name: 'Spike',
+		data: obstaclesByName['spike'],
 		color: '#64E572'
 	}, {
 		name: 'DontKnow',
 		data: [1, 2, 2, 1, 1],
 		color: '#058DC7'
 	}]
-	var xCategories = ['Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5']
+	var xCategories = Object.keys(obstaclesByLevel)
 	var yTitle = 'Number of obstacles'
 
 	plotGraph(container, title, subtitle, xCategories, yTitle, seriesData);
@@ -242,23 +253,39 @@ function levelVsLoss() {
 	if(!levelWisePlayerData) {
 		levelWisePlayerData = groupBy(eventsData.userData, "level");
 	}
+
+	var metricNames = ["quit", "restart", "obstacle", "Out of Time"];
+	var metricsByLevel = {};
+	for(const level in levelWisePlayerData) {
+		metricsByLevel[level] = {}
+		metricNames.forEach(metric => {
+			metricsByLevel[level][metric] = levelWisePlayerData[level].filter(e => metric === e['exitReason']).length
+		})
+	}
+	var metricsByName = getMetricsByName(metricsByLevel, metricNames, Object.keys(levelWisePlayerData));
+
+
 	var container = 'lossTypeDiv';
 	var title = 'Level Vs Loss Scenario'
 	var subtitle = 'blah blah blah'
 	var seriesData = [{
 		name: 'Quit level',
-		data: [0, 1, 2, 4, 5],
+		data: metricsByName['quit'],
 		color: '#FF9655'
-	}, {
+	},{
+		name: 'Restart level',
+		data: metricsByName['restart'],
+		
+	},{
 		name: 'Lost by time',
-		data: [1, 2, 3, 5, 7],
+		data: metricsByName['Out of Time'],
 		color: '#64E572'
 	}, {
 		name: 'Lost by obstacle',
-		data: [1, 4, 3, 8, 9],
+		data: metricsByName['obstacle'],
 		color: '#FF0000'
 	}]
-	var xCategories = ['Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5']
+	var xCategories = Object.keys(levelWisePlayerData)
 	var yTitle = 'Count'
 
 	plotGraph(container, title, subtitle, xCategories, yTitle, seriesData);
@@ -268,20 +295,31 @@ function startVsComplete() {
 	if(!levelWisePlayerData) {
 		levelWisePlayerData = groupBy(eventsData.userData, "level");
 	}
+
+	var metricNames = ["won"];
+	var metricsByLevel = {};
+	for(const level in levelWisePlayerData) {
+		metricsByLevel[level] = {}
+		metricNames.forEach(metric => {
+			metricsByLevel[level][metric] = levelWisePlayerData[level].filter(e => metric === e['exitReason']).length
+		})
+	}
+	var metricsByName = getMetricsByName(metricsByLevel, metricNames, Object.keys(levelWisePlayerData));
+
 	var container = 'startVsCompleteDiv';
 	var title = 'Start Vs Complete'
 	var subtitle = 'blah blah blah'
 	var seriesData = [{
 		name: 'Start',
-		data: [80, 70, 70, 50, 40],
+		data: Object.values(levelWisePlayerData).map(e => e.length),
 		color: '#c42525'
 	}, {
 		name: 'Complete',
-		data: [75, 60, 50, 30, 10],
+		data: Object.values(levelWisePlayerData).map(e => e.filter(res => "won" === res['exitReason']).length),
 		color: '#64E572'
 		
 	}]
-	var xCategories = ['Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5']
+	var xCategories = Object.keys(levelWisePlayerData)
 	var yTitle = 'Attempts'
 
 	plotGraph(container, title, subtitle, xCategories, yTitle, seriesData);
