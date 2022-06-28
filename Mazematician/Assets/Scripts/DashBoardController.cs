@@ -267,7 +267,8 @@ public class DashBoardController : MonoBehaviour
 
     void DisplayLevelText()
     {
-        GameObject levelObject = gameObject.transform.GetChild(16).gameObject;
+        GameObject[] levelObjectArray = GameObject.FindGameObjectsWithTag("levelText");
+        GameObject levelObject = levelObjectArray[0];
         TextMeshProUGUI levelText = levelObject.GetComponent<TextMeshProUGUI>();
         levelText.text = "Level: " + LevelsController.LevelNumber;
     }
