@@ -33,9 +33,7 @@ public class LevelsController : MonoBehaviour
     public static Dictionary<int, string> tutorialLevels = new Dictionary<int, string>
     {
         {1, "ag_tutorial"},
-        {2, "breakable_tile_tutorial"},
-        {3, "ag_tutorial"},
-        {4, "breakable_tile_tutorial"}
+        {2, "breakable_tile_tutorial"}
     };
 
     public void BackButton()
