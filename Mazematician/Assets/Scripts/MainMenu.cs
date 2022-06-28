@@ -28,9 +28,5 @@ public class MainMenu : MonoBehaviour
     {
         TutorialButtonClicked = true;
         SceneManager.LoadScene("Tutorial");
-        // LevelsController.LevelNumber = 0;
-        // LevelsController.LevelName = "ag_tutorial";
-        // // LevelsController.LevelName = "breakable_tile_tutorial";
-        // SceneManager.LoadScene("SampleGrid");
     }
 }
