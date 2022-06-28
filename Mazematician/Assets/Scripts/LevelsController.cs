@@ -11,8 +11,8 @@ public class LevelsController : MonoBehaviour
 {
 
     // Variables to store level inforamation
-    public static string LevelName;
     public static int LevelNumber;
+    public static string LevelName;
 
     // Initializing dictionary storing level numbers and level names
     public static Dictionary<int, string> levelNumberToName = new Dictionary<int, string>
@@ -29,16 +29,9 @@ public class LevelsController : MonoBehaviour
         {10, "null"}
     };
 
-    // Initializing dictionary storing level numbers and level names
-    public static Dictionary<int, string> tutorialLevels = new Dictionary<int, string>
-    {
-        {1, "ag_tutorial"},
-        {2, "breakable_tile_tutorial"}
-    };
-
     public void BackButton()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+        SceneManager.LoadScene("MainMenu");
     }
 
     public void Level1Button()

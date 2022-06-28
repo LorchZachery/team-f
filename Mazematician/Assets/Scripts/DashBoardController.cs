@@ -270,7 +270,14 @@ public class DashBoardController : MonoBehaviour
         GameObject[] levelObjectArray = GameObject.FindGameObjectsWithTag("levelText");
         GameObject levelObject = levelObjectArray[0];
         TextMeshProUGUI levelText = levelObject.GetComponent<TextMeshProUGUI>();
-        levelText.text = "Level: " + LevelsController.LevelNumber;
+        if (MainMenu.PlayButtonClicked)
+        {
+            levelText.text = "Level: " + LevelsController.LevelNumber;
+        }
+        else
+        {
+            levelText.text = "Tutorial: " + TutorialController.TutorialLevelNumber;
+        }
     }
 
     public void QuitButton()
