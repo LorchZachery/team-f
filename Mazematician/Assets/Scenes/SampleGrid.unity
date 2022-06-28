@@ -428,8 +428,8 @@ MonoBehaviour:
   obstacle: {fileID: 2483983227542680485, guid: df4afda6eb5b14640b44c34ad3ff168d, type: 3}
   winBlock: {fileID: 2483983227542680485, guid: 6bb51171fc4084713befef5614528d83, type: 3}
   myCamera: {fileID: 138263140}
-  spikeObstacle: {fileID: 2927829571682668071, guid: 3c606bbb02d784689b305601a99fbd0b, type: 3}
-  spikeObstacleTwoWide: {fileID: 843929278336598885, guid: 9bd3cdda2a71a410db07dd8c503b72cd, type: 3}
+  spikeObstacle: {fileID: 1802073259230417242, guid: 3c606bbb02d784689b305601a99fbd0b, type: 3}
+  spikeObstacleTwoWide: {fileID: 912858068555824792, guid: 9bd3cdda2a71a410db07dd8c503b72cd, type: 3}
   coin: {fileID: 2483983227542680485, guid: d6f7d26c050c74901a8743d57ecbb8ef, type: 3}
   powerUpWalkThru: {fileID: 4918814534900967767, guid: c99ccf159be3f4f4594ccc88063d0161, type: 3}
   breakableWall: {fileID: 3790120316791274753, guid: 74d701d78a3224f3e892233604486ea1, type: 3}
@@ -3083,7 +3083,7 @@ GameObject:
   - component: {fileID: 1544730713}
   m_Layer: 5
   m_Name: LevelText
-  m_TagString: Untagged
+  m_TagString: levelText
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3105,7 +3105,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 442, y: -44}
+  m_AnchoredPosition: {x: 272.3, y: -45}
   m_SizeDelta: {x: 160.40356, y: 50.000977}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1544730713

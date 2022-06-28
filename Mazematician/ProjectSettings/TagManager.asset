@@ -25,6 +25,8 @@ TagManager:
   - SpikeTop
   - SpikeBottom
   - help
+  - levelText
+  - spikeObstacleTwoWide
   layers:
   - Default
   - TransparentFX
