@@ -29,6 +29,13 @@ public class LevelsController : MonoBehaviour
         {10, "null"}
     };
 
+    // Initializing dictionary storing level numbers and level names
+    public static Dictionary<int, string> tutorialLevels = new Dictionary<int, string>
+    {
+        {1, "ag_tutorial"},
+        {2, "breakable_tile_tutorial"}
+    };
+
     public void BackButton()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
