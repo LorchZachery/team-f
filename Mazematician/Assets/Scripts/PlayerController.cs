@@ -46,9 +46,8 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
     }
 
-    // Update is called once per frame
 
-    void Update()
+    private void FixedUpdate()
     {
         x = Input.GetAxisRaw("Horizontal");
         y = Input.GetAxisRaw("Vertical");
@@ -61,6 +60,15 @@ public class PlayerController : MonoBehaviour
 
         Vector2 move = new Vector2(x * isDiagonal, y * isDiagonal);
         rb.velocity = move * ballSpeed * Time.deltaTime;
+
+        UpdateIntagibleTimer();
+    }
+
+    // Update is called once per frame
+
+    void Update()
+    {
+       
         
         if (Input.GetKeyDown(KeyCode.M) && coins >= 3f) {
             analyticsManager.RegisterEvent(GameEvent.POWER_UP_USED, "shield");
@@ -72,7 +80,6 @@ public class PlayerController : MonoBehaviour
         }
 
 
-        UpdateIntagibleTimer();
     }
 
     private IEnumerator handleShield()
