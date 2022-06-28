@@ -10,6 +10,7 @@ public class DashBoardController : MonoBehaviour
 {
 
     GameObject player;
+    GameObject helpMenu;
     float remainingTime;
     bool timerRunning;
     int target;
@@ -29,6 +30,8 @@ public class DashBoardController : MonoBehaviour
         timerRunning = true;
         UpdateScore(0);
         DisplayTargetText();
+        helpMenu = GameObject.FindGameObjectWithTag("help");
+        helpMenu.SetActive(false);
         analyticsManager = AnalyticsManager.GetAnalyticsManager();
         analyticsManager.RegisterEvent(GameEvent.TOTAL_TIME, remainingTime);
     }
@@ -75,7 +78,7 @@ public class DashBoardController : MonoBehaviour
                         {
                             bonusTime = false;
                             remainingTime += 11;
-                            analyticsManager.RegisterEvent(GameEvent.TOTAL_TIME, 11);
+                            analyticsManager.RegisterEvent(GameEvent.TOTAL_TIME, 11f);
                             analyticsManager.RegisterEvent(GameEvent.POWER_UP_USED, "bonusTime");
                             StartCoroutine("BonusTime");
                             if (!bonusTime)
@@ -278,6 +281,16 @@ public class DashBoardController : MonoBehaviour
     {
         UpdateAnalytics("restart");
         SceneManager.LoadScene("SampleGrid");
+    }
+
+    public void HelpButton()
+    {
+        helpMenu.SetActive(true);
+    }
+
+    public void QuitHelpButton()
+    {
+        helpMenu.SetActive(false);
     }
 
 
