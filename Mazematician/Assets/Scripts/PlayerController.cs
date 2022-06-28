@@ -77,6 +77,12 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(5.0f);
         playerShield.SetActive(false);
         isCoroutine = false;
+
+        foreach (Collider2D col in collist)
+        {
+            Physics2D.IgnoreCollision(col, GetComponent<CircleCollider2D>(), false);
+        }
+        collist.Clear();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -96,7 +102,6 @@ public class PlayerController : MonoBehaviour
         }
         else if (collision.gameObject.CompareTag("SpikeTop"))
         {
-
             if (playerShield.activeInHierarchy) {
                 Physics2D.IgnoreCollision(collision.gameObject.GetComponent<PolygonCollider2D>(), GetComponent<CircleCollider2D>());
                 collist.Add(collision.gameObject.GetComponent<PolygonCollider2D>());
@@ -111,10 +116,6 @@ public class PlayerController : MonoBehaviour
         else if (collision.gameObject.CompareTag("SpikeBottom"))
         {
             Debug.Log("HIT BOTTOM");
-            if (playerShield.activeInHierarchy) {
-                Physics2D.IgnoreCollision(collision.gameObject.GetComponent<PolygonCollider2D>(), GetComponent<CircleCollider2D>());
-                collist.Add(collision.gameObject.GetComponent<PolygonCollider2D>());
-            }
         }
         if (collision.gameObject.CompareTag("coin"))
         {

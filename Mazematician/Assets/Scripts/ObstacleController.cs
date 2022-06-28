@@ -12,24 +12,19 @@ public class ObstacleController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
         collist = new List<Collider2D>();
-
         analyticsManager = AnalyticsManager.GetAnalyticsManager();
-
     }
 
     // Update is called once per frame
     void Update()
     {
-
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("player"))
         {
-            
             var script = collision.gameObject.GetComponent<PlayerController>();
             if (!script.playerShield.activeInHierarchy) {
                 GameObject penaltyObj = gameObject.transform.GetChild(0).gameObject;
@@ -46,7 +41,7 @@ public class ObstacleController : MonoBehaviour
             }
             else {
                 Physics2D.IgnoreCollision(collision.gameObject.GetComponent<CircleCollider2D>(), GetComponent<CircleCollider2D>());
-                collist.Add(collision.gameObject.GetComponent<CircleCollider2D>());
+                // collist.Add(collision.gameObject.GetComponent<CircleCollider2D>());
             }
         }
     }
