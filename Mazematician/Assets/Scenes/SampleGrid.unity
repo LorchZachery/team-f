@@ -434,6 +434,7 @@ MonoBehaviour:
   powerUpWalkThru: {fileID: 4918814534900967767, guid: c99ccf159be3f4f4594ccc88063d0161, type: 3}
   breakableWall: {fileID: 3790120316791274753, guid: 74d701d78a3224f3e892233604486ea1, type: 3}
   oneWayDoorSet: {fileID: 7656152047234893126, guid: 9b7ed69081cde9147a0e164ae387fde7, type: 3}
+  breakableWallHint: {fileID: 5981375227449178806, guid: 030dfeae5ac9344baa3584c65a267ed5, type: 3}
   target: 32
   playerCoordinates: {x: 0, y: 0}
   winBlockCoor: {x: 0, y: 0}
