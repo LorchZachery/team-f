@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class TutorialController : MonoBehaviour
 {
@@ -25,7 +27,7 @@ public class TutorialController : MonoBehaviour
 
     public void BackButton()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+        SceneManager.LoadScene("MainMenu");
     }
 
     public void PointsButton()
@@ -63,9 +65,37 @@ public class TutorialController : MonoBehaviour
         SceneManager.LoadScene("SampleGrid");
     }
 
-    public void LosePointsButton()
+    public void OneWayDoorButton()
     {
-        TutorialLevelNumber = 5;
+        TutorialLevelNumber = 6;
+        TutorialLevelName = tutorialLevels[TutorialLevelNumber];
+        SceneManager.LoadScene("SampleGrid");
+    }
+
+    public void WalkThroughWallButton()
+    {
+        TutorialLevelNumber = 7;
+        TutorialLevelName = tutorialLevels[TutorialLevelNumber];
+        SceneManager.LoadScene("SampleGrid");
+    }
+
+    public void IncreaseTimeButton()
+    {
+        TutorialLevelNumber = 8;
+        TutorialLevelName = tutorialLevels[TutorialLevelNumber];
+        SceneManager.LoadScene("SampleGrid");
+    }
+
+    public void ShieldButton()
+    {
+        TutorialLevelNumber = 9;
+        TutorialLevelName = tutorialLevels[TutorialLevelNumber];
+        SceneManager.LoadScene("SampleGrid");
+    }
+
+    public void SmallBallButton()
+    {
+        TutorialLevelNumber = 10;
         TutorialLevelName = tutorialLevels[TutorialLevelNumber];
         SceneManager.LoadScene("SampleGrid");
     }

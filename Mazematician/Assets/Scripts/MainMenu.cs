@@ -9,16 +9,28 @@ using UnityEngine.SceneManagement;
 */
 public class MainMenu : MonoBehaviour
 {
+    public static string PlayButtonClicked;
+    public static string TutorialButtonClicked;
+
+    void Start()
+    {
+        PlayButtonClicked = false;
+        TutorialButtonClicked = false;
+    }
+
     public void PlayButton()
     {
+        PlayButtonClicked = true;
         SceneManager.LoadScene("Levels");
     }
 
     public void TutorialButton()
     {
-        LevelsController.LevelNumber = 0;
-        LevelsController.LevelName = "ag_tutorial";
-        // LevelsController.LevelName = "breakable_tile_tutorial";
-        SceneManager.LoadScene("SampleGrid");
+        TutorialButtonClicked = true;
+        SceneManager.LoadScene("Tutorial");
+        // LevelsController.LevelNumber = 0;
+        // LevelsController.LevelName = "ag_tutorial";
+        // // LevelsController.LevelName = "breakable_tile_tutorial";
+        // SceneManager.LoadScene("SampleGrid");
     }
 }
