@@ -17,7 +17,12 @@ public class LevelsController : MonoBehaviour
         {2, "lorch_2"},
         {3, "iven_1"},
         {4, "iven_2"},
-        {5, "lorch_3"}
+        {5, "lorch_3"},
+        {6, "null"},
+        {7, "null"},
+        {8, "null"},
+        {9, "null"},
+        {10, "null"}
     };
 
 
@@ -57,6 +62,41 @@ public class LevelsController : MonoBehaviour
     public void Level5Button()
     {
         LevelNumber = 5;
+        LevelName = levelNumberToName[LevelNumber];
+        SceneManager.LoadScene("SampleGrid");
+    }
+
+    public void Level6Button()
+    {
+        LevelNumber = 6;
+        LevelName = levelNumberToName[LevelNumber];
+        SceneManager.LoadScene("SampleGrid");
+    }
+
+    public void Level7Button()
+    {
+        LevelNumber = 7;
+        LevelName = levelNumberToName[LevelNumber];
+        SceneManager.LoadScene("SampleGrid");
+    }
+
+    public void Level8Button()
+    {
+        LevelNumber = 8;
+        LevelName = levelNumberToName[LevelNumber];
+        SceneManager.LoadScene("SampleGrid");
+    }
+
+    public void Level9Button()
+    {
+        LevelNumber = 9;
+        LevelName = levelNumberToName[LevelNumber];
+        SceneManager.LoadScene("SampleGrid");
+    }
+
+    public void Level10Button()
+    {
+        LevelNumber = 10;
         LevelName = levelNumberToName[LevelNumber];
         SceneManager.LoadScene("SampleGrid");
     }
