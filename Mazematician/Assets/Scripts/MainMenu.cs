@@ -9,8 +9,8 @@ using UnityEngine.SceneManagement;
 */
 public class MainMenu : MonoBehaviour
 {
-    public static string PlayButtonClicked;
-    public static string TutorialButtonClicked;
+    public static bool PlayButtonClicked;
+    public static bool TutorialButtonClicked;
 
     void Start()
     {

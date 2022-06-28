@@ -21,8 +21,8 @@ public class TutorialController : MonoBehaviour
         {6, "null"},
         {7, "null"},
         {8, "null"},
-        {9, "null"},
-        {10, "null"},
+        {9, "ag_tutorial"},
+        {10, "breakable_tile_tutorial"},
     };
 
     public void BackButton()

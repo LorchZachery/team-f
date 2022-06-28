@@ -18,8 +18,8 @@ static class OConst
     public const int oneway = 4;
     public const int breakableTile = 5;
     public const int spikeTwo = 6;
-   
-    
+
+
     public const int TRIANGLE_NW = 7;
     public const int TRIANGLE_NE = 8;
     public const int TRIANGLE_SW = 9;
@@ -99,7 +99,14 @@ public class GridManager : MonoBehaviour
     {
         var script = winBlock.GetComponent<GameEndController>();
         script.targetScore = target;
-        LevelName = LevelsController.LevelName;
+        if (MainMenu.PlayButtonClicked)
+        {
+            LevelName = LevelsController.LevelName;
+        }
+        else if (MainMenu.TutorialButtonClicked)
+        {
+            LevelName = TutorialController.TutorialLevelName;
+        }
         analyticsManager = AnalyticsManager.GetAnalyticsManager();
         analyticsManager.Reset(LevelsController.LevelNumber.ToString());
     }
@@ -250,7 +257,7 @@ public class GridManager : MonoBehaviour
                     PlaceCornerSE((int)obj[0], (int)obj[1]);
 
                 }
-                 if (obj[3] == OConst.breakableTile)
+                if (obj[3] == OConst.breakableTile)
                 {
                     PlaceBreakableWall((int)obj[0], (int)obj[1]);
                 }
@@ -269,7 +276,7 @@ public class GridManager : MonoBehaviour
             PlaceSpikeObstacle(16, 16);
             PlaceObstacle(14, 14, 0.5f);
             PlaceBreakableWall(12, 12);
-            PlaceSpikeObstacleTwoWide(16,16);
+            PlaceSpikeObstacleTwoWide(16, 16);
             // PlaceBreakableWallHint(12, 12);
         }
 
@@ -280,7 +287,7 @@ public class GridManager : MonoBehaviour
         ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
 
         //invoking gravity to switch every 7 seconds, with a red screen flash before
-        if( LevelName != "ag_tutorial" && LevelName != "breakable_tile_tutorial")
+        if (LevelName != "ag_tutorial" && LevelName != "breakable_tile_tutorial")
         {
             InvokeRepeating("rotateGameRoutine", 7.0f, 7.0f);
         }
@@ -288,7 +295,7 @@ public class GridManager : MonoBehaviour
         {
             Debug.Log("enter breakable_tile_tutorial ");
             PlaceBreakableWallHint(15, 12);
-        
+
         }
 
         InitAnalyticsData();
@@ -644,9 +651,9 @@ public class GridManager : MonoBehaviour
     void PlaceBreakableWallHint(int x, int y)
     {
         GameObject t = Instantiate(breakableWallHint, GetCameraCoordinates(x, y), Quaternion.identity);
-        t.transform.localScale = new Vector3(scale*1.2f, scale*1.2f, 1);
+        t.transform.localScale = new Vector3(scale * 1.2f, scale * 1.2f, 1);
     }
-    
+
 
     void AddPowerUpWalkThru()
     {
