@@ -213,7 +213,7 @@ public class GridManager : MonoBehaviour
                     PlaceSpikeObstacleTwoWide((int)obj[0], (int)obj[1]);
 
                 }
-                 if (obj[3] == OConst.breakableTile)
+                if (obj[3] == OConst.breakableTile)
                 {
                     PlaceBreakableWall((int)obj[0], (int)obj[1]);
                 }
@@ -225,10 +225,10 @@ public class GridManager : MonoBehaviour
         {
             AddPowerUpWalkThru();
             // PlaceOneWayDoor(16, 16);
-           // PlaceSpikeObstacle(16, 16);
+            PlaceSpikeObstacle(15, 15);
             PlaceObstacle(14, 14, 0.5f);
             PlaceBreakableWall(12, 12);
-            PlaceSpikeObstacleTwoWide(16,16);
+            PlaceSpikeObstacleTwoWide(16, 16);
         }
 
 
@@ -238,7 +238,7 @@ public class GridManager : MonoBehaviour
         ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
 
         //invoking gravity to switch every 7 seconds, with a red screen flash before
-        if(LevelName != "ag_tutorial")
+        if (LevelName != "ag_tutorial")
         {
             InvokeRepeating("rotateGameRoutine", 7.0f, 7.0f);
         }
@@ -250,9 +250,9 @@ public class GridManager : MonoBehaviour
     void InitAnalyticsData()
     {
         int totalCoins = 0;
-        foreach(var obj in objectList)
+        foreach (var obj in objectList)
         {
-            if(obj[3] == OConst.coin)
+            if (obj[3] == OConst.coin)
             {
                 totalCoins++;
             }
@@ -556,7 +556,7 @@ public class GridManager : MonoBehaviour
         GameObject t = Instantiate(spikeObstacle, GetCameraCoordinates(x, y), Quaternion.identity);
         // t.transform.localScale = new Vector3(scale * 0.30f, scale * 0.30f, 1);
     }
-     void PlaceSpikeObstacleTwoWide(int x, int y)
+    void PlaceSpikeObstacleTwoWide(int x, int y)
     {
         GameObject t = Instantiate(spikeObstacleTwoWide, GetCameraCoordinates(x, y), Quaternion.identity);
         // t.transform.localScale = new Vector3(scale * 0.30f, scale * 0.30f, 1);
@@ -565,7 +565,7 @@ public class GridManager : MonoBehaviour
     void PlaceBreakableWall(int x, int y)
     {
         GameObject t = Instantiate(breakableWall, GetCameraCoordinates(x, y), Quaternion.identity);
-        t.transform.localScale = new Vector3(scale*2f, scale*2f, 1);
+        t.transform.localScale = new Vector3(scale * 2f, scale * 2f, 1);
     }
 
     void AddPowerUpWalkThru()
