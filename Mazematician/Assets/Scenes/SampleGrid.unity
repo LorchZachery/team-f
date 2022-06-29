@@ -446,6 +446,7 @@ MonoBehaviour:
   blockList: []
   objectList: []
   warningPrefab: {fileID: 3725297818231593299, guid: f4e79fe507a8e174bbd06bda189a76c7, type: 3}
+  gravityText: {fileID: 3725297818231593299, guid: 8663fd2ca68664d73b3e293716ab9257, type: 3}
   LevelName: 
 --- !u!4 &79570880
 Transform:

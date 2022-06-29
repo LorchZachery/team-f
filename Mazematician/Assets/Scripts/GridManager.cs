@@ -86,6 +86,8 @@ public class GridManager : MonoBehaviour
 
     public GameObject warningPrefab;
     private GameObject warning;
+    public GameObject gravityText;
+    private GameObject p_gravityText;
 
 
     private bool read = false;
@@ -113,6 +115,9 @@ public class GridManager : MonoBehaviour
         // Instantiate warning red flash creation to alert user to gravity switch
         warning = Instantiate(warningPrefab, new Vector2(Screen.width, Screen.height), Quaternion.identity);
         warning.gameObject.SetActive(false);
+        p_gravityText = Instantiate(gravityText);
+        p_gravityText.gameObject.SetActive(false);
+
         TextAsset levelFile = Resources.Load<TextAsset>("Levels/" + LevelName);
         Debug.Log(levelFile);
 
@@ -273,14 +278,11 @@ public class GridManager : MonoBehaviour
             // PlaceBreakableWallHint(12, 12);
         }
 
-
-
-
         //giving gavity to objects
         ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
 
         //invoking gravity to switch every 7 seconds, with a red screen flash before
-        if (LevelName != "ag_tutorial" && LevelName != "breakable_tile_tutorial" && LevelName != "Tutorial_2")
+        if (LevelName != "ag_tutorial" && LevelName != "Tutorial_2")
         {
             InvokeRepeating("rotateGameRoutine", 7.0f, 7.0f);
         }
@@ -569,14 +571,22 @@ public class GridManager : MonoBehaviour
     {
 
         warning.gameObject.SetActive(true);
+        // Gravity text for a tutorial level
+        //if(LevelName == "breakable_tile_tutorial"){
+        p_gravityText.gameObject.SetActive(true);
+        //}
         var whenAreweDone = Time.time + 3;
         while (Time.time < whenAreweDone)
         {
-
             yield return new WaitForSeconds(0.5f);
             warning.gameObject.SetActive(!warning.gameObject.activeSelf);
+            //if(LevelName == "breakable_tile_tutorial"){
+            p_gravityText.gameObject.SetActive(!p_gravityText.gameObject.activeSelf);
+            //}
+
         }
         warning.gameObject.SetActive(false);
+        p_gravityText.gameObject.SetActive(false);
         rotation = 90.0f;
     }
 
