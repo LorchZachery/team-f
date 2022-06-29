@@ -30,7 +30,6 @@ static class OConst
     public const int walkThroughWallHint = 14;
     public const int timeHint = 15;
     public const int gravityHint = 16;
-    
 }
 
 /**
@@ -273,6 +272,18 @@ public class GridManager : MonoBehaviour
                 {
                     PlaceBreakableWallHint((int)obj[0], (int)obj[1]);
                 }
+                if (obj[3] == OConst.shieldHint)
+                {
+                    PlaceShieldHint((int)obj[0], (int)obj[1]);
+                }
+                if (obj[3] == OConst.shrinkHint)
+                {
+                    PlaceShrinkHint((int)obj[0], (int)obj[1]);
+                }
+                if (obj[3] == OConst.walkThroughWallHint)
+                {
+                    PlaceWalkThroughHint((int)obj[0], (int)obj[1]);
+                }
 
                 if (obj[3] == OConst.breakableWallHint)
                 {
@@ -319,6 +330,30 @@ public class GridManager : MonoBehaviour
             Debug.Log("enter breakable_tile_tutorial ");
             PlaceBreakableWallHint(14, 16);
             //PlaceGravityHint(15, 10);
+
+        }
+        if (LevelName == "Tutorial_2")
+        {
+            Debug.Log("enter shield_tutorial ");
+            PlaceShieldHint(15, 12);
+
+        }
+        if (LevelName == "Tutorial_2")
+        {
+            Debug.Log("enter shrink_tutorial ");
+            PlaceShrinkHint(10, 2);
+
+        }
+        if (LevelName == "Tutorial_2")
+        {
+            Debug.Log("enter walkthrough_tutorial ");
+            PlaceWalkThroughHint(11, 7);
+
+        }
+        if (LevelName == "Tutorial_2")
+        {
+            Debug.Log("enter time_tutorial ");
+            PlaceTimeHint(14, 8);
 
         }
         if (LevelName == "Tutorial_2")
@@ -737,7 +772,6 @@ public class GridManager : MonoBehaviour
         GameObject t = Instantiate(timeHint, GetCameraCoordinates(x, y), Quaternion.identity);
         t.transform.localScale = new Vector3(scale * 1.2f, scale * 1.2f, 1);
     }
-
     void AddPowerUpWalkThru()
     {
         bool end = false;
