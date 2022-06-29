@@ -14,15 +14,9 @@ public class TutorialController : MonoBehaviour
     public static Dictionary<int, string> tutorialLevels = new Dictionary<int, string>
     {
         {1, "ag_tutorial"},
-        {2, "null"},
-        {3, "breakable_tile_tutorial"},
-        {4, "null"},
-        {5, "null"},
-        {6, "null"},
-        {7, "null"},
-        {8, "null"},
-        {9, "ag_tutorial"},
-        {10, "breakable_tile_tutorial"},
+        {2, "breakable_tile_tutorial"},
+        {3, "null"},
+        {4, "Tutorial_2"}
     };
 
     public void BackButton()
@@ -37,65 +31,23 @@ public class TutorialController : MonoBehaviour
         SceneManager.LoadScene("SampleGrid");
     }
 
-    public void CoinsButton()
+    public void BreakTileButton()
     {
         TutorialLevelNumber = 2;
         TutorialLevelName = tutorialLevels[TutorialLevelNumber];
         SceneManager.LoadScene("SampleGrid");
     }
 
-    public void BreakTileButton()
+    public void Obstaclesbutton()
     {
         TutorialLevelNumber = 3;
         TutorialLevelName = tutorialLevels[TutorialLevelNumber];
         SceneManager.LoadScene("SampleGrid");
     }
 
-    public void SpikeButton()
+    public void PowerUpButton()
     {
         TutorialLevelNumber = 4;
-        TutorialLevelName = tutorialLevels[TutorialLevelNumber];
-        SceneManager.LoadScene("SampleGrid");
-    }
-
-    public void LosePointsButton()
-    {
-        TutorialLevelNumber = 5;
-        TutorialLevelName = tutorialLevels[TutorialLevelNumber];
-        SceneManager.LoadScene("SampleGrid");
-    }
-
-    public void OneWayDoorButton()
-    {
-        TutorialLevelNumber = 6;
-        TutorialLevelName = tutorialLevels[TutorialLevelNumber];
-        SceneManager.LoadScene("SampleGrid");
-    }
-
-    public void WalkThroughWallButton()
-    {
-        TutorialLevelNumber = 7;
-        TutorialLevelName = tutorialLevels[TutorialLevelNumber];
-        SceneManager.LoadScene("SampleGrid");
-    }
-
-    public void IncreaseTimeButton()
-    {
-        TutorialLevelNumber = 8;
-        TutorialLevelName = tutorialLevels[TutorialLevelNumber];
-        SceneManager.LoadScene("SampleGrid");
-    }
-
-    public void ShieldButton()
-    {
-        TutorialLevelNumber = 9;
-        TutorialLevelName = tutorialLevels[TutorialLevelNumber];
-        SceneManager.LoadScene("SampleGrid");
-    }
-
-    public void SmallBallButton()
-    {
-        TutorialLevelNumber = 10;
         TutorialLevelName = tutorialLevels[TutorialLevelNumber];
         SceneManager.LoadScene("SampleGrid");
     }

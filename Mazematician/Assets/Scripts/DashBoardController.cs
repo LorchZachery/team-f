@@ -27,6 +27,13 @@ public class DashBoardController : MonoBehaviour
     void Start()
     {
         remainingTime = 60 * 2f;
+        if(MainMenu.TutorialButtonClicked) {
+            if(TutorialController.TutorialLevelName == "Tutorial_2") {
+                remainingTime = 25 * 1f;
+            }
+        } else {
+            remainingTime = 60 * 2f;
+        }
         timerRunning = true;
         UpdateScore(0);
         DisplayTargetText();
