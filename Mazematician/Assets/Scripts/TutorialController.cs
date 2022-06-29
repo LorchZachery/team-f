@@ -16,7 +16,7 @@ public class TutorialController : MonoBehaviour
         {1, "ag_tutorial"},
         {2, "null"},
         {3, "breakable_tile_tutorial"},
-        {4, "null"},
+        {4, "Tutorial_2"},
         {5, "null"},
         {6, "null"},
         {7, "null"},
