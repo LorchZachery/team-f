@@ -23,8 +23,8 @@ public class LevelsController : MonoBehaviour
         {4, "nic_lvl_4"},
         {5, "sodhi_1"},
         {6, "iven_2"},
-        {7, "level4_ashley"},
-        {8, "lorch_3"},
+        {7, "lorch_3"},
+        {8, "level4_ashley"},
         {9, "sodhi_2"},
         {10, "lorch_2"}
 
