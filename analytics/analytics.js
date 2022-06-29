@@ -2,14 +2,6 @@ var data;
 var levels;
 var eventsData = {};
 var levelWisePlayerData;
-function setData(analyticsData) {
-	data = analyticsData;
-}
-
-function setLevels(analyticLevels) {
-	levels = analyticLevels;
-}
-
 
 const groupBy = (array, key) => {
   return array.reduce((result, currentValue) => {
@@ -19,6 +11,20 @@ const groupBy = (array, key) => {
     return result;
   }, {});
 };
+
+
+function setData(analyticsData) {
+	data = analyticsData;
+	data = groupBy(data, "platform")
+	data = data['WebGL']
+}
+
+function setLevels(analyticLevels) {
+	levels = analyticLevels;
+}
+
+
+
 
 
 function processData() {
