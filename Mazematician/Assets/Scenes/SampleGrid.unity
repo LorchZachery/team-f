@@ -435,6 +435,9 @@ MonoBehaviour:
   breakableWall: {fileID: 3790120316791274753, guid: 74d701d78a3224f3e892233604486ea1, type: 3}
   oneWayDoorSet: {fileID: 7656152047234893126, guid: 9b7ed69081cde9147a0e164ae387fde7, type: 3}
   breakableWallHint: {fileID: 5981375227449178806, guid: 030dfeae5ac9344baa3584c65a267ed5, type: 3}
+  shieldHint: {fileID: 5981375227449178806, guid: 7f6540e5a5c118c4197070ae2e8d96ef, type: 3}
+  shrinkHint: {fileID: 5981375227449178806, guid: 18346730552c61e4d97b96ced6238de8, type: 3}
+  walkThroughWallHint: {fileID: 5981375227449178806, guid: 1f70368b23c819747bf9d25840100a75, type: 3}
   triangle_nw: {fileID: 2483983227542680485, guid: 59f9c030248e741f690d049af883710e, type: 3}
   triangle_ne: {fileID: 2483983227542680485, guid: f154d6a26446f40d89a05b6b261c5ebb, type: 3}
   triangle_sw: {fileID: 2483983227542680485, guid: 5758fceedbb594e3a9e29f8a71806e5e, type: 3}
