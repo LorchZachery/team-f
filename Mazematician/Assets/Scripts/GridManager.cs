@@ -28,6 +28,8 @@ static class OConst
     public const int shieldHint = 12;
     public const int shrinkHint = 13;
     public const int walkThroughWallHint = 14;
+    public const int timeHint = 15;
+    
 
 
 
@@ -67,7 +69,7 @@ public class GridManager : MonoBehaviour
     public GameObject shieldHint;
     public GameObject shrinkHint;
     public GameObject walkThroughWallHint;
-    
+    public GameObject timeHint;    
 
 
     public GameObject triangle_nw;
@@ -322,13 +324,19 @@ public class GridManager : MonoBehaviour
         if (LevelName == "Tutorial_2")
         {
             Debug.Log("enter shrink_tutorial ");
-            PlaceShrinkHint(15, 20);
+            PlaceShrinkHint(10, 2);
 
         }
         if (LevelName == "Tutorial_2")
         {
             Debug.Log("enter walkthrough_tutorial ");
-            PlaceWalkThroughHint(15, 5);
+            PlaceWalkThroughHint(11, 7);
+
+        }
+        if (LevelName == "Tutorial_2")
+        {
+            Debug.Log("enter time_tutorial ");
+            PlaceTimeHint(14, 8);
 
         }
 
@@ -700,6 +708,11 @@ public class GridManager : MonoBehaviour
     void PlaceWalkThroughHint(int x, int y)
     {
         GameObject t = Instantiate(walkThroughWallHint, GetCameraCoordinates(x, y), Quaternion.identity);
+        t.transform.localScale = new Vector3(scale * 1.2f, scale * 1.2f, 1);
+    }
+    void PlaceTimeHint(int x, int y)
+    {
+        GameObject t = Instantiate(timeHint, GetCameraCoordinates(x, y), Quaternion.identity);
         t.transform.localScale = new Vector3(scale * 1.2f, scale * 1.2f, 1);
     }
     void AddPowerUpWalkThru()
