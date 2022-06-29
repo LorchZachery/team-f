@@ -287,7 +287,7 @@ public class GridManager : MonoBehaviour
         ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
 
         //invoking gravity to switch every 7 seconds, with a red screen flash before
-        if (LevelName != "ag_tutorial" && LevelName != "breakable_tile_tutorial")
+        if (LevelName != "ag_tutorial" && LevelName != "breakable_tile_tutorial" && LevelName != "Tutorial_2")
         {
             InvokeRepeating("rotateGameRoutine", 7.0f, 7.0f);
         }
