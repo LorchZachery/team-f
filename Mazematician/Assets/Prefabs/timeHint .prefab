@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3360128502230030950}
   - component: {fileID: 7568317954871893141}
   m_Layer: 5
-  m_Name: 'walkThroughWallHint '
+  m_Name: 'timeHint '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -100,8 +100,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\n\n<------ Collect this to go\n         through walls \n               
-    temporarily for 5sec"
+  m_text: "Click B to increase \ntime by 10sec"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

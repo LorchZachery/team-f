@@ -438,6 +438,7 @@ MonoBehaviour:
   shieldHint: {fileID: 5981375227449178806, guid: 7f6540e5a5c118c4197070ae2e8d96ef, type: 3}
   shrinkHint: {fileID: 5981375227449178806, guid: 18346730552c61e4d97b96ced6238de8, type: 3}
   walkThroughWallHint: {fileID: 5981375227449178806, guid: 1f70368b23c819747bf9d25840100a75, type: 3}
+  timeHint: {fileID: 5981375227449178806, guid: 7bdff4d2e1e1c5e43bd3dad485861681, type: 3}
   triangle_nw: {fileID: 2483983227542680485, guid: 59f9c030248e741f690d049af883710e, type: 3}
   triangle_ne: {fileID: 2483983227542680485, guid: f154d6a26446f40d89a05b6b261c5ebb, type: 3}
   triangle_sw: {fileID: 2483983227542680485, guid: 5758fceedbb594e3a9e29f8a71806e5e, type: 3}
