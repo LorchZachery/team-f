@@ -572,17 +572,17 @@ public class GridManager : MonoBehaviour
 
         warning.gameObject.SetActive(true);
         // Gravity text for a tutorial level
-        //if(LevelName == "breakable_tile_tutorial"){
-        p_gravityText.gameObject.SetActive(true);
-        //}
+        if(LevelName == "breakable_tile_tutorial"){
+            p_gravityText.gameObject.SetActive(true);
+        }
         var whenAreweDone = Time.time + 3;
         while (Time.time < whenAreweDone)
         {
             yield return new WaitForSeconds(0.5f);
             warning.gameObject.SetActive(!warning.gameObject.activeSelf);
-            //if(LevelName == "breakable_tile_tutorial"){
-            p_gravityText.gameObject.SetActive(!p_gravityText.gameObject.activeSelf);
-            //}
+            if(LevelName == "breakable_tile_tutorial"){
+                p_gravityText.gameObject.SetActive(!p_gravityText.gameObject.activeSelf);
+            }
 
         }
         warning.gameObject.SetActive(false);
