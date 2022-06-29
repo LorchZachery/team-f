@@ -24,12 +24,7 @@ static class OConst
     public const int TRIANGLE_NE = 8;
     public const int TRIANGLE_SW = 9;
     public const int TRIANGLE_SE = 10;
-    public const int breakableWallHint = 11;
-    public const int shieldHint = 12;
-    public const int shrinkHint = 13;
-    public const int walkThroughWallHint = 14;
-    public const int timeHint = 15;
-    public const int gravityHint = 16;
+    
 }
 
 /**
@@ -83,7 +78,6 @@ public class GridManager : MonoBehaviour
 
     public Vector2 playerCoordinates;
     public Vector2 winBlockCoor;
-    public List<Vector2> noGoCorr = new List<Vector2>();
 
     //TODO work for reset of map (blocklist, mazeWallList, winblockcorr)
     public List<Vector3> blockList = new List<Vector3>();
@@ -101,7 +95,6 @@ public class GridManager : MonoBehaviour
     private GameObject p_gravityText;
 
 
-    private bool read = false;
     public string LevelName;
 
     AnalyticsManager analyticsManager;
@@ -130,53 +123,32 @@ public class GridManager : MonoBehaviour
         p_gravityText.gameObject.SetActive(false);
 
         TextAsset levelFile = Resources.Load<TextAsset>("Levels/" + LevelName);
-        Debug.Log(levelFile);
+        
 
-        //if (!File.Exists("Assets/Resources/Levels/" + LevelName + ".txt")) 
-        if (levelFile == null)
-        {
-            //setting screen length and height and translating it to a camera scale
-            screenWidth = 24;
+        
+        string fileData = levelFile.text;
+        fileData = fileData.Replace("\r", "");
+        string[] levelData = fileData.Split("\n");
+        fileObject.ReadTextAsset(levelData);
+        setFileClassVars(fileObject);
 
-            gridLength = 20; //10 + 2; // 8 x 8 grid + 1 top(left) wall + 1 bottom(right);
-            /* We need to scale the the tiles such that grid fits in camera(screen) */
-
-            //saving the player cooridantes and generating a list of cooridinates where blocks
-            //obsticles and walls should not be allow to generate. prevents crappy starting situations
-            //for players
-            playerCoordinates = new Vector2((int)gridLength - 2, (int)gridLength - 2);
-            generator = new Generator(gridLength, screenWidth);
-            mazeWallsList = generator.MazeGenerator();
-        }
-        else
-        {
-            //fileObject.ReadFile(LevelName);
-            string fileData = levelFile.text;
-            fileData = fileData.Replace("\r", "");
-            string[] levelData = fileData.Split("\n");
-            Debug.Log(levelData.Length);
-            fileObject.ReadTextAsset(levelData);
-            setFileClassVars(fileObject);
-
-            setFileClassVars(fileObject);
-
-            read = true;
-        }
+           
 
         screenHeight = Camera.main.orthographicSize * 2;
         scale = Mathf.Min(screenWidth, screenHeight) / gridLength;
-        createNoGoCoorList();
+       
         GenerateWalls();
         foreach (var wall in mazeWallsList)
         {
 
-            if (!noGoCorr.Contains(new Vector2(wall.x, wall.y)))
-            {
+            
                 if (wall.isWall())
                 {
+                    
                     GenerateTile(wall.x, wall.y);
                 }
-            }
+                
+            
         }
 
         DrawGridLines();
@@ -191,12 +163,7 @@ public class GridManager : MonoBehaviour
         {
             PlaceWinBlock((int)winBlockCoor[0], (int)winBlockCoor[1], target);
         }
-        else
-        {
-            //creating win block 
-            AddWinBlock(target);
-            noGoCorr.Add(winBlockCoor);
-        }
+        
 
 
 
@@ -207,11 +174,7 @@ public class GridManager : MonoBehaviour
                 GenerateBlock((int)block[0], (int)block[1], (int)block[2]);
             }
         }
-        else
-        {
-            //placing number blocks in maze
-            PlaceBlocksInMaze();
-        }
+        
 
         //placing object (powerups spikes...)
         if (objectList.Count != 0)
@@ -270,55 +233,10 @@ public class GridManager : MonoBehaviour
                 {
                     PlaceBreakableWall((int)obj[0], (int)obj[1]);
                 }
-                if (obj[3] == OConst.breakableWallHint)
-                {
-                    PlaceBreakableWallHint((int)obj[0], (int)obj[1]);
-                }
-                if (obj[3] == OConst.shieldHint)
-                {
-                    PlaceShieldHint((int)obj[0], (int)obj[1]);
-                }
-                if (obj[3] == OConst.shrinkHint)
-                {
-                    PlaceShrinkHint((int)obj[0], (int)obj[1]);
-                }
-                if (obj[3] == OConst.walkThroughWallHint)
-                {
-                    PlaceWalkThroughHint((int)obj[0], (int)obj[1]);
-                }
-
-                if (obj[3] == OConst.breakableWallHint)
-                {
-                    PlaceGravityHint((int)obj[0], (int)obj[1]);
-                }
-                if (obj[3] == OConst.shieldHint)
-                {
-                    PlaceShieldHint((int)obj[0], (int)obj[1]);
-                }
-                if (obj[3] == OConst.shrinkHint)
-                {
-                    PlaceShrinkHint((int)obj[0], (int)obj[1]);
-                }
-                if (obj[3] == OConst.walkThroughWallHint)
-                {
-                    PlaceWalkThroughHint((int)obj[0], (int)obj[1]);
-                }
-
+                
             }
         }
-        //if not read hardcode things for testing
-        if (!read)
-        {
-            AddPowerUpWalkThru();
-            // PlaceOneWayDoor(16, 16);
-            PlaceSpikeObstacle(16, 16);
-            PlaceObstacle(14, 14, 0.5f);
-            PlaceBreakableWall(12, 12);
-            PlaceSpikeObstacleTwoWide(16, 16);
-            // PlaceBreakableWallHint(12, 12);
-            // PlaceBreakableWallHint(12, 12);
-        }
-
+        
         //giving gavity to objects
         ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
 
@@ -329,58 +247,18 @@ public class GridManager : MonoBehaviour
         }
         if (LevelName == "breakable_tile_tutorial")
         {
-            Debug.Log("enter breakable_tile_tutorial ");
+            
             PlaceBreakableWallHint(14, 16);
             //PlaceGravityHint(15, 10);
 
         }
         if (LevelName == "Tutorial_2")
         {
-            Debug.Log("enter shield_tutorial ");
+           
             PlaceShieldHint(15, 12);
-
-        }
-        if (LevelName == "Tutorial_2")
-        {
-            Debug.Log("enter shrink_tutorial ");
             PlaceShrinkHint(10, 2);
-
-        }
-        if (LevelName == "Tutorial_2")
-        {
-            Debug.Log("enter walkthrough_tutorial ");
             PlaceWalkThroughHint(11, 7);
-
-        }
-        if (LevelName == "Tutorial_2")
-        {
-            Debug.Log("enter time_tutorial ");
             PlaceTimeHint(14, 8);
-
-        }
-        if (LevelName == "Tutorial_2")
-        {
-            Debug.Log("enter shield_tutorial ");
-            PlaceShieldHint(15, 12);
-
-        }
-        if (LevelName == "Tutorial_2")
-        {
-            Debug.Log("enter shrink_tutorial ");
-            PlaceShrinkHint(10, 2);
-
-        }
-        if (LevelName == "Tutorial_2")
-        {
-            Debug.Log("enter walkthrough_tutorial ");
-            PlaceWalkThroughHint(11, 7);
-
-        }
-        if (LevelName == "Tutorial_2")
-        {
-            Debug.Log("enter time_tutorial ");
-            PlaceTimeHint(14, 8);
-
         }
 
         InitAnalyticsData();
@@ -415,27 +293,7 @@ public class GridManager : MonoBehaviour
 
     }
 
-    void createNoGoCoorList()
-    {
-        noGoCorr.Add(playerCoordinates);
-        // Hard coding spike obstacle and 8 directions around
-        for (int i = 15; i < 18; i++)
-        {
-            for (int j = 15; j < 18; j++)
-            {
-                noGoCorr.Add(new Vector2(i, j));
-            }
-        }
-        // Hard coding points obstacle
-        noGoCorr.Add(new Vector2(14, 14));
-
-        //noGoCorr.Add(new Vector2(playerCoordinates[0]+1,playerCoordinates[1]+1));
-        noGoCorr.Add(new Vector2(playerCoordinates[0], playerCoordinates[1] + 1));
-        noGoCorr.Add(new Vector2(playerCoordinates[0] + 1, playerCoordinates[1]));
-        //noGoCorr.Add(new Vector2(playerCoordinates[0]-1,playerCoordinates[1]-1));
-        noGoCorr.Add(new Vector2(playerCoordinates[0], playerCoordinates[1] - 1));
-        noGoCorr.Add(new Vector2(playerCoordinates[0] - 1, playerCoordinates[1]));
-    }
+    
 
     void GenerateWalls()
     {
@@ -515,33 +373,6 @@ public class GridManager : MonoBehaviour
         return new Vector3(cartesianX + (0.5f * scale), cartesianY - (0.5f * scale), z);
     }
 
-    void AddWinBlock(int value)
-    {
-        Debug.Log("IN ADD WIN BLOCK");
-        bool end = false;
-        while (!end)
-        {
-            int x = random.Next((int)screenWidth - 5);
-            int y = random.Next((int)gridLength - 1);
-            Vector2 coor = new Vector2(x, y);
-            if (coor != playerCoordinates)
-            {
-                MazeWall temp = mazeWallsList.Find(r => r.x == x && r.y == y);
-                if (temp != null)
-                {
-                    if (!temp.isWall() && !temp.isBlock())
-                    {
-                        winBlockCoor = new Vector2(x, y);
-                        PlaceWinBlock(x, y, value);
-                        end = true;
-                    }
-                }
-            }
-
-        }
-
-    }
-
     void PlaceWinBlock(int x, int y, int value)
     {
         GameObject t = Instantiate(winBlock, GetCameraCoordinates(x, y), Quaternion.identity);
@@ -551,55 +382,7 @@ public class GridManager : MonoBehaviour
         t.transform.localScale = new Vector3(scale, scale, 1);
     }
 
-    void PlaceBlocksInMaze()
-    {
-
-        double numNeeded = Math.Log((double)target, 2);
-        int value = 2;
-        int mulitplier = (int)numNeeded;
-        int total = (int)numNeeded;
-        bool divided = false;
-        while (total > 0)
-        {
-            if (value >= (numNeeded / 2) && !divided)
-            {
-                mulitplier = 1;
-                divided = true;
-            }
-            for (int i = 0; i < mulitplier; i++)
-            {
-                bool taken = true;
-
-                while (taken)
-                {
-                    int x = random.Next((int)(screenWidth - 5));
-                    int y = random.Next((int)gridLength - 1);
-                    Vector2 coor = new Vector2(x, y);
-                    if (!noGoCorr.Contains(coor))
-                    {
-                        MazeWall temp = mazeWallsList.Find(r => r.x == x && r.y == y);
-                        if (temp != null)
-                        {
-                            if (!temp.isWall() && !temp.isBlock())
-                            {
-
-                                temp.setBlock();
-                                GenerateBlock(x, y, value);
-                                GenerateCoin(x + 1, y);
-                                blockList.Add(new Vector3(x, y, value));
-                                taken = false;
-
-                            }
-                        }
-                    }
-
-                }
-            }
-
-            total--;
-            value = 2 * value;
-        }
-    }
+    
 
     void GenerateBlock(int x, int y, int points)
     {
@@ -774,35 +557,13 @@ public class GridManager : MonoBehaviour
         GameObject t = Instantiate(timeHint, GetCameraCoordinates(x, y), Quaternion.identity);
         t.transform.localScale = new Vector3(scale * 1.2f, scale * 1.2f, 1);
     }
-    void AddPowerUpWalkThru()
-    {
-        bool end = false;
-        while (!end)
-        {
-            int x = random.Next((int)screenWidth - 5);
-            int y = random.Next((int)gridLength - 1);
-            Vector2 coor = new Vector2(x, y);
-            if (coor != playerCoordinates && coor != winBlockCoor)
-            {
-                MazeWall temp = mazeWallsList.Find(r => r.x == x && r.y == y);
-                if (temp != null)
-                {
-                    if (!temp.isWall() && !temp.isBlock())
-                    {
-                        noGoCorr.Add(new Vector2(x, y));
-                        PlacePowerUpWalkThru(x, y);
-                        end = true;
-                    }
-                }
-            }
-        }
-    }
+    
 
     void PlacePowerUpWalkThru(int x, int y)
     {
         GameObject t = Instantiate(powerUpWalkThru, GetCameraCoordinates(x, y), Quaternion.identity);
         t.transform.localScale = new Vector3(scale, scale, 1);
-        Debug.Log("Power Up Add");
+       
     }
 
     // dir (1:UP, 2:DOWN, 3:LEFT, 4:RIGHT)
@@ -837,18 +598,7 @@ public class GridManager : MonoBehaviour
         blockList = file.blockList;
         objectList = file.objectList;
     }
-    void setWriteFileClassVars(FileClass file)
-    {
-        file.screenHeight = screenHeight;
-        file.screenWidth = screenWidth;
-        file.gridLength = gridLength;
-        file.playerCooridantes = playerCoordinates;
-        file.winBlockCoor = winBlockCoor;
-        file.target = target;
-        file.mazeWallsList = mazeWallsList;
-        file.blockList = blockList;
-        file.objectList = objectList;
-    }
+   
 }
 
 
