@@ -25,6 +25,11 @@ static class OConst
     public const int TRIANGLE_SW = 9;
     public const int TRIANGLE_SE = 10;
     public const int breakableWallHint = 11;
+    public const int shieldHint = 12;
+    public const int shrinkHint = 13;
+    public const int walkThroughWallHint = 14;
+
+
 
 }
 
@@ -59,6 +64,11 @@ public class GridManager : MonoBehaviour
     public GameObject breakableWall;
     public GameObject oneWayDoorSet;
     public GameObject breakableWallHint;
+    public GameObject shieldHint;
+    public GameObject shrinkHint;
+    public GameObject walkThroughWallHint;
+    
+
 
     public GameObject triangle_nw;
     public GameObject triangle_ne;
@@ -99,14 +109,7 @@ public class GridManager : MonoBehaviour
     {
         var script = winBlock.GetComponent<GameEndController>();
         script.targetScore = target;
-        if (MainMenu.PlayButtonClicked)
-        {
-            LevelName = LevelsController.LevelName;
-        }
-        else if (MainMenu.TutorialButtonClicked)
-        {
-            LevelName = TutorialController.TutorialLevelName;
-        }
+        LevelName = LevelsController.LevelName;
         analyticsManager = AnalyticsManager.GetAnalyticsManager();
         analyticsManager.Reset(LevelsController.LevelNumber.ToString());
     }
@@ -265,6 +268,18 @@ public class GridManager : MonoBehaviour
                 {
                     PlaceBreakableWallHint((int)obj[0], (int)obj[1]);
                 }
+                if (obj[3] == OConst.shieldHint)
+                {
+                    PlaceShieldHint((int)obj[0], (int)obj[1]);
+                }
+                if (obj[3] == OConst.shrinkHint)
+                {
+                    PlaceShrinkHint((int)obj[0], (int)obj[1]);
+                }
+                if (obj[3] == OConst.walkThroughWallHint)
+                {
+                    PlaceWalkThroughHint((int)obj[0], (int)obj[1]);
+                }
 
             }
         }
@@ -277,6 +292,7 @@ public class GridManager : MonoBehaviour
             PlaceObstacle(14, 14, 0.5f);
             PlaceBreakableWall(12, 12);
             PlaceSpikeObstacleTwoWide(16, 16);
+            // PlaceBreakableWallHint(12, 12);
             // PlaceBreakableWallHint(12, 12);
         }
 
@@ -295,6 +311,24 @@ public class GridManager : MonoBehaviour
         {
             Debug.Log("enter breakable_tile_tutorial ");
             PlaceBreakableWallHint(15, 12);
+
+        }
+        if (LevelName == "Tutorial_2")
+        {
+            Debug.Log("enter shield_tutorial ");
+            PlaceShieldHint(15, 12);
+
+        }
+        if (LevelName == "Tutorial_2")
+        {
+            Debug.Log("enter shrink_tutorial ");
+            PlaceShrinkHint(15, 20);
+
+        }
+        if (LevelName == "Tutorial_2")
+        {
+            Debug.Log("enter walkthrough_tutorial ");
+            PlaceWalkThroughHint(15, 5);
 
         }
 
@@ -653,8 +687,21 @@ public class GridManager : MonoBehaviour
         GameObject t = Instantiate(breakableWallHint, GetCameraCoordinates(x, y), Quaternion.identity);
         t.transform.localScale = new Vector3(scale * 1.2f, scale * 1.2f, 1);
     }
-
-
+    void PlaceShieldHint(int x, int y)
+    {
+        GameObject t = Instantiate(shieldHint, GetCameraCoordinates(x, y), Quaternion.identity);
+        t.transform.localScale = new Vector3(scale * 1.2f, scale * 1.2f, 1);
+    }
+    void PlaceShrinkHint(int x, int y)
+    {
+        GameObject t = Instantiate(shrinkHint, GetCameraCoordinates(x, y), Quaternion.identity);
+        t.transform.localScale = new Vector3(scale * 1.2f, scale * 1.2f, 1);
+    }
+    void PlaceWalkThroughHint(int x, int y)
+    {
+        GameObject t = Instantiate(walkThroughWallHint, GetCameraCoordinates(x, y), Quaternion.identity);
+        t.transform.localScale = new Vector3(scale * 1.2f, scale * 1.2f, 1);
+    }
     void AddPowerUpWalkThru()
     {
         bool end = false;
