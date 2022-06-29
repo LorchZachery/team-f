@@ -25,8 +25,12 @@ static class OConst
     public const int TRIANGLE_SW = 9;
     public const int TRIANGLE_SE = 10;
     public const int breakableWallHint = 11;
-    public const int gravityHint = 12;
-
+    public const int shieldHint = 12;
+    public const int shrinkHint = 13;
+    public const int walkThroughWallHint = 14;
+    public const int timeHint = 15;
+    public const int gravityHint = 16;
+    
 }
 
 /**
@@ -60,6 +64,10 @@ public class GridManager : MonoBehaviour
     public GameObject breakableWall;
     public GameObject oneWayDoorSet;
     public GameObject breakableWallHint;
+    public GameObject shieldHint;
+    public GameObject shrinkHint;
+    public GameObject walkThroughWallHint;
+    public GameObject timeHint;
     public GameObject gravityHint;
 
     public GameObject triangle_nw;
@@ -88,6 +96,8 @@ public class GridManager : MonoBehaviour
 
     public GameObject warningPrefab;
     private GameObject warning;
+    public GameObject gravityText;
+    private GameObject p_gravityText;
 
 
     private bool read = false;
@@ -115,6 +125,9 @@ public class GridManager : MonoBehaviour
         // Instantiate warning red flash creation to alert user to gravity switch
         warning = Instantiate(warningPrefab, new Vector2(Screen.width, Screen.height), Quaternion.identity);
         warning.gameObject.SetActive(false);
+        p_gravityText = Instantiate(gravityText);
+        p_gravityText.gameObject.SetActive(false);
+
         TextAsset levelFile = Resources.Load<TextAsset>("Levels/" + LevelName);
         Debug.Log(levelFile);
 
@@ -260,9 +273,22 @@ public class GridManager : MonoBehaviour
                 {
                     PlaceBreakableWallHint((int)obj[0], (int)obj[1]);
                 }
+
                 if (obj[3] == OConst.breakableWallHint)
                 {
                     PlaceGravityHint((int)obj[0], (int)obj[1]);
+                }
+                if (obj[3] == OConst.shieldHint)
+                {
+                    PlaceShieldHint((int)obj[0], (int)obj[1]);
+                }
+                if (obj[3] == OConst.shrinkHint)
+                {
+                    PlaceShrinkHint((int)obj[0], (int)obj[1]);
+                }
+                if (obj[3] == OConst.walkThroughWallHint)
+                {
+                    PlaceWalkThroughHint((int)obj[0], (int)obj[1]);
                 }
 
             }
@@ -277,10 +303,8 @@ public class GridManager : MonoBehaviour
             PlaceBreakableWall(12, 12);
             PlaceSpikeObstacleTwoWide(16, 16);
             // PlaceBreakableWallHint(12, 12);
+            // PlaceBreakableWallHint(12, 12);
         }
-
-
-
 
         //giving gavity to objects
         ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
@@ -294,7 +318,31 @@ public class GridManager : MonoBehaviour
         {
             Debug.Log("enter breakable_tile_tutorial ");
             PlaceBreakableWallHint(14, 16);
-            PlaceGravityHint(15, 10);
+            //PlaceGravityHint(15, 10);
+
+        }
+        if (LevelName == "Tutorial_2")
+        {
+            Debug.Log("enter shield_tutorial ");
+            PlaceShieldHint(15, 12);
+
+        }
+        if (LevelName == "Tutorial_2")
+        {
+            Debug.Log("enter shrink_tutorial ");
+            PlaceShrinkHint(10, 2);
+
+        }
+        if (LevelName == "Tutorial_2")
+        {
+            Debug.Log("enter walkthrough_tutorial ");
+            PlaceWalkThroughHint(11, 7);
+
+        }
+        if (LevelName == "Tutorial_2")
+        {
+            Debug.Log("enter time_tutorial ");
+            PlaceTimeHint(14, 8);
 
         }
 
@@ -578,14 +626,22 @@ public class GridManager : MonoBehaviour
     {
 
         warning.gameObject.SetActive(true);
+        // Gravity text for a tutorial level
+        if(LevelName == "breakable_tile_tutorial"){
+            p_gravityText.gameObject.SetActive(true);
+        }
         var whenAreweDone = Time.time + 3;
         while (Time.time < whenAreweDone)
         {
-
             yield return new WaitForSeconds(0.5f);
             warning.gameObject.SetActive(!warning.gameObject.activeSelf);
+            if(LevelName == "breakable_tile_tutorial"){
+                p_gravityText.gameObject.SetActive(!p_gravityText.gameObject.activeSelf);
+            }
+
         }
         warning.gameObject.SetActive(false);
+        p_gravityText.gameObject.SetActive(false);
         rotation = 90.0f;
     }
 
@@ -661,6 +717,26 @@ public class GridManager : MonoBehaviour
         t.transform.localScale = new Vector3(scale * 1.2f, scale * 1.2f, 1);
     }
 
+    void PlaceShieldHint(int x, int y)
+    {
+        GameObject t = Instantiate(shieldHint, GetCameraCoordinates(x, y), Quaternion.identity);
+        t.transform.localScale = new Vector3(scale * 1.2f, scale * 1.2f, 1);
+    }
+    void PlaceShrinkHint(int x, int y)
+    {
+        GameObject t = Instantiate(shrinkHint, GetCameraCoordinates(x, y), Quaternion.identity);
+        t.transform.localScale = new Vector3(scale * 1.2f, scale * 1.2f, 1);
+    }
+    void PlaceWalkThroughHint(int x, int y)
+    {
+        GameObject t = Instantiate(walkThroughWallHint, GetCameraCoordinates(x, y), Quaternion.identity);
+        t.transform.localScale = new Vector3(scale * 1.2f, scale * 1.2f, 1);
+    }
+    void PlaceTimeHint(int x, int y)
+    {
+        GameObject t = Instantiate(timeHint, GetCameraCoordinates(x, y), Quaternion.identity);
+        t.transform.localScale = new Vector3(scale * 1.2f, scale * 1.2f, 1);
+    }
 
     void AddPowerUpWalkThru()
     {
