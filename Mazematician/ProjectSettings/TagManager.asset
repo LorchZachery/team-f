@@ -27,6 +27,8 @@ TagManager:
   - help
   - levelText
   - spikeObstacleTwoWide
+  - breakableWallHint
+  - gravityHint
   layers:
   - Default
   - TransparentFX
