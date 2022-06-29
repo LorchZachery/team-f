@@ -283,6 +283,7 @@ public class DashBoardController : MonoBehaviour
 
     public void QuitButton()
     {
+       
         UpdateAnalytics("quit");
         SceneManager.LoadScene("MainMenu");
     }

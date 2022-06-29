@@ -76,6 +76,8 @@ public class GridManager : MonoBehaviour
 
 
 
+    public  Coroutine rountine;
+
     public int target = 32;
     public Generator generator;
 
@@ -654,7 +656,7 @@ public class GridManager : MonoBehaviour
     void rotateGameRoutine()
     {
 
-        StartCoroutine(flash());
+        rountine = StartCoroutine(flash());
 
     }
     IEnumerator flash()
