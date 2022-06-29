@@ -99,14 +99,7 @@ public class GridManager : MonoBehaviour
     {
         var script = winBlock.GetComponent<GameEndController>();
         script.targetScore = target;
-        if (MainMenu.PlayButtonClicked)
-        {
-            LevelName = LevelsController.LevelName;
-        }
-        else if (MainMenu.TutorialButtonClicked)
-        {
-            LevelName = TutorialController.TutorialLevelName;
-        }
+        LevelName = LevelsController.LevelName;
         analyticsManager = AnalyticsManager.GetAnalyticsManager();
         analyticsManager.Reset(LevelsController.LevelNumber.ToString());
     }
