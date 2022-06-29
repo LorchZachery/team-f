@@ -17,16 +17,16 @@ public class LevelsController : MonoBehaviour
     // Initializing dictionary storing level numbers and level names
     public static Dictionary<int, string> levelNumberToName = new Dictionary<int, string>
     {
-        {1, "lorch_1"},
-        {2, "lorch_2"},
-        {3, "iven_1"},
-        {4, "iven_2"},
-        {5, "lorch_3"},
-        {6, "null"},
-        {7, "null"},
-        {8, "null"},
-        {9, "null"},
-        {10, "null"}
+        {1, "ag_tutorial"},
+        {2, "breakable_tile_tutorial"},
+        {3, "Tutorial_2"},
+        {4, "lorch_1"},
+        {5, "sodhi_1"},
+        {6, "iven_2"},
+        {7, "level4_ashley"},
+        {8, "lorch_4"},
+        {9, "level1_ashley"},
+        {10, "lorch_2"}
     };
 
     public void BackButton()

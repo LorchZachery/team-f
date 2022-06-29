@@ -16,27 +16,13 @@ public class GameOverWon : MonoBehaviour
         DisplayLevelCompleteText();
         GameObject nextLevelButtonObject = gameObject.transform.GetChild(3).gameObject;
         // Checking whether at last level in order to dispplay next button or not
-        if (MainMenu.PlayButtonClicked)
+        if (!LevelsController.levelNumberToName.ContainsKey(LevelsController.LevelNumber + 1))
         {
-            if (!LevelsController.levelNumberToName.ContainsKey(LevelsController.LevelNumber + 1))
-            {
-                nextLevelButtonObject.SetActive(false);
-            }
-            else
-            {
-                nextLevelButtonObject.SetActive(true);
-            }
+            nextLevelButtonObject.SetActive(false);
         }
-        else if (MainMenu.TutorialButtonClicked)
+        else
         {
-            if (!TutorialController.tutorialLevels.ContainsKey(TutorialController.TutorialLevelNumber + 1))
-            {
-                nextLevelButtonObject.SetActive(false);
-            }
-            else
-            {
-                nextLevelButtonObject.SetActive(true);
-            }
+            nextLevelButtonObject.SetActive(true);
         }
     }
 
@@ -44,14 +30,7 @@ public class GameOverWon : MonoBehaviour
     {
         GameObject levelCompleteObject = gameObject.transform.GetChild(0).gameObject;
         TextMeshProUGUI levelCompleteText = levelCompleteObject.GetComponent<TextMeshProUGUI>();
-        if (MainMenu.PlayButtonClicked)
-        {
-            levelCompleteText.text = "Level " + LevelsController.LevelNumber + " Complete!";
-        }
-        else if (MainMenu.TutorialButtonClicked)
-        {
-            levelCompleteText.text = "Tutorial " + TutorialController.TutorialLevelNumber + " Complete!";
-        }
+        levelCompleteText.text = "Level " + LevelsController.LevelNumber + " Complete!";
     }
 
     public void RestartButton()
@@ -66,17 +45,8 @@ public class GameOverWon : MonoBehaviour
 
     public void NextButton()
     {
-        if (MainMenu.PlayButtonClicked)
-        {
-            LevelsController.LevelNumber += 1;
-            LevelsController.LevelName = LevelsController.levelNumberToName[LevelsController.LevelNumber];
-            SceneManager.LoadScene("SampleGrid");
-        }
-        else if (MainMenu.TutorialButtonClicked)
-        {
-            TutorialController.TutorialLevelNumber += 1;
-            TutorialController.TutorialLevelName = TutorialController.tutorialLevels[TutorialController.TutorialLevelNumber];
-            SceneManager.LoadScene("SampleGrid");
-        }
+        LevelsController.LevelNumber += 1;
+        LevelsController.LevelName = LevelsController.levelNumberToName[LevelsController.LevelNumber];
+        SceneManager.LoadScene("SampleGrid");
     }
 }

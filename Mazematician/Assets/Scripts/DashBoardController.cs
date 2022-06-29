@@ -26,11 +26,13 @@ public class DashBoardController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if(MainMenu.TutorialButtonClicked) {
-            if(TutorialController.TutorialLevelName == "Tutorial_2") {
-                remainingTime = 25 * 1f;
-            }
-        } else {
+        remainingTime = 60 * 2f;
+        if (LevelsController.LevelNumber == 3)
+        {
+            remainingTime = 25 * 1f;
+        }
+        else
+        {
             remainingTime = 60 * 2f;
         }
         timerRunning = true;
@@ -276,14 +278,7 @@ public class DashBoardController : MonoBehaviour
         GameObject[] levelObjectArray = GameObject.FindGameObjectsWithTag("levelText");
         GameObject levelObject = levelObjectArray[0];
         TextMeshProUGUI levelText = levelObject.GetComponent<TextMeshProUGUI>();
-        if (MainMenu.PlayButtonClicked)
-        {
-            levelText.text = "Level: " + LevelsController.LevelNumber;
-        }
-        else
-        {
-            levelText.text = "Tutorial: " + TutorialController.TutorialLevelNumber;
-        }
+        levelText.text = "Level: " + LevelsController.LevelNumber;
     }
 
     public void QuitButton()

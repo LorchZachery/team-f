@@ -164,13 +164,24 @@ public class AnalyticsManager
         analytics.Add("exitReason", exitReason);
 
         AnalyticsResult analyticsResult = Analytics.CustomEvent("userData", analytics);
-        Debug.Log(analyticsResult);
-
+        if(analyticsResult != AnalyticsResult.Ok)
+        {
+            Debug.LogError(analytics);
+            Debug.LogError("Something went wrong while publishing");
+        }
         analyticsResult = Analytics.CustomEvent("powerUpUsed", powerUpUsed);
-        Debug.Log(analyticsResult);
+        if (analyticsResult != AnalyticsResult.Ok)
+        {
+            Debug.LogError(analytics);
+            Debug.LogError("Something went wrong while publishing");
+        }
 
         analyticsResult = Analytics.CustomEvent("collidedObstacles", collidedObstacles);
-        Debug.Log(analyticsResult);
+        if (analyticsResult != AnalyticsResult.Ok)
+        {
+            Debug.LogError(analytics);
+            Debug.LogError("Something went wrong while publishing");
+        }
     }
 
 }
