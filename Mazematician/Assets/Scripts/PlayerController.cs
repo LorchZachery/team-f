@@ -129,8 +129,8 @@ public class PlayerController : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("tile") && isIntangible)
         {
-            Physics2D.IgnoreCollision(collision.gameObject.GetComponent<BoxCollider2D>(), GetComponent<CircleCollider2D>());
-            collist.Add(collision.gameObject.GetComponent<BoxCollider2D>());
+            Physics2D.IgnoreCollision(collision.gameObject.GetComponent<Collider2D>(), GetComponent<CircleCollider2D>());
+            collist.Add(collision.gameObject.GetComponent<Collider2D>());
 
         }
 
