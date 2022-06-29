@@ -29,10 +29,7 @@ static class OConst
     public const int shrinkHint = 13;
     public const int walkThroughWallHint = 14;
     public const int timeHint = 15;
-    
-
-
-
+    public const int gravityHint = 16;
 }
 
 /**
@@ -69,8 +66,8 @@ public class GridManager : MonoBehaviour
     public GameObject shieldHint;
     public GameObject shrinkHint;
     public GameObject walkThroughWallHint;
-    public GameObject timeHint;    
-
+    public GameObject timeHint;
+    public GameObject gravityHint;
 
     public GameObject triangle_nw;
     public GameObject triangle_ne;
@@ -288,6 +285,23 @@ public class GridManager : MonoBehaviour
                     PlaceWalkThroughHint((int)obj[0], (int)obj[1]);
                 }
 
+                if (obj[3] == OConst.breakableWallHint)
+                {
+                    PlaceGravityHint((int)obj[0], (int)obj[1]);
+                }
+                if (obj[3] == OConst.shieldHint)
+                {
+                    PlaceShieldHint((int)obj[0], (int)obj[1]);
+                }
+                if (obj[3] == OConst.shrinkHint)
+                {
+                    PlaceShrinkHint((int)obj[0], (int)obj[1]);
+                }
+                if (obj[3] == OConst.walkThroughWallHint)
+                {
+                    PlaceWalkThroughHint((int)obj[0], (int)obj[1]);
+                }
+
             }
         }
         //if not read hardcode things for testing
@@ -314,7 +328,32 @@ public class GridManager : MonoBehaviour
         if (LevelName == "breakable_tile_tutorial")
         {
             Debug.Log("enter breakable_tile_tutorial ");
-            PlaceBreakableWallHint(15, 12);
+            PlaceBreakableWallHint(14, 16);
+            //PlaceGravityHint(15, 10);
+
+        }
+        if (LevelName == "Tutorial_2")
+        {
+            Debug.Log("enter shield_tutorial ");
+            PlaceShieldHint(15, 12);
+
+        }
+        if (LevelName == "Tutorial_2")
+        {
+            Debug.Log("enter shrink_tutorial ");
+            PlaceShrinkHint(10, 2);
+
+        }
+        if (LevelName == "Tutorial_2")
+        {
+            Debug.Log("enter walkthrough_tutorial ");
+            PlaceWalkThroughHint(11, 7);
+
+        }
+        if (LevelName == "Tutorial_2")
+        {
+            Debug.Log("enter time_tutorial ");
+            PlaceTimeHint(14, 8);
 
         }
         if (LevelName == "Tutorial_2")
@@ -584,6 +623,8 @@ public class GridManager : MonoBehaviour
         TransformGameObjects(GameObject.FindGameObjectsWithTag("target"), angle);
         TransformGameObjects(GameObject.FindGameObjectsWithTag("coin"), angle);
         TransformGameObjects(GameObject.FindGameObjectsWithTag("powerUpWalkThru"), angle);
+        TransformGameObjects(GameObject.FindGameObjectsWithTag("breakableWallHint"), angle);
+        TransformGameObjects(GameObject.FindGameObjectsWithTag("gravityHint"), angle);
         ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
     }
 
@@ -705,6 +746,12 @@ public class GridManager : MonoBehaviour
         GameObject t = Instantiate(breakableWallHint, GetCameraCoordinates(x, y), Quaternion.identity);
         t.transform.localScale = new Vector3(scale * 1.2f, scale * 1.2f, 1);
     }
+    void PlaceGravityHint(int x, int y)
+    {
+        GameObject t = Instantiate(gravityHint, GetCameraCoordinates(x, y), Quaternion.identity);
+        t.transform.localScale = new Vector3(scale * 1.2f, scale * 1.2f, 1);
+    }
+
     void PlaceShieldHint(int x, int y)
     {
         GameObject t = Instantiate(shieldHint, GetCameraCoordinates(x, y), Quaternion.identity);
