@@ -498,5 +498,5 @@ MonoBehaviour:
   blockList: []
   objectList: []
   warningPrefab: {fileID: 3725297818231593299, guid: f4e79fe507a8e174bbd06bda189a76c7, type: 3}
-  LevelName: breakable_tile_tutorial
+  LevelName: Tutorial_2
   textbox: {fileID: 70108231}
