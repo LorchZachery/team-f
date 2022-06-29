@@ -26,7 +26,8 @@ public class LevelsController : MonoBehaviour
         {7, "level4_ashley"},
         {8, "lorch_3"},
         {9, "lorch_1"},
-        {10, "lorch_2"}
+        {10, "sodhi_2"}
+
     };
 
     public void BackButton()
