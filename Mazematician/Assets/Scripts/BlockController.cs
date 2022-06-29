@@ -61,33 +61,49 @@ public class BlockController : MonoBehaviour
         {
             gameObject.GetComponent<Renderer>().material.color = new Color(255f / 255f, 153f / 255f, 153f / 255f);
         }
-        if(points == 4)
+        if (points == 4)
         {
-            gameObject.GetComponent<Renderer>().material.color = new Color(255f / 255f, 204f / 255f, 153f / 255f);
+            gameObject.GetComponent<Renderer>().material.color = new Color(251f / 255f, 140f / 255f, 69f / 255f);
         }
-        if(points == 8)
+        if (points == 8)
         {
             gameObject.GetComponent<Renderer>().material.color = new Color(255f / 255f, 255f / 255f, 153f / 255f);
         }
-        if(points == 16)
+        if (points == 16)
         {
-            gameObject.GetComponent<Renderer>().material.color = new Color(204f / 255f, 255f / 255f, 153f / 255f);
+            gameObject.GetComponent<Renderer>().material.color = new Color(115f / 255f, 240f / 255f, 187f / 255f);
         }
-        if(points == 32)
+        if (points == 32)
         {
-            gameObject.GetComponent<Renderer>().material.color = new Color(153f / 255f, 255f / 255f, 255f / 255f);
+            gameObject.GetComponent<Renderer>().material.color = new Color(196f / 255f, 245f / 255f, 243f / 255f);
         }
-        if(points == 64)
+        if (points == 64)
         {
-            gameObject.GetComponent<Renderer>().material.color = new Color(102f / 255f, 102f / 255f, 255f / 255f);
+            gameObject.GetComponent<Renderer>().material.color = new Color(102f / 255f, 206f / 255f, 245f / 255f);
         }
-        if(points == 128)
+        if (points == 128)
         {
-            gameObject.GetComponent<Renderer>().material.color = new Color(204f / 255f, 153f / 255f, 255f / 255f);
+            gameObject.GetComponent<Renderer>().material.color = new Color(219f / 255f, 196f / 255f, 245f / 255f);
         }
-        if(points == 256)
+        if (points == 256)
         {
-            gameObject.GetComponent<Renderer>().material.color = new Color(224f / 255f, 224f / 255f, 224f / 255f);
+            gameObject.GetComponent<Renderer>().material.color = new Color(185f / 255f, 182f / 255f, 185f / 255f);
+        }
+        if (points == 512)
+        {
+            gameObject.GetComponent<Renderer>().material.color = new Color(245f / 255f, 224f / 255f, 46f / 255f);
+        }
+        if (points == 1024)
+        {
+            gameObject.GetComponent<Renderer>().material.color = new Color(245f / 255f, 120f / 255f, 219f / 255f);
+        }
+        if (points == 2048)
+        {
+            gameObject.GetComponent<Renderer>().material.color = new Color(250f / 255f, 206f / 255f, 133f / 255f);
+        }
+        if (points == 4096)
+        {
+            gameObject.GetComponent<Renderer>().material.color = new Color(255f / 255f, 167f / 255f, 138f / 255f);
         }
     }
 }
