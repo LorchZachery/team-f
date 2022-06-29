@@ -114,7 +114,7 @@ public class DashBoardController : MonoBehaviour
 
                 }
                 DisplayTime(remainingTime);
-                if (remainingTime < 3)
+                if (remainingTime < 5)
                 {
                     Flash();
                 }
@@ -283,7 +283,7 @@ public class DashBoardController : MonoBehaviour
 
     public void QuitButton()
     {
-       
+
         UpdateAnalytics("quit");
         SceneManager.LoadScene("MainMenu");
     }
