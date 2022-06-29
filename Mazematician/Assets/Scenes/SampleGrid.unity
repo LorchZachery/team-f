@@ -158,7 +158,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -49, y: -45}
+  m_AnchoredPosition: {x: -24, y: -45}
   m_SizeDelta: {x: 232.83221, y: 54}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &61988435
@@ -435,6 +435,10 @@ MonoBehaviour:
   breakableWall: {fileID: 3790120316791274753, guid: 74d701d78a3224f3e892233604486ea1, type: 3}
   oneWayDoorSet: {fileID: 7656152047234893126, guid: 9b7ed69081cde9147a0e164ae387fde7, type: 3}
   breakableWallHint: {fileID: 5981375227449178806, guid: 030dfeae5ac9344baa3584c65a267ed5, type: 3}
+  shieldHint: {fileID: 5981375227449178806, guid: 7f6540e5a5c118c4197070ae2e8d96ef, type: 3}
+  shrinkHint: {fileID: 5981375227449178806, guid: 18346730552c61e4d97b96ced6238de8, type: 3}
+  walkThroughWallHint: {fileID: 5981375227449178806, guid: 1f70368b23c819747bf9d25840100a75, type: 3}
+  timeHint: {fileID: 5981375227449178806, guid: 7bdff4d2e1e1c5e43bd3dad485861681, type: 3}
   triangle_nw: {fileID: 2483983227542680485, guid: 59f9c030248e741f690d049af883710e, type: 3}
   triangle_ne: {fileID: 2483983227542680485, guid: f154d6a26446f40d89a05b6b261c5ebb, type: 3}
   triangle_sw: {fileID: 2483983227542680485, guid: 5758fceedbb594e3a9e29f8a71806e5e, type: 3}
@@ -723,7 +727,7 @@ RectTransform:
   m_GameObject: {fileID: 150749890}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 649174766}
@@ -733,8 +737,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -43, y: -40}
-  m_SizeDelta: {x: 79.05664, y: 50.781982}
+  m_AnchoredPosition: {x: -9, y: -10}
+  m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &150749892
 MonoBehaviour:
@@ -1167,7 +1171,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
@@ -4012,7 +4016,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -1, y: -45}
+  m_AnchoredPosition: {x: 22, y: -41}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2106373136
@@ -4149,7 +4153,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 25, y: 31}
-  m_SizeDelta: {x: 800, y: 800}
+  m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2111261718
 MonoBehaviour:
