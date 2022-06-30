@@ -241,10 +241,6 @@ function obstacleCollisionGraph() {
 		name: 'Spike',
 		data: obstaclesByName['spike'],
 		color: '#64E572'
-	}, {
-		name: 'DontKnow',
-		data: [1, 2, 2, 1, 1],
-		color: '#058DC7'
 	}]
 	var xCategories = Object.keys(obstaclesByLevel)
 	var yTitle = 'Number of obstacles'
