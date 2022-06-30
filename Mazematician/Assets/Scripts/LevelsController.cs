@@ -4,26 +4,35 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-
+/*
+ * This class deals with navigation from levels screen
+*/
 public class LevelsController : MonoBehaviour
 {
-    public static string LevelName;
+
+    // Variables to store level inforamation
     public static int LevelNumber;
+    public static string LevelName;
 
     // Initializing dictionary storing level numbers and level names
     public static Dictionary<int, string> levelNumberToName = new Dictionary<int, string>
     {
-        {1, "lorch_1"},
-        {2, "lorch_2"},
-        {3, "iven_1"},
-        {4, "iven_2"},
-        {5, "lorch_3"}
-    };
+        {1, "ag_tutorial"},
+        {2, "breakable_tile_tutorial"},
+        {3, "Tutorial_2"},
+        {4, "lorch_3"},
+        {5, "iven_2"},
+        {6, "sodhi_1"},
+        {7, "nic_lvl_4"},
+        {8, "level4_ashley"},
+        {9, "sodhi_2"},
+        {10, "lorch_2"}
 
+    };
 
     public void BackButton()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+        SceneManager.LoadScene("MainMenu");
     }
 
     public void Level1Button()
@@ -57,6 +66,41 @@ public class LevelsController : MonoBehaviour
     public void Level5Button()
     {
         LevelNumber = 5;
+        LevelName = levelNumberToName[LevelNumber];
+        SceneManager.LoadScene("SampleGrid");
+    }
+
+    public void Level6Button()
+    {
+        LevelNumber = 6;
+        LevelName = levelNumberToName[LevelNumber];
+        SceneManager.LoadScene("SampleGrid");
+    }
+
+    public void Level7Button()
+    {
+        LevelNumber = 7;
+        LevelName = levelNumberToName[LevelNumber];
+        SceneManager.LoadScene("SampleGrid");
+    }
+
+    public void Level8Button()
+    {
+        LevelNumber = 8;
+        LevelName = levelNumberToName[LevelNumber];
+        SceneManager.LoadScene("SampleGrid");
+    }
+
+    public void Level9Button()
+    {
+        LevelNumber = 9;
+        LevelName = levelNumberToName[LevelNumber];
+        SceneManager.LoadScene("SampleGrid");
+    }
+
+    public void Level10Button()
+    {
+        LevelNumber = 10;
         LevelName = levelNumberToName[LevelNumber];
         SceneManager.LoadScene("SampleGrid");
     }

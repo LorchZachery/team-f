@@ -1,4 +1,4 @@
-  using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -77,6 +77,12 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(5.0f);
         playerShield.SetActive(false);
         isCoroutine = false;
+
+        foreach (Collider2D col in collist)
+        {
+            Physics2D.IgnoreCollision(col, GetComponent<CircleCollider2D>(), false);
+        }
+        collist.Clear();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -96,7 +102,6 @@ public class PlayerController : MonoBehaviour
         }
         else if (collision.gameObject.CompareTag("SpikeTop"))
         {
-
             if (playerShield.activeInHierarchy) {
                 Physics2D.IgnoreCollision(collision.gameObject.GetComponent<PolygonCollider2D>(), GetComponent<CircleCollider2D>());
                 collist.Add(collision.gameObject.GetComponent<PolygonCollider2D>());
@@ -124,8 +129,8 @@ public class PlayerController : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("tile") && isIntangible)
         {
-            Physics2D.IgnoreCollision(collision.gameObject.GetComponent<BoxCollider2D>(), GetComponent<CircleCollider2D>());
-            collist.Add(collision.gameObject.GetComponent<BoxCollider2D>());
+            Physics2D.IgnoreCollision(collision.gameObject.GetComponent<Collider2D>(), GetComponent<CircleCollider2D>());
+            collist.Add(collision.gameObject.GetComponent<Collider2D>());
 
         }
 
@@ -191,7 +196,7 @@ public class PlayerController : MonoBehaviour
         }
         if (score == 4)
         {
-            gameObject.GetComponent<Renderer>().material.color = new Color(255f / 255f, 204f / 255f, 153f / 255f);
+            gameObject.GetComponent<Renderer>().material.color = new Color(251f / 255f, 140f / 255f, 69f / 255f);
         }
         if (score == 8)
         {
@@ -199,23 +204,39 @@ public class PlayerController : MonoBehaviour
         }
         if (score == 16)
         {
-            gameObject.GetComponent<Renderer>().material.color = new Color(204f / 255f, 255f / 255f, 153f / 255f);
+            gameObject.GetComponent<Renderer>().material.color = new Color(115f / 255f, 240f / 255f, 187f / 255f);
         }
         if (score == 32)
         {
-            gameObject.GetComponent<Renderer>().material.color = new Color(153f / 255f, 255f / 255f, 255f / 255f);
+            gameObject.GetComponent<Renderer>().material.color = new Color(196f / 255f, 245f / 255f, 243f / 255f);
         }
         if (score == 64)
         {
-            gameObject.GetComponent<Renderer>().material.color = new Color(102f / 255f, 102f / 255f, 255f / 255f);
+            gameObject.GetComponent<Renderer>().material.color = new Color(102f / 255f, 206f / 255f, 245f / 255f);
         }
         if (score == 128)
         {
-            gameObject.GetComponent<Renderer>().material.color = new Color(204f / 255f, 153f / 255f, 255f / 255f);
+            gameObject.GetComponent<Renderer>().material.color = new Color(219f / 255f, 196f / 255f, 245f / 255f);
         }
         if (score == 256)
         {
-            gameObject.GetComponent<Renderer>().material.color = new Color(224f / 255f, 224f / 255f, 224f / 255f);
+            gameObject.GetComponent<Renderer>().material.color = new Color(185f / 255f, 182f / 255f, 185f / 255f);
+        }
+        if (score == 512)
+        {
+            gameObject.GetComponent<Renderer>().material.color = new Color(245f / 255f, 224f / 255f, 46f / 255f);
+        }
+        if (score == 1024)
+        {
+            gameObject.GetComponent<Renderer>().material.color = new Color(245f / 255f, 120f / 255f, 219f / 255f);
+        }
+        if (score == 2048)
+        {
+            gameObject.GetComponent<Renderer>().material.color = new Color(250f / 255f, 206f / 255f, 133f / 255f);
+        }
+        if (score == 4096)
+        {
+            gameObject.GetComponent<Renderer>().material.color = new Color(255f / 255f, 167f / 255f, 138f / 255f);
         }
     }
 

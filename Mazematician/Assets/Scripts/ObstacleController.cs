@@ -6,17 +6,14 @@ using TMPro;
 public class ObstacleController : MonoBehaviour
 {
     AnalyticsManager analyticsManager;
-
-    private List<Collider2D> collist;
+    List<Collider2D> collist;
+    private bool isCoroutine = false;
 
     // Start is called before the first frame update
     void Start()
     {
-
-        collist = new List<Collider2D>();
-
         analyticsManager = AnalyticsManager.GetAnalyticsManager();
-
+        collist = new List<Collider2D>();
     }
 
     // Update is called once per frame
@@ -29,9 +26,14 @@ public class ObstacleController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("player"))
         {
-            
             var script = collision.gameObject.GetComponent<PlayerController>();
             if (!script.playerShield.activeInHierarchy) {
+                foreach (Collider2D col in collist)
+                {
+                    Physics2D.IgnoreCollision(col, GetComponent<CircleCollider2D>(), false);
+                }
+                collist.Clear();
+
                 GameObject penaltyObj = gameObject.transform.GetChild(0).gameObject;
                 TextMeshPro penaltyText = penaltyObj.GetComponent<TextMeshPro>();
                 if (penaltyText.text == "X 0.5")
@@ -47,8 +49,24 @@ public class ObstacleController : MonoBehaviour
             else {
                 Physics2D.IgnoreCollision(collision.gameObject.GetComponent<CircleCollider2D>(), GetComponent<CircleCollider2D>());
                 collist.Add(collision.gameObject.GetComponent<CircleCollider2D>());
+                if (!isCoroutine) {
+                    isCoroutine = true;
+                    StartCoroutine(handleShieldForObs());
+                }
             }
         }
+    }
+
+    private IEnumerator handleShieldForObs()
+    {
+        yield return new WaitForSeconds(5.0f);
+        isCoroutine = false;
+
+        foreach (Collider2D col in collist)
+        {
+            Physics2D.IgnoreCollision(col, GetComponent<CircleCollider2D>(), false);
+        }
+        collist.Clear();
     }
 
     public void SetPenalty(float penalty)

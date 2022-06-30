@@ -27,9 +27,18 @@ public class DashBoardController : MonoBehaviour
     void Start()
     {
         remainingTime = 60 * 2f;
+        if (LevelsController.LevelNumber == 3)
+        {
+            remainingTime = 25 * 1f;
+        }
+        else
+        {
+            remainingTime = 60 * 2f;
+        }
         timerRunning = true;
         UpdateScore(0);
         DisplayTargetText();
+        DisplayLevelText();
         helpMenu = GameObject.FindGameObjectWithTag("help");
         helpMenu.SetActive(false);
         analyticsManager = AnalyticsManager.GetAnalyticsManager();
@@ -66,7 +75,7 @@ public class DashBoardController : MonoBehaviour
             {
                 //Debug.Log("Time remaining: " + remainingTime);
                 remainingTime -= Time.deltaTime;
-                
+
                 if (player != null)
                 {
                     if (player.GetComponent<PlayerController>().coins >= 3)
@@ -77,6 +86,10 @@ public class DashBoardController : MonoBehaviour
                         if (Input.GetKeyDown(KeyCode.B))
                         {
                             bonusTime = false;
+                            if (timerText.enabled == false)
+                            {
+                                timerText.enabled = true;
+                            }
                             remainingTime += 11;
                             analyticsManager.RegisterEvent(GameEvent.TOTAL_TIME, 11f);
                             analyticsManager.RegisterEvent(GameEvent.POWER_UP_USED, "bonusTime");
@@ -105,7 +118,7 @@ public class DashBoardController : MonoBehaviour
 
                 }
                 DisplayTime(remainingTime);
-                if (remainingTime < 3)
+                if (remainingTime < 5)
                 {
                     Flash();
                 }
@@ -264,15 +277,17 @@ public class DashBoardController : MonoBehaviour
 
     //}
 
-    //void DisplayLevelText()
-    //{
-    //    GameObject levelObject = gameObject.transform.GetChild(18).gameObject;
-    //    TextMeshProUGUI levelText = levelObject.GetComponent<TextMeshProUGUI>();
-    //    levelText.text = "Level: " + LevelsController.LevelNumber;
-    //}
+    void DisplayLevelText()
+    {
+        GameObject[] levelObjectArray = GameObject.FindGameObjectsWithTag("levelText");
+        GameObject levelObject = levelObjectArray[0];
+        TextMeshProUGUI levelText = levelObject.GetComponent<TextMeshProUGUI>();
+        levelText.text = "Level: " + LevelsController.LevelNumber;
+    }
 
     public void QuitButton()
     {
+
         UpdateAnalytics("quit");
         SceneManager.LoadScene("MainMenu");
     }
