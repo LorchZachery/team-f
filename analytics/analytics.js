@@ -89,7 +89,7 @@ function plotNumberOfAttempts() {
 
 	var container = 'attemptsPerLevelDiv';
 	var title = 'Number of attempts per level'
-	var subtitle = 'blah blah blah'
+	var subtitle = 'Number of attempts the player took to complete each level'
 	var seriesData = [{
 		name: 'Attempts',
 		data: Object.values(levelWisePlayerData).map(e => e.length),
@@ -141,7 +141,7 @@ function levelVsCoins() {
 
 	var container = 'coinsDiv';
 	var title = 'Coins vs Level'
-	var subtitle = 'blah blah blah'
+	var subtitle = 'Coin collection and usage in each level'
 	var seriesData = [{
 		name: 'Total Coins',
 		data: coinMetricsByName['totalCoins']
@@ -177,7 +177,7 @@ function levelVsTime() {
 
 	var container = 'timeDiv';
 	var title = 'Time vs Level'
-	var subtitle = 'blah blah blah'
+	var subtitle = 'Time taken by a player to win level'
 	var seriesData = [{
 		name: 'Total time',
 		data: metricsByName['totalTime'],
@@ -201,7 +201,7 @@ function powerUpsPerLevel() {
 
 	var container = 'powerUpsDiv';
 	var title = 'Power-Ups per level'
-	var subtitle = 'blah blah blah'
+	var subtitle = 'Types of power-ups used by a player per level'
 	var seriesData = [{
 		name: 'Extra time',
 		data: powerUpsByName['bonusTime'] || [],
@@ -232,7 +232,7 @@ function obstacleCollisionGraph() {
 
 	var container = 'obstacleDiv';
 	var title = 'Obstacle collision per level'
-	var subtitle = 'blah blah blah'
+	var subtitle = 'Types of obstacles collided by a player per level'
 	var seriesData = [{
 		name: 'X 0.5',
 		data: obstaclesByName['X 0.5'],
@@ -266,7 +266,7 @@ function levelVsLoss() {
 
 	var container = 'lossTypeDiv';
 	var title = 'Level Vs Loss Scenario'
-	var subtitle = 'blah blah blah'
+	var subtitle = 'This graph shows how the player loses the level'
 	var seriesData = [{
 		name: 'Quit level',
 		data: metricsByName['quit'],
@@ -307,7 +307,7 @@ function startVsComplete() {
 
 	var container = 'startVsCompleteDiv';
 	var title = 'Start Vs Complete'
-	var subtitle = 'blah blah blah'
+	var subtitle = ''
 	var seriesData = [{
 		name: 'Start',
 		data: Object.values(levelWisePlayerData).map(e => e.length),
