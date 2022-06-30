@@ -86,6 +86,10 @@ public class DashBoardController : MonoBehaviour
                         if (Input.GetKeyDown(KeyCode.B))
                         {
                             bonusTime = false;
+                            if (timerText.enabled == false)
+                            {
+                                timerText.enabled = true;
+                            }
                             remainingTime += 11;
                             analyticsManager.RegisterEvent(GameEvent.TOTAL_TIME, 11f);
                             analyticsManager.RegisterEvent(GameEvent.POWER_UP_USED, "bonusTime");
