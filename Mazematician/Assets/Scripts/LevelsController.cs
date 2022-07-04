@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 /*
  * This class deals with navigation from levels screen
@@ -29,6 +30,24 @@ public class LevelsController : MonoBehaviour
         {10, "lorch_2"}
 
     };
+
+    void Start()
+    {
+        // Looping through each level to see if there is a best score and displaying such score
+        for (int i = 0; i < 10; i++)
+        {
+            int levelScoreTime = SaveGame.savedData[i].timeBestScore;
+            if (levelScoreTime != int.MaxValue)
+            {
+                int sceneIndex = i + 11; // Index of game object in unity scene
+                GameObject levelScoreObject = gameObject.transform.GetChild(sceneIndex).gameObject;
+                TextMeshProUGUI levelScoreText = levelScoreObject.GetComponent<TextMeshProUGUI>();
+                int minutes = levelScoreTime / 60;
+                int seconds = levelScoreTime % 60;
+                levelScoreText.text = "Best Score: " + string.Format("{0:00}:{1:00}", minutes, seconds);
+            }
+        }
+    }
 
     public void BackButton()
     {

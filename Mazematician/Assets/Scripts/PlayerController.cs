@@ -153,14 +153,13 @@ public class PlayerController : MonoBehaviour
             GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.5f);
             InvokeRepeating("Flash", intangibleTime - 2, 0.2f);
         }
-
+        // Once reach target, get running time and send score to GameOverWon scene
         if (collision.gameObject.CompareTag("target"))
         {
             if (targetScore == score)
             {
-                float runningTime = dashboardController.GetRunningTime();
-                int runningTimeInt = Mathf.FloorToInt(runningTime);
-                GameOverWon.scoreTime = runningTimeInt;
+                int runningTime = Mathf.FloorToInt(dashboardController.GetRunningTime());
+                GameOverWon.scoreTime = runningTime;
                 PublishGameData(true, "won");
                 SceneManager.LoadScene("GameOverWon");
             }

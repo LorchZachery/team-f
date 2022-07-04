@@ -15,6 +15,7 @@ public class GameOverWon : MonoBehaviour
     {
         DisplayLevelCompleteText();
         DisplayScoreTimeText();
+        DisplayBestScoreText();
         GameObject nextLevelButtonObject = gameObject.transform.GetChild(5).gameObject;
         // Checking whether at last level in order to dispplay next button or not
         if (!LevelsController.levelNumberToName.ContainsKey(LevelsController.LevelNumber + 1))
@@ -41,6 +42,23 @@ public class GameOverWon : MonoBehaviour
         int minutes = scoreTime / 60;
         int seconds = scoreTime % 60;
         scoreText.text = "Score: " + string.Format("{0:00}:{1:00}", minutes, seconds);
+    }
+
+    void DisplayBestScoreText()
+    {
+        GameObject bestScoreObject = gameObject.transform.GetChild(2).gameObject;
+        TextMeshProUGUI bestScoreText = bestScoreObject.GetComponent<TextMeshProUGUI>();
+        int currLevelBestScore = SaveGame.savedData[LevelsController.LevelNumber - 1].timeBestScore;
+        if (scoreTime < currLevelBestScore)
+        {
+            bestScoreText.text = "New best score!";
+            SaveGame.savedData[LevelsController.LevelNumber - 1].timeBestScore = scoreTime;
+            SaveGame.SaveData();
+        }
+        else
+        {
+            bestScoreText.text = "";
+        }
     }
 
     public void RestartButton()
