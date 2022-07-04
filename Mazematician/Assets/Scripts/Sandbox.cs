@@ -76,7 +76,7 @@ public class Sandbox : MonoBehaviour
     public float gridLength = 0f;
     float scale;
 
-   
+
 
     public System.Random random = new System.Random();
 
@@ -103,11 +103,11 @@ public class Sandbox : MonoBehaviour
     public int target = 32;
 
 
-    
+
     public List<Vector2> noGoCorr = new List<Vector2>();
 
     //For level loading and saving
-    public Vector2 playerCooridantes; 
+    public Vector2 playerCooridantes;
     public Vector2 winBlockCoor;
     public List<MazeWall> mazeWallsList = new List<MazeWall>();
     public List<Vector3> blockList = new List<Vector3>();
@@ -123,34 +123,25 @@ public class Sandbox : MonoBehaviour
     private GameObject warning;
 
     //level name to load or save as (or both)
-    public string LevelName; 
+    public string LevelName;
     //mode for what to start at
     private int mode = 0;
 
     //sandbox variables
     public GameObject textbox;
     private string blockInput = null;
-    public List<Tuple<GameObject,Vector2>> tileList = new List<Tuple<GameObject,Vector2>>();
-    public List<Tuple<GameObject,Vector3>> blockListObjects = new List<Tuple<GameObject,Vector3>>();
-    public List<Tuple<List<GameObject>,Vector4>> objectListObjects = new List<Tuple<List<GameObject>,Vector4>>();
-    
+    public List<Tuple<GameObject, Vector2>> tileList = new List<Tuple<GameObject, Vector2>>();
+    public List<Tuple<GameObject, Vector3>> blockListObjects = new List<Tuple<GameObject, Vector3>>();
+    public List<Tuple<List<GameObject>, Vector4>> objectListObjects = new List<Tuple<List<GameObject>, Vector4>>();
+
     //to delete and reset player and win box
     private GameObject playerObject;
     private GameObject winBlockObject;
 
     private FileClass fileObject = new FileClass();
 
-    //adds win block script to winblock
-    //calculates to see if the player is at the target
-    void Awake()
-    {
-        var script = winBlock.GetComponent<GameEndController>();
-        script.targetScore = target;
-    }
-
-    
     void Start()
-    {   
+    {
 
         //warning red flash creation to alert user to gravity switch
         warning = Instantiate(warningPrefab, new Vector2(Screen.width, Screen.height), Quaternion.identity);
@@ -160,31 +151,35 @@ public class Sandbox : MonoBehaviour
         textbox.gameObject.SetActive(false);
 
         //if the level name is not a file create a new map
-        if(!File.Exists("Assets/Resources/Levels/" + LevelName + ".txt") || new FileInfo("Assets/Resources/Levels/" + LevelName + ".txt").Length == 0)
+        if (!File.Exists("Assets/Resources/Levels/" + LevelName + ".txt") || new FileInfo("Assets/Resources/Levels/" + LevelName + ".txt").Length == 0)
         {
             //setting screen length and height and translating it to a camera scale
-            if(screenWidth == 0){
+            if (screenWidth == 0)
+            {
                 screenWidth = 24;
             }
             screenHeight = Camera.main.orthographicSize * 2;
-            if(gridLength == 0){
-                gridLength = 20; 
+            if (gridLength == 0)
+            {
+                gridLength = 20;
             }
-        
-        
+
+
             //saving the player cooridantes and generating a list of cooridinates where blocks
             //obsticles and walls should not be allow to generate. prevents crappy starting situations
             //for players
             playerCooridantes = new Vector2((int)gridLength - 2, (int)gridLength - 2);
-            for(int x =1; x < screenWidth+5; x++){
-            for(int y = 1; y < gridLength+5; y++){
-                MazeWall temp = new MazeWall(x,y);
-                temp.removeWall();
-                mazeWallsList.Add(temp);
-                 
+            for (int x = 1; x < screenWidth + 5; x++)
+            {
+                for (int y = 1; y < gridLength + 5; y++)
+                {
+                    MazeWall temp = new MazeWall(x, y);
+                    temp.removeWall();
+                    mazeWallsList.Add(temp);
+
+                }
             }
-        }
-        
+
         }
         //if the level name is a file load that verision
         else
@@ -197,89 +192,90 @@ public class Sandbox : MonoBehaviour
         scale = Mathf.Min(screenWidth, screenHeight) / gridLength;
         //createNoGoCoorList();       
         GenerateWalls();
-        
+
 
         //adding walls if we are loading a level
         foreach (var wall in mazeWallsList)
         {
 
-            if(!noGoCorr.Contains(new Vector2(wall.x,wall.y))){
+            if (!noGoCorr.Contains(new Vector2(wall.x, wall.y)))
+            {
                 if (wall.isWall())
                 {
                     GenerateTile(wall.x, wall.y);
                 }
             }
         }
-       
+
         DrawGridLines();
 
-        
+
         GeneratePlayer(playerCooridantes);
-        
+
         //if we are loading a level create winblock
-        if(winBlockCoor != new Vector2(0,0))
+        if (winBlockCoor != new Vector2(0, 0))
         {
-            PlaceWinBlock((int)winBlockCoor[0],(int)winBlockCoor[1],target);
+            PlaceWinBlock((int)winBlockCoor[0], (int)winBlockCoor[1], target);
         }
-        
+
         //if we are loading a level add blocks 
-        if(blockList.Count != 0)
+        if (blockList.Count != 0)
         {
-            foreach(Vector3 block in blockList)
+            foreach (Vector3 block in blockList)
             {
-                GenerateBlock((int)block[0],(int)block[1],(int)block[2]);
+                GenerateBlock((int)block[0], (int)block[1], (int)block[2]);
             }
         }
 
-        if(objectList.Count != 0)
+        if (objectList.Count != 0)
         {
-            foreach(Vector4 obj in objectList)
+            foreach (Vector4 obj in objectList)
             {
-                if(obj[3] == OConst.normObj )
+                if (obj[3] == OConst.normObj)
                 {
-                    PlaceObstacle((int)obj[0],(int)obj[1],obj[2]);
+                    PlaceObstacle((int)obj[0], (int)obj[1], obj[2]);
                 }
-                if(obj[3] == OConst.spike)
+                if (obj[3] == OConst.spike)
                 {
-                    PlaceSpikeObstacle((int)obj[0],(int)obj[1]);
+                    PlaceSpikeObstacle((int)obj[0], (int)obj[1]);
                 }
-                if(obj[3] == OConst.wallkThru)
+                if (obj[3] == OConst.wallkThru)
                 {
-                    PlacePowerUpWalkThru((int)obj[0],(int)obj[1]);
+                    PlacePowerUpWalkThru((int)obj[0], (int)obj[1]);
                 }
-                if(obj[3] == OConst.coin)
+                if (obj[3] == OConst.coin)
                 {
-                    GenerateCoin((int)obj[0],(int)obj[1]);
+                    GenerateCoin((int)obj[0], (int)obj[1]);
                 }
-                if(obj[3] == OConst.oneway)
+                if (obj[3] == OConst.oneway)
                 {
-                    PlaceOneWayDoor((int)obj[0],(int)obj[1], (int)obj[2]);
+                    PlaceOneWayDoor((int)obj[0], (int)obj[1], (int)obj[2]);
                 }
                 if (obj[3] == OConst.breakableTile)
                 {
                     PlaceBreakableWall((int)obj[0], (int)obj[1]);
                 }
-                 if (obj[3] == OConst.spikeTwo)
+                if (obj[3] == OConst.spikeTwo)
                 {
                     PlaceSpikeObstacleTwoWide((int)obj[0], (int)obj[1]);
 
                 }
-                 if (obj[3] == OConst.TRIANGLE_NW)
+                if (obj[3] == OConst.TRIANGLE_NW)
                 {
                     PlaceCornerNW((int)obj[0], (int)obj[1]);
 
                 }
-                 if (obj[3] == OConst.TRIANGLE_NE)
+                if (obj[3] == OConst.TRIANGLE_NE)
                 {
                     PlaceCornerNE((int)obj[0], (int)obj[1]);
 
                 }
-                 if (obj[3] == OConst.TRIANGLE_SW)
+                if (obj[3] == OConst.TRIANGLE_SW)
                 {
                     PlaceCornerSW((int)obj[0], (int)obj[1]);
 
                 }
-                 if (obj[3] == OConst.TRIANGLE_SE)
+                if (obj[3] == OConst.TRIANGLE_SE)
                 {
                     PlaceCornerSE((int)obj[0], (int)obj[1]);
 
@@ -287,19 +283,19 @@ public class Sandbox : MonoBehaviour
 
             }
         }
-       
-        
-       
-       
-        
+
+
+
+
+
     }
 
-   //to start testing putting the game in play mode
+    //to start testing putting the game in play mode
     void startTesting()
     {
         //giving gavity to objects
         ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
-        
+
         //invoking gravity to switch every 7 seconds, with a red screen flash before
         InvokeRepeating("rotateGameRoutine", 7.0f, 7.0f);
 
@@ -318,7 +314,7 @@ public class Sandbox : MonoBehaviour
 
     void rightSideUp(GameObject[] gameObjects)
     {
-        foreach(GameObject gameObject in gameObjects)
+        foreach (GameObject gameObject in gameObjects)
         {
             gameObject.transform.rotation = Quaternion.identity;
         }
@@ -331,109 +327,109 @@ public class Sandbox : MonoBehaviour
         CancelInvoke();
         //puts everything right side up
         ReturnRotation();
-        
+
         //have to destory blocks and then re-instantate them because player could have
         //merged with blocks meaning they dont exist anymore
-        List<Tuple<GameObject,Vector3>> temp = new List<Tuple<GameObject,Vector3>>(blockListObjects);
-        foreach(var blockTuple in temp)
+        List<Tuple<GameObject, Vector3>> temp = new List<Tuple<GameObject, Vector3>>(blockListObjects);
+        foreach (var blockTuple in temp)
         {
             //moveBlock((int)blockTuple.Item2[0],(int)blockTuple.Item2[1],blockTuple.Item1);
             blockListObjects.Remove(blockTuple);
             blockList.Remove(blockList.Find(r => r[0] == blockTuple.Item2[0] && r[1] == blockTuple.Item2[1]));
             Destroy(blockTuple.Item1);
-            
+
 
             GenerateBlock((int)blockTuple.Item2[0], (int)blockTuple.Item2[1], (int)blockTuple.Item2[2]);
             blockList.Add(new Vector3((int)blockTuple.Item2[0], (int)blockTuple.Item2[1], (int)blockTuple.Item2[2]));
-            
+
 
 
         }
 
-        List<Tuple<List<GameObject>,Vector4>> tempObj = new List<Tuple<List<GameObject>,Vector4>>(objectListObjects);
-        foreach( var objTuple in tempObj)
+        List<Tuple<List<GameObject>, Vector4>> tempObj = new List<Tuple<List<GameObject>, Vector4>>(objectListObjects);
+        foreach (var objTuple in tempObj)
         {
             objectListObjects.Remove(objTuple);
             objectList.Remove(objectList.Find(r => r[0] == objTuple.Item2[0] && r[1] == objTuple.Item2[1] && r[3] == objTuple.Item2[3]));
-            foreach(var gameobject in objTuple.Item1)
+            foreach (var gameobject in objTuple.Item1)
             {
                 Destroy(gameobject);
             }
 
-               if(objTuple.Item2[3] == OConst.normObj )
-                {
-                    PlaceObstacle((int)objTuple.Item2[0],(int)objTuple.Item2[1],objTuple.Item2[2]);
-                }
-                if(objTuple.Item2[3] == OConst.spike)
-                {
-                    PlaceSpikeObstacle((int)objTuple.Item2[0],(int)objTuple.Item2[1]);
-                }
-                if(objTuple.Item2[3] == OConst.wallkThru)
-                {
-                    PlacePowerUpWalkThru((int)objTuple.Item2[0],(int)objTuple.Item2[1]);
-                }
-                if(objTuple.Item2[3] == OConst.coin)
-                {
-                    GenerateCoin((int)objTuple.Item2[0],(int)objTuple.Item2[1]);
-                }
-                if(objTuple.Item2[3] == OConst.oneway)
-                {
-                    PlaceOneWayDoor((int)objTuple.Item2[0],(int)objTuple.Item2[1], (int)objTuple.Item2[2]);
-                }
-                if (objTuple.Item2[3] == OConst.breakableTile)
-                {
-                    PlaceBreakableWall((int)objTuple.Item2[0], (int)objTuple.Item2[1]);
-                }
-                if (objTuple.Item2[3] == OConst.spikeTwo)
-                {
-                    PlaceSpikeObstacleTwoWide((int)objTuple.Item2[0], (int)objTuple.Item2[1]);
+            if (objTuple.Item2[3] == OConst.normObj)
+            {
+                PlaceObstacle((int)objTuple.Item2[0], (int)objTuple.Item2[1], objTuple.Item2[2]);
+            }
+            if (objTuple.Item2[3] == OConst.spike)
+            {
+                PlaceSpikeObstacle((int)objTuple.Item2[0], (int)objTuple.Item2[1]);
+            }
+            if (objTuple.Item2[3] == OConst.wallkThru)
+            {
+                PlacePowerUpWalkThru((int)objTuple.Item2[0], (int)objTuple.Item2[1]);
+            }
+            if (objTuple.Item2[3] == OConst.coin)
+            {
+                GenerateCoin((int)objTuple.Item2[0], (int)objTuple.Item2[1]);
+            }
+            if (objTuple.Item2[3] == OConst.oneway)
+            {
+                PlaceOneWayDoor((int)objTuple.Item2[0], (int)objTuple.Item2[1], (int)objTuple.Item2[2]);
+            }
+            if (objTuple.Item2[3] == OConst.breakableTile)
+            {
+                PlaceBreakableWall((int)objTuple.Item2[0], (int)objTuple.Item2[1]);
+            }
+            if (objTuple.Item2[3] == OConst.spikeTwo)
+            {
+                PlaceSpikeObstacleTwoWide((int)objTuple.Item2[0], (int)objTuple.Item2[1]);
 
-                }
-                if (objTuple.Item2[3] == OConst.TRIANGLE_NW)
-                {
-                    PlaceCornerNW((int)objTuple.Item2[0], (int)objTuple.Item2[1]);
+            }
+            if (objTuple.Item2[3] == OConst.TRIANGLE_NW)
+            {
+                PlaceCornerNW((int)objTuple.Item2[0], (int)objTuple.Item2[1]);
 
-                }
-                if (objTuple.Item2[3] == OConst.TRIANGLE_NE)
-                {
-                    PlaceCornerNE((int)objTuple.Item2[0], (int)objTuple.Item2[1]);
+            }
+            if (objTuple.Item2[3] == OConst.TRIANGLE_NE)
+            {
+                PlaceCornerNE((int)objTuple.Item2[0], (int)objTuple.Item2[1]);
 
-                }
-                if (objTuple.Item2[3] == OConst.TRIANGLE_SW)
-                {
-                    PlaceCornerSW((int)objTuple.Item2[0], (int)objTuple.Item2[1]);
+            }
+            if (objTuple.Item2[3] == OConst.TRIANGLE_SW)
+            {
+                PlaceCornerSW((int)objTuple.Item2[0], (int)objTuple.Item2[1]);
 
-                }
-                if (objTuple.Item2[3] == OConst.TRIANGLE_SE)
-                {
-                    PlaceCornerSE((int)objTuple.Item2[0], (int)objTuple.Item2[1]);
+            }
+            if (objTuple.Item2[3] == OConst.TRIANGLE_SE)
+            {
+                PlaceCornerSE((int)objTuple.Item2[0], (int)objTuple.Item2[1]);
 
-                }
+            }
 
-            objectList.Add(new Vector4(objTuple.Item2[0],objTuple.Item2[1],objTuple.Item2[2],objTuple.Item2[3]));
+            objectList.Add(new Vector4(objTuple.Item2[0], objTuple.Item2[1], objTuple.Item2[2], objTuple.Item2[3]));
         }
 
         //reset the player
-        playerObject.transform.position = GetCameraCoordinates((int)playerCooridantes[0],(int)playerCooridantes[1]);
+        playerObject.transform.position = GetCameraCoordinates((int)playerCooridantes[0], (int)playerCooridantes[1]);
         var script = playerObject.GetComponent<PlayerController>();
         script.SetScore(2);
     }
 
-   
+
 
     // Update is called once per frame
     //on update there is a create to rotate the screen slowly
     void Update()
     {
-        
+
         //press T to enter tile creation mode
-        if(Input.GetKeyDown(KeyCode.T))
+        if (Input.GetKeyDown(KeyCode.T))
         {
             Debug.Log("Place Tile Mode");
             mode = Constants.tile;
         }
         //press 1 to enter oneway wall Up mode
-        if(Input.GetKeyDown(KeyCode.Alpha1))
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             Debug.Log("Oneway Up Mode");
             mode = Constants.onewayUp;
@@ -463,63 +459,63 @@ public class Sandbox : MonoBehaviour
             mode = Constants.block;
         }
         //press G to enter winblock creation mode
-         if(Input.GetKeyDown(KeyCode.G))
+        if (Input.GetKeyDown(KeyCode.G))
         {
             Debug.Log("Place Win block mode");
             mode = Constants.win;
         }
         //press D to enter delete mode
-        if(Input.GetKeyDown(KeyCode.D))
+        if (Input.GetKeyDown(KeyCode.D))
         {
             Debug.Log("DELETE MODE");
             mode = Constants.delete;
         }
         //press C to enter coin mode
-        if(Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.C))
         {
             Debug.Log("Place Coin");
             mode = Constants.coin;
         }
 
         //press K to enter spike mode
-        if(Input.GetKeyDown(KeyCode.K))
+        if (Input.GetKeyDown(KeyCode.K))
         {
             Debug.Log("Place Spike");
             mode = Constants.spike;
         }
         //press L to enter Twospike mode
-        if(Input.GetKeyDown(KeyCode.L))
+        if (Input.GetKeyDown(KeyCode.L))
         {
             Debug.Log("Place TwoSpike");
             mode = Constants.spikeTwo;
         }
         //press Y to enter Corner NW mode
-        if(Input.GetKeyDown(KeyCode.Y))
+        if (Input.GetKeyDown(KeyCode.Y))
         {
             Debug.Log("Place Corner NW");
             mode = Constants.TRIANGLE_NW;
         }
         //press U to enter Corner NE mode
-        if(Input.GetKeyDown(KeyCode.U))
+        if (Input.GetKeyDown(KeyCode.U))
         {
             Debug.Log("Place Corner NE");
             mode = Constants.TRIANGLE_NE;
         }
         //press H to enter Corner SW mode
-        if(Input.GetKeyDown(KeyCode.H))
+        if (Input.GetKeyDown(KeyCode.H))
         {
             Debug.Log("Place Corner SW");
             mode = Constants.TRIANGLE_SW;
         }
         //press J to enter Corner SE mode
-        if(Input.GetKeyDown(KeyCode.J))
+        if (Input.GetKeyDown(KeyCode.J))
         {
             Debug.Log("Place Corner SE");
             mode = Constants.TRIANGLE_SE;
         }
 
         //press O to enter obstacle mode
-        if(Input.GetKeyDown(KeyCode.O))
+        if (Input.GetKeyDown(KeyCode.O))
         {
             Debug.Log("Place obstacle");
             mode = Constants.obstacle;
@@ -541,99 +537,106 @@ public class Sandbox : MonoBehaviour
         }
 
         //press P to enter play mode
-        if(Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.P))
         {
             Debug.Log("PLAY MODE");
             mode = Constants.play;
         }
         //press E to exit play mode, or reset player back to start
         //do not have to be in play mode for E to work 
-        if(Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E))
         {
             Debug.Log("EXIT PLAY MODE");
             mode = Constants.exitPlay;
         }
 
         //press S to save the current map
-        if(Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(KeyCode.S))
         {
             Debug.Log("SAVING");
             File.Delete("Assets/Resources/Levels/" + LevelName + ".txt");
             setWriteFileClassVars(fileObject);
             fileObject.writeToFile(LevelName);
         }
-        
+
         //adding coin to map where user clicks
-        if (Input.GetMouseButtonDown(0) && mode == Constants.coin) {
+        if (Input.GetMouseButtonDown(0) && mode == Constants.coin)
+        {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            
-            Vector2 tilePos = GetTileCoordinates(mousePos[0],mousePos[1]);
+
+            Vector2 tilePos = GetTileCoordinates(mousePos[0], mousePos[1]);
             Debug.Log($"CREATE COIN {tilePos}");
-            GenerateCoin((int)tilePos[0],(int)tilePos[1]);
-            
-           objectList.Add(new Vector4(tilePos[0],tilePos[1],-1,OConst.coin));
+            GenerateCoin((int)tilePos[0], (int)tilePos[1]);
+
+            objectList.Add(new Vector4(tilePos[0], tilePos[1], -1, OConst.coin));
         }
 
 
         //adding spike to map where user clicks
-        if (Input.GetMouseButtonDown(0) && mode == Constants.spike) {
+        if (Input.GetMouseButtonDown(0) && mode == Constants.spike)
+        {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            
-            Vector2 tilePos = GetTileCoordinates(mousePos[0],mousePos[1]);
+
+            Vector2 tilePos = GetTileCoordinates(mousePos[0], mousePos[1]);
             Debug.Log($"CREATE SPIKE {tilePos}");
-            PlaceSpikeObstacle((int)tilePos[0],(int)tilePos[1]);
-            
-           objectList.Add(new Vector4(tilePos[0],tilePos[1],-1,OConst.spike));
+            PlaceSpikeObstacle((int)tilePos[0], (int)tilePos[1]);
+
+            objectList.Add(new Vector4(tilePos[0], tilePos[1], -1, OConst.spike));
         }
-         //adding Two spike to map where user clicks
-        if (Input.GetMouseButtonDown(0) && mode == Constants.spikeTwo) {
+        //adding Two spike to map where user clicks
+        if (Input.GetMouseButtonDown(0) && mode == Constants.spikeTwo)
+        {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            
-            Vector2 tilePos = GetTileCoordinates(mousePos[0],mousePos[1]);
+
+            Vector2 tilePos = GetTileCoordinates(mousePos[0], mousePos[1]);
             Debug.Log($"CREATE Two SPIKE {tilePos}");
-            PlaceSpikeObstacleTwoWide((int)tilePos[0],(int)tilePos[1]);
-            
-           objectList.Add(new Vector4(tilePos[0],tilePos[1],-1,OConst.spikeTwo));
+            PlaceSpikeObstacleTwoWide((int)tilePos[0], (int)tilePos[1]);
+
+            objectList.Add(new Vector4(tilePos[0], tilePos[1], -1, OConst.spikeTwo));
         }
-         //Corner NW
-        if (Input.GetMouseButtonDown(0) && mode == Constants.TRIANGLE_NW) {
+        //Corner NW
+        if (Input.GetMouseButtonDown(0) && mode == Constants.TRIANGLE_NW)
+        {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            
-            Vector2 tilePos = GetTileCoordinates(mousePos[0],mousePos[1]);
+
+            Vector2 tilePos = GetTileCoordinates(mousePos[0], mousePos[1]);
             Debug.Log($"CREATE corner nw {tilePos}");
-            PlaceCornerNW((int)tilePos[0],(int)tilePos[1]);
-            
-           objectList.Add(new Vector4(tilePos[0],tilePos[1],-1,OConst.TRIANGLE_NW));
+            PlaceCornerNW((int)tilePos[0], (int)tilePos[1]);
+
+            objectList.Add(new Vector4(tilePos[0], tilePos[1], -1, OConst.TRIANGLE_NW));
         }
-         //Corner NE
-        if (Input.GetMouseButtonDown(0) && mode == Constants.TRIANGLE_NE) {
+        //Corner NE
+        if (Input.GetMouseButtonDown(0) && mode == Constants.TRIANGLE_NE)
+        {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            
-            Vector2 tilePos = GetTileCoordinates(mousePos[0],mousePos[1]);
+
+            Vector2 tilePos = GetTileCoordinates(mousePos[0], mousePos[1]);
             Debug.Log($"CREATE corner ne {tilePos}");
-            PlaceCornerNE((int)tilePos[0],(int)tilePos[1]);
-            
-           objectList.Add(new Vector4(tilePos[0],tilePos[1],-1,OConst.TRIANGLE_NE));
+            PlaceCornerNE((int)tilePos[0], (int)tilePos[1]);
+
+            objectList.Add(new Vector4(tilePos[0], tilePos[1], -1, OConst.TRIANGLE_NE));
         }
-         //Corner SW
-        if (Input.GetMouseButtonDown(0) && mode == Constants.TRIANGLE_SW) {
+        //Corner SW
+        if (Input.GetMouseButtonDown(0) && mode == Constants.TRIANGLE_SW)
+        {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            
-            Vector2 tilePos = GetTileCoordinates(mousePos[0],mousePos[1]);
+
+            Vector2 tilePos = GetTileCoordinates(mousePos[0], mousePos[1]);
             Debug.Log($"CREATE corner sw {tilePos}");
-            PlaceCornerSW((int)tilePos[0],(int)tilePos[1]);
-            
-           objectList.Add(new Vector4(tilePos[0],tilePos[1],-1,OConst.TRIANGLE_SW));
+            PlaceCornerSW((int)tilePos[0], (int)tilePos[1]);
+
+            objectList.Add(new Vector4(tilePos[0], tilePos[1], -1, OConst.TRIANGLE_SW));
         }
-         //Corner SE
-        if (Input.GetMouseButtonDown(0) && mode == Constants.TRIANGLE_SE) {
+        //Corner SE
+        if (Input.GetMouseButtonDown(0) && mode == Constants.TRIANGLE_SE)
+        {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            
-            Vector2 tilePos = GetTileCoordinates(mousePos[0],mousePos[1]);
+
+            Vector2 tilePos = GetTileCoordinates(mousePos[0], mousePos[1]);
             Debug.Log($"CREATE corner se {tilePos}");
-            PlaceCornerSE((int)tilePos[0],(int)tilePos[1]);
-            
-           objectList.Add(new Vector4(tilePos[0],tilePos[1],-1,OConst.TRIANGLE_SE));
+            PlaceCornerSE((int)tilePos[0], (int)tilePos[1]);
+
+            objectList.Add(new Vector4(tilePos[0], tilePos[1], -1, OConst.TRIANGLE_SE));
         }
 
         //adding breakable tile to map where user clicks
@@ -650,94 +653,99 @@ public class Sandbox : MonoBehaviour
 
 
         //adding powerup walkthru to map where user clicks
-        if (Input.GetMouseButtonDown(0) && mode == Constants.powerWalkThru) {
+        if (Input.GetMouseButtonDown(0) && mode == Constants.powerWalkThru)
+        {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            
-            Vector2 tilePos = GetTileCoordinates(mousePos[0],mousePos[1]);
+
+            Vector2 tilePos = GetTileCoordinates(mousePos[0], mousePos[1]);
             Debug.Log($"CREATE walkthru {tilePos}");
-            PlacePowerUpWalkThru((int)tilePos[0],(int)tilePos[1]);
-            
-           objectList.Add(new Vector4(tilePos[0],tilePos[1],-1,OConst.wallkThru));
+            PlacePowerUpWalkThru((int)tilePos[0], (int)tilePos[1]);
+
+            objectList.Add(new Vector4(tilePos[0], tilePos[1], -1, OConst.wallkThru));
         }
 
 
         //adding oneway wall to map where user clicks
-        if (Input.GetMouseButtonDown(0) && mode >= Constants.onewayUp && mode <= Constants.onewayRight) {
+        if (Input.GetMouseButtonDown(0) && mode >= Constants.onewayUp && mode <= Constants.onewayRight)
+        {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            
-            Vector2 tilePos = GetTileCoordinates(mousePos[0],mousePos[1]);
+
+            Vector2 tilePos = GetTileCoordinates(mousePos[0], mousePos[1]);
             Debug.Log($"CREATE oneway {tilePos}");
             int dir = mode - 10;
-            PlaceOneWayDoor((int)tilePos[0],(int)tilePos[1],dir);
-            
-           objectList.Add(new Vector4(tilePos[0],tilePos[1],dir,OConst.oneway));
+            PlaceOneWayDoor((int)tilePos[0], (int)tilePos[1], dir);
+
+            objectList.Add(new Vector4(tilePos[0], tilePos[1], dir, OConst.oneway));
         }
 
-         //adding obsticle to map where user clicks
-        if (Input.GetMouseButtonDown(0) && mode == Constants.obstacle) {
+        //adding obsticle to map where user clicks
+        if (Input.GetMouseButtonDown(0) && mode == Constants.obstacle)
+        {
             Debug.Log("starting obstcale co-r");
 
             StartCoroutine(obstaclekMakingFunction());
         }
 
         //adding tiles to map where user clicks
-        if (Input.GetMouseButtonDown(0) && mode == Constants.tile) {
+        if (Input.GetMouseButtonDown(0) && mode == Constants.tile)
+        {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            
-           
-            Vector2 tilePos = GetTileCoordinates(mousePos[0],mousePos[1]);
+
+
+            Vector2 tilePos = GetTileCoordinates(mousePos[0], mousePos[1]);
             Debug.Log($"CREATE TILE {tilePos}");
-            GenerateTile((int)tilePos[0],(int)tilePos[1]);
+            GenerateTile((int)tilePos[0], (int)tilePos[1]);
             //todo change to find and add wall
             //mazeWallsList.Add(new MazeWall((int)tilePos[0],(int)tilePos[1]));
-            MazeWall wall = mazeWallsList.Find(r=> r.x == (int)tilePos[0] && r.y == (int)tilePos[1]);
-           
-            
+            MazeWall wall = mazeWallsList.Find(r => r.x == (int)tilePos[0] && r.y == (int)tilePos[1]);
+
+
             wall.setWall();
         }
 
-        
 
 
-         //adding win block where user clicks
-         if( Input.GetMouseButtonDown(0) && mode == Constants.win)
-         {
+
+        //adding win block where user clicks
+        if (Input.GetMouseButtonDown(0) && mode == Constants.win)
+        {
             Debug.Log("starting win block co-r");
 
             StartCoroutine(winBlockMakingFunction());
 
-         }
+        }
 
         //adding block where user clicks
-        if( Input.GetMouseButtonDown(0) && mode == Constants.block)
+        if (Input.GetMouseButtonDown(0) && mode == Constants.block)
         {
             Debug.Log("starting block co-r");
-           StartCoroutine(blockMakingFunction());
-                
+            StartCoroutine(blockMakingFunction());
+
         }
         //delete clicked item
-        if (Input.GetMouseButtonDown(0) && mode == Constants.delete) {
+        if (Input.GetMouseButtonDown(0) && mode == Constants.delete)
+        {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            
-            
-            Vector2 tilePos = GetTileCoordinates(mousePos[0],mousePos[1]);
+
+
+            Vector2 tilePos = GetTileCoordinates(mousePos[0], mousePos[1]);
             Debug.Log($"DELETE attempt {tilePos}");
-            Tuple<GameObject,Vector2> tupleObject = tileList.Find(r => r.Item2[0] == (int)tilePos[0] && r.Item2[1] == (int)tilePos[1]);
-            if(tupleObject != null)
+            Tuple<GameObject, Vector2> tupleObject = tileList.Find(r => r.Item2[0] == (int)tilePos[0] && r.Item2[1] == (int)tilePos[1]);
+            if (tupleObject != null)
             {
                 Debug.Log($"DELTING TILE");
                 tileList.Remove(tupleObject);
                 //mazeWallsList.Remove(mazeWallsList.Find(r=> r.x == tilePos[0] && r.y == tilePos[1]));
-                MazeWall temp = mazeWallsList.Find(r=> r.x == tilePos[0] && r.y == tilePos[1]);
+                MazeWall temp = mazeWallsList.Find(r => r.x == tilePos[0] && r.y == tilePos[1]);
                 temp.removeWall();
                 Destroy(tupleObject.Item1);
-                
+
 
             }
             else
             {
-                Tuple<GameObject,Vector3> blockTupleObject = blockListObjects.Find(r => r.Item2[0] == (int)tilePos[0] && r.Item2[1] == (int)tilePos[1]);
-                if(blockTupleObject != null)
+                Tuple<GameObject, Vector3> blockTupleObject = blockListObjects.Find(r => r.Item2[0] == (int)tilePos[0] && r.Item2[1] == (int)tilePos[1]);
+                if (blockTupleObject != null)
                 {
                     Debug.Log("DELETING BLOCK");
                     blockListObjects.Remove(blockTupleObject);
@@ -746,41 +754,42 @@ public class Sandbox : MonoBehaviour
                 }
                 else
                 {
-                    Tuple<List<GameObject>,Vector4> objTuple = objectListObjects.Find(r => r.Item2[0] == (int)tilePos[0] && r.Item2[1] == (int)tilePos[1]);
-                    if(objTuple != null)
+                    Tuple<List<GameObject>, Vector4> objTuple = objectListObjects.Find(r => r.Item2[0] == (int)tilePos[0] && r.Item2[1] == (int)tilePos[1]);
+                    if (objTuple != null)
                     {
                         Debug.Log($"Delete obj {objTuple.Item2[3]}");
                         objectListObjects.Remove(objTuple);
                         objectList.Remove(objectList.Find(r => r[0] == objTuple.Item2[0] && r[1] == objTuple.Item2[1]));
-                        foreach(var gameobject in objTuple.Item1)
+                        foreach (var gameobject in objTuple.Item1)
                         {
                             Destroy(gameobject);
                         }
-                        
-                        
-                    }
-                    else{
 
-                        if(tilePos[0] == winBlockCoor[0] && tilePos[1] == winBlockCoor[1])
+
+                    }
+                    else
+                    {
+
+                        if (tilePos[0] == winBlockCoor[0] && tilePos[1] == winBlockCoor[1])
                         {
                             Debug.Log("DELETE WINBLOCK");
-                            winBlockCoor = new Vector2(0,0);
+                            winBlockCoor = new Vector2(0, 0);
                             Destroy(winBlockObject);
                         }
                     }
                 }
             }
 
-            
+
         }
         //entering testing mode
-        if(mode == Constants.play)
+        if (mode == Constants.play)
         {
             startTesting();
             mode = Constants.nothing;
         }
         //exiting testing mode or reseting map
-        if(mode == Constants.exitPlay)
+        if (mode == Constants.exitPlay)
         {
             stopTesting();
             mode = Constants.nothing;
@@ -796,25 +805,25 @@ public class Sandbox : MonoBehaviour
             RotateGame(currentRotation);
 
         }
-       
+
     }
-    
+
 
     //function to create obstacle with input value
     private IEnumerator obstaclekMakingFunction()
     {
-            mode = Constants.nothing;
-            Debug.Log("Enter Obj maker");
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector2 blockPos = GetTileCoordinates(mousePos[0],mousePos[1]);
-            Debug.Log($"Got Obj pos {blockPos}");
-            
-           if(textbox != null)
-           {
-            textbox.transform.position = Camera.main.ScreenToWorldPoint( new Vector3(Screen.width/2, Screen.height/2, Camera.main.nearClipPlane) );
+        mode = Constants.nothing;
+        Debug.Log("Enter Obj maker");
+        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 blockPos = GetTileCoordinates(mousePos[0], mousePos[1]);
+        Debug.Log($"Got Obj pos {blockPos}");
+
+        if (textbox != null)
+        {
+            textbox.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, Camera.main.nearClipPlane));
             textbox.gameObject.SetActive(true);
             yield return waitForInput();
-            while(!float.TryParse(blockInput, out _))
+            while (!float.TryParse(blockInput, out _))
             {
                 Debug.Log("ERROR IN ENTER VALUE TRY AGAIN");
                 blockInput = null;
@@ -822,29 +831,29 @@ public class Sandbox : MonoBehaviour
             }
             Debug.Log($"CREATE OBJ {blockPos} value {blockInput}");
             PlaceObstacle((int)blockPos[0], (int)blockPos[1], float.Parse(blockInput));
-            
-            objectList.Add(new Vector4((int)blockPos[0], (int)blockPos[1], float.Parse(blockInput),OConst.normObj));
+
+            objectList.Add(new Vector4((int)blockPos[0], (int)blockPos[1], float.Parse(blockInput), OConst.normObj));
             blockInput = null;
             textbox.gameObject.SetActive(false);
-            
-           } 
+
+        }
     }
 
     //function to create winblock with input value
     private IEnumerator winBlockMakingFunction()
     {
-            mode = Constants.nothing;
-            Debug.Log("Enter Win maker");
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector2 blockPos = GetTileCoordinates(mousePos[0],mousePos[1]);
-            Debug.Log($"Got win pos {blockPos}");
-            
-           if(textbox != null)
-           {
-            textbox.transform.position = Camera.main.ScreenToWorldPoint( new Vector3(Screen.width/2, Screen.height/2, Camera.main.nearClipPlane) );
+        mode = Constants.nothing;
+        Debug.Log("Enter Win maker");
+        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 blockPos = GetTileCoordinates(mousePos[0], mousePos[1]);
+        Debug.Log($"Got win pos {blockPos}");
+
+        if (textbox != null)
+        {
+            textbox.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, Camera.main.nearClipPlane));
             textbox.gameObject.SetActive(true);
             yield return waitForInput();
-            while(!int.TryParse(blockInput, out _))
+            while (!int.TryParse(blockInput, out _))
             {
                 Debug.Log("ERROR IN ENTER VALUE TRY AGAIN");
                 blockInput = null;
@@ -854,11 +863,11 @@ public class Sandbox : MonoBehaviour
             PlaceWinBlock((int)blockPos[0], (int)blockPos[1], Int32.Parse(blockInput));
             winBlockCoor = new Vector2((int)blockPos[0], (int)blockPos[1]);
             target = Int32.Parse(blockInput);
-            
+
             blockInput = null;
             textbox.gameObject.SetActive(false);
-            
-           } 
+
+        }
     }
 
 
@@ -866,18 +875,18 @@ public class Sandbox : MonoBehaviour
     //function to create normal block with input value
     private IEnumerator blockMakingFunction()
     {
-            mode = Constants.nothing;
-            Debug.Log("Enter Block maker");
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector2 blockPos = GetTileCoordinates(mousePos[0],mousePos[1]);
-            Debug.Log($"Got block pos {blockPos}");
-            
-           if(textbox != null)
-           {
-            textbox.transform.position = Camera.main.ScreenToWorldPoint( new Vector3(Screen.width/2, Screen.height/2, Camera.main.nearClipPlane) );
+        mode = Constants.nothing;
+        Debug.Log("Enter Block maker");
+        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 blockPos = GetTileCoordinates(mousePos[0], mousePos[1]);
+        Debug.Log($"Got block pos {blockPos}");
+
+        if (textbox != null)
+        {
+            textbox.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, Camera.main.nearClipPlane));
             textbox.gameObject.SetActive(true);
             yield return waitForInput();
-            while(!int.TryParse(blockInput, out _))
+            while (!int.TryParse(blockInput, out _))
             {
                 Debug.Log("ERROR IN ENTER VALUE TRY AGAIN");
                 blockInput = null;
@@ -886,20 +895,20 @@ public class Sandbox : MonoBehaviour
             Debug.Log($"CREATE BLOCK {blockPos} value {blockInput}");
             GenerateBlock((int)blockPos[0], (int)blockPos[1], Int32.Parse(blockInput));
             blockList.Add(new Vector3((int)blockPos[0], (int)blockPos[1], Int32.Parse(blockInput)));
-            
+
             blockInput = null;
             textbox.gameObject.SetActive(false);
-            
-           } 
+
+        }
     }
 
     //waits for input from input box when block needs a value
     private IEnumerator waitForInput()
     {
         bool done = false;
-        while(!done)
+        while (!done)
         {
-            if(blockInput != null)
+            if (blockInput != null)
             {
                 done = true;
             }
@@ -911,29 +920,31 @@ public class Sandbox : MonoBehaviour
     public void ReadStringInput(string s)
     {
         blockInput = s;
-       
+
     }
 
     //function that is called every 7 seconds that then starts a screen flash co routine
-    void rotateGameRoutine(){
-        
+    void rotateGameRoutine()
+    {
+
         StartCoroutine(flash());
 
     }
     IEnumerator flash()
     {
 
-                warning.gameObject.SetActive(true);
-                var whenAreweDone = Time.time + 3;
-                while(Time.time < whenAreweDone){
-                     
-                    yield return new WaitForSeconds(0.5f);
-                    warning.gameObject.SetActive(!warning.gameObject.activeSelf);
-                }
-                warning.gameObject.SetActive(false) ; 
-                rotation = 90.0f;
+        warning.gameObject.SetActive(true);
+        var whenAreweDone = Time.time + 3;
+        while (Time.time < whenAreweDone)
+        {
+
+            yield return new WaitForSeconds(0.5f);
+            warning.gameObject.SetActive(!warning.gameObject.activeSelf);
+        }
+        warning.gameObject.SetActive(false);
+        rotation = 90.0f;
     }
-    
+
     void RotateGame(float angle)
     {
         Camera.main.transform.Rotate(0, 0, angle);
@@ -946,7 +957,7 @@ public class Sandbox : MonoBehaviour
 
     void TransformGameObjects(GameObject[] gameObjects, float z)
     {
-        foreach(GameObject gameObject in gameObjects)
+        foreach (GameObject gameObject in gameObjects)
         {
             Vector3 currentTransform = gameObject.transform.eulerAngles;
             //gameObject.transform.Rotate(myCamera.transform.up, 0, Space.World);
@@ -998,23 +1009,23 @@ public class Sandbox : MonoBehaviour
 
         var script = t.GetComponent<BlockController>();
         script.SetPoints(points);
-        blockListObjects.Add(new Tuple<GameObject,Vector3>(t,new Vector3(x,y,points)));
+        blockListObjects.Add(new Tuple<GameObject, Vector3>(t, new Vector3(x, y, points)));
 
 
     }
 
-     void GenerateCoin(int x, int y)
+    void GenerateCoin(int x, int y)
     {
         GameObject t = Instantiate(coin, GetCameraCoordinates(x, y), Quaternion.identity);
         t.transform.localScale = new Vector3(scale * 0.7f, scale * 0.7f, 1);
-        List<GameObject> coinObjList = new List<GameObject> {t};
-        objectListObjects.Add(new Tuple<List<GameObject>,Vector4>(coinObjList,new Vector4(x,y,0,OConst.coin)));
+        List<GameObject> coinObjList = new List<GameObject> { t };
+        objectListObjects.Add(new Tuple<List<GameObject>, Vector4>(coinObjList, new Vector4(x, y, 0, OConst.coin)));
     }
 
     void moveBlock(int x, int y, GameObject t)
     {
-       t.transform.position = GetCameraCoordinates(x,y);
-    
+        t.transform.position = GetCameraCoordinates(x, y);
+
     }
 
 
@@ -1056,8 +1067,8 @@ public class Sandbox : MonoBehaviour
 
         var script = t.GetComponent<ObstacleController>();
         script.SetPenalty(penalty);
-        List<GameObject> obstacleObjList = new List<GameObject> {t};
-        objectListObjects.Add(new Tuple<List<GameObject>,Vector4>(obstacleObjList,new Vector4(x,y,penalty,OConst.normObj)));
+        List<GameObject> obstacleObjList = new List<GameObject> { t };
+        objectListObjects.Add(new Tuple<List<GameObject>, Vector4>(obstacleObjList, new Vector4(x, y, penalty, OConst.normObj)));
 
     }
 
@@ -1067,45 +1078,45 @@ public class Sandbox : MonoBehaviour
         // t.transform.localScale = new Vector3(scale * 0.30f, scale * 0.30f, 1);
         GameObject spiketop = t.transform.GetChild(3).gameObject;
         spiketop.tag = "Untagged";
-        List<GameObject> spikeObjList = new List<GameObject> {t};
-        objectListObjects.Add(new Tuple<List<GameObject>,Vector4>(spikeObjList,new Vector4(x,y,0,OConst.spike)));
+        List<GameObject> spikeObjList = new List<GameObject> { t };
+        objectListObjects.Add(new Tuple<List<GameObject>, Vector4>(spikeObjList, new Vector4(x, y, 0, OConst.spike)));
 
     }
     void PlaceSpikeObstacleTwoWide(int x, int y)
     {
         GameObject t = Instantiate(spikeObstacleTwoWide, GetCameraCoordinates(x, y), Quaternion.identity);
         // t.transform.localScale = new Vector3(scale * 0.30f, scale * 0.30f, 1);
-        List<GameObject> spikeObjList = new List<GameObject> {t};
-        objectListObjects.Add(new Tuple<List<GameObject>,Vector4>(spikeObjList,new Vector4(x,y,0,OConst.spikeTwo)));
+        List<GameObject> spikeObjList = new List<GameObject> { t };
+        objectListObjects.Add(new Tuple<List<GameObject>, Vector4>(spikeObjList, new Vector4(x, y, 0, OConst.spikeTwo)));
     }
     // Corners
     void PlaceCornerNW(int x, int y)
     {
         GameObject t = Instantiate(triangle_nw, GetCameraCoordinates(x, y), Quaternion.identity);
         t.transform.localScale = new Vector3(scale * 0.50f, scale * 0.50f, 1);
-        List<GameObject> spikeObjList = new List<GameObject> {t};
-        objectListObjects.Add(new Tuple<List<GameObject>,Vector4>(spikeObjList,new Vector4(x,y,0,OConst.TRIANGLE_NW)));
+        List<GameObject> spikeObjList = new List<GameObject> { t };
+        objectListObjects.Add(new Tuple<List<GameObject>, Vector4>(spikeObjList, new Vector4(x, y, 0, OConst.TRIANGLE_NW)));
     }
     void PlaceCornerNE(int x, int y)
     {
         GameObject t = Instantiate(triangle_ne, GetCameraCoordinates(x, y), Quaternion.identity);
         t.transform.localScale = new Vector3(scale * 0.50f, scale * 0.50f, 1);
-        List<GameObject> spikeObjList = new List<GameObject> {t};
-        objectListObjects.Add(new Tuple<List<GameObject>,Vector4>(spikeObjList,new Vector4(x,y,0,OConst.TRIANGLE_NE)));
+        List<GameObject> spikeObjList = new List<GameObject> { t };
+        objectListObjects.Add(new Tuple<List<GameObject>, Vector4>(spikeObjList, new Vector4(x, y, 0, OConst.TRIANGLE_NE)));
     }
     void PlaceCornerSW(int x, int y)
     {
         GameObject t = Instantiate(triangle_sw, GetCameraCoordinates(x, y), Quaternion.identity);
         t.transform.localScale = new Vector3(scale * 0.50f, scale * 0.50f, 1);
-        List<GameObject> spikeObjList = new List<GameObject> {t};
-        objectListObjects.Add(new Tuple<List<GameObject>,Vector4>(spikeObjList,new Vector4(x,y,0,OConst.TRIANGLE_SW)));
+        List<GameObject> spikeObjList = new List<GameObject> { t };
+        objectListObjects.Add(new Tuple<List<GameObject>, Vector4>(spikeObjList, new Vector4(x, y, 0, OConst.TRIANGLE_SW)));
     }
     void PlaceCornerSE(int x, int y)
     {
         GameObject t = Instantiate(triangle_se, GetCameraCoordinates(x, y), Quaternion.identity);
         t.transform.localScale = new Vector3(scale * 0.50f, scale * 0.50f, 1);
-        List<GameObject> spikeObjList = new List<GameObject> {t};
-        objectListObjects.Add(new Tuple<List<GameObject>,Vector4>(spikeObjList,new Vector4(x,y,0,OConst.TRIANGLE_SE)));
+        List<GameObject> spikeObjList = new List<GameObject> { t };
+        objectListObjects.Add(new Tuple<List<GameObject>, Vector4>(spikeObjList, new Vector4(x, y, 0, OConst.TRIANGLE_SE)));
     }
 
     void PlaceWinBlock(int x, int y, int value)
@@ -1122,8 +1133,8 @@ public class Sandbox : MonoBehaviour
     {
         GameObject t = Instantiate(powerUpWalkThru, GetCameraCoordinates(x, y), Quaternion.identity);
         t.transform.localScale = new Vector3(scale * 0.5f, scale * 0.5f, 1);
-        List<GameObject> powerWalkObjList = new List<GameObject> {t};
-        objectListObjects.Add(new Tuple<List<GameObject>,Vector4>(powerWalkObjList,new Vector4(x,y,0,OConst.wallkThru)));
+        List<GameObject> powerWalkObjList = new List<GameObject> { t };
+        objectListObjects.Add(new Tuple<List<GameObject>, Vector4>(powerWalkObjList, new Vector4(x, y, 0, OConst.wallkThru)));
 
     }
     //oneway in 4-direction, dir = 1:UP, 2:DOWN, 3:LEFT, 4:RIGHT
@@ -1143,8 +1154,8 @@ public class Sandbox : MonoBehaviour
                 oneway.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, 270f));
                 break;
         }
-        List<GameObject> oneWayDoorObj = new List<GameObject>{oneway};
-        objectListObjects.Add(new Tuple<List<GameObject>,Vector4>(oneWayDoorObj,new Vector4(x,y,dir,OConst.oneway)));
+        List<GameObject> oneWayDoorObj = new List<GameObject> { oneway };
+        objectListObjects.Add(new Tuple<List<GameObject>, Vector4>(oneWayDoorObj, new Vector4(x, y, dir, OConst.oneway)));
 
 
     }
@@ -1152,7 +1163,7 @@ public class Sandbox : MonoBehaviour
     void PlaceBreakableWall(int x, int y)
     {
         GameObject t = Instantiate(breakableWall, GetCameraCoordinates(x, y), Quaternion.identity);
-        t.transform.localScale = new Vector3(scale*2f, scale*2f, 1);
+        t.transform.localScale = new Vector3(scale * 2f, scale * 2f, 1);
         List<GameObject> breakList = new List<GameObject> { t };
         objectListObjects.Add(new Tuple<List<GameObject>, Vector4>(breakList, new Vector4(x, y, 0, OConst.breakableTile)));
 
@@ -1165,7 +1176,7 @@ public class Sandbox : MonoBehaviour
     {
         GameObject t = Instantiate(tile, GetCameraCoordinates(x, y), Quaternion.identity);
         t.transform.localScale = new Vector3(scale, scale, 1);
-        tileList.Add(new Tuple<GameObject,Vector2>(t,new Vector2(x,y)));
+        tileList.Add(new Tuple<GameObject, Vector2>(t, new Vector2(x, y)));
 
     }
     //outer tiles for wall of map, prevents walkthruwalls from passing outside map area
@@ -1203,24 +1214,25 @@ public class Sandbox : MonoBehaviour
     {
         cartesianX = cartesianX - (0.5f * scale);
         cartesianY = cartesianY - (0.5f * scale);
-        int y = (int)Mathf.Ceil(((cartesianX / scale) + ((gridLength + 1) /2)) -1);
-        int x = (int)(-((cartesianY/scale) - ((gridLength +1)/2))) -1;
-        return new Vector2(x,y);
+        int y = (int)Mathf.Ceil(((cartesianX / scale) + ((gridLength + 1) / 2)) - 1);
+        int x = (int)(-((cartesianY / scale) - ((gridLength + 1) / 2))) - 1;
+        return new Vector2(x, y);
     }
 
-    void createNoGoCoorList(){
+    void createNoGoCoorList()
+    {
         noGoCorr.Add(playerCooridantes);
         //noGoCorr.Add(new Vector2(playerCooridantes[0]+1,playerCooridantes[1]+1));
-        noGoCorr.Add(new Vector2(playerCooridantes[0],playerCooridantes[1]+1));
-        noGoCorr.Add(new Vector2(playerCooridantes[0]+1,playerCooridantes[1]));
+        noGoCorr.Add(new Vector2(playerCooridantes[0], playerCooridantes[1] + 1));
+        noGoCorr.Add(new Vector2(playerCooridantes[0] + 1, playerCooridantes[1]));
         //noGoCorr.Add(new Vector2(playerCooridantes[0]-1,playerCooridantes[1]-1));
-        noGoCorr.Add(new Vector2(playerCooridantes[0],playerCooridantes[1]-1));
-        noGoCorr.Add(new Vector2(playerCooridantes[0]-1,playerCooridantes[1]));
+        noGoCorr.Add(new Vector2(playerCooridantes[0], playerCooridantes[1] - 1));
+        noGoCorr.Add(new Vector2(playerCooridantes[0] - 1, playerCooridantes[1]));
 
 
     }
 
-    
+
     void setFileClassVars(FileClass file)
     {
         screenHeight = file.screenHeight;
