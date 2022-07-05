@@ -59,10 +59,12 @@ public class PlayerController : MonoBehaviour
         y = (dir1 + dir2).y;
         GetComponent<Rigidbody2D>().velocity = new Vector2(x * ballSpeed * isDiagonal, y * ballSpeed * isDiagonal);
 
-        if (Input.GetKeyDown(KeyCode.M) && coins >= 3f) {
+        if (Input.GetKeyDown(KeyCode.M) && coins >= 3f)
+        {
             analyticsManager.RegisterEvent(GameEvent.POWER_UP_USED, "shield");
             playerShield.SetActive(true);
-            if (!isCoroutine) {
+            if (!isCoroutine)
+            {
                 isCoroutine = true;
                 StartCoroutine(handleShield());
             }
@@ -102,11 +104,13 @@ public class PlayerController : MonoBehaviour
         }
         else if (collision.gameObject.CompareTag("SpikeTop"))
         {
-            if (playerShield.activeInHierarchy) {
+            if (playerShield.activeInHierarchy)
+            {
                 Physics2D.IgnoreCollision(collision.gameObject.GetComponent<PolygonCollider2D>(), GetComponent<CircleCollider2D>());
                 collist.Add(collision.gameObject.GetComponent<PolygonCollider2D>());
             }
-            else {
+            else
+            {
                 Debug.Log("HIT TOP");
                 analyticsManager.RegisterEvent(GameEvent.COLLISION, "spike");
                 PublishGameData(false, "obstacle");
@@ -116,7 +120,8 @@ public class PlayerController : MonoBehaviour
         else if (collision.gameObject.CompareTag("SpikeBottom"))
         {
             Debug.Log("HIT BOTTOM");
-            if (playerShield.activeInHierarchy) {
+            if (playerShield.activeInHierarchy)
+            {
                 Physics2D.IgnoreCollision(collision.gameObject.GetComponent<PolygonCollider2D>(), GetComponent<CircleCollider2D>());
                 collist.Add(collision.gameObject.GetComponent<PolygonCollider2D>());
             }
@@ -134,7 +139,7 @@ public class PlayerController : MonoBehaviour
 
         }
 
-        
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -148,11 +153,13 @@ public class PlayerController : MonoBehaviour
             GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.5f);
             InvokeRepeating("Flash", intangibleTime - 2, 0.2f);
         }
-        
+        // Once reach target, get running time and send score to GameOverWon scene
         if (collision.gameObject.CompareTag("target"))
         {
             if (targetScore == score)
             {
+                int runningTime = Mathf.FloorToInt(dashboardController.GetRunningTime());
+                GameOverWon.scoreTime = runningTime;
                 PublishGameData(true, "won");
                 SceneManager.LoadScene("GameOverWon");
             }
@@ -284,12 +291,13 @@ public class PlayerController : MonoBehaviour
 
     public void PublishGameData(bool won, string reason)
     {
-        if(won)
+        if (won)
         {
             analyticsManager.RegisterEvent(GameEvent.PLAYER_WON, dashboardController.GetRemainingTime());
-        } else
+        }
+        else
         {
-            analyticsManager.RegisterEvent(GameEvent.PLAYER_LOST, (int) score);
+            analyticsManager.RegisterEvent(GameEvent.PLAYER_LOST, (int)score);
         }
         analyticsManager.RegisterEvent(GameEvent.EXIT_REASON, reason);
         analyticsManager.RegisterEvent(GameEvent.TIME_SPENT, dashboardController.GetRemainingTime());

@@ -24,7 +24,7 @@ static class OConst
     public const int TRIANGLE_NE = 8;
     public const int TRIANGLE_SW = 9;
     public const int TRIANGLE_SE = 10;
-    
+
 }
 
 /**
@@ -71,7 +71,7 @@ public class GridManager : MonoBehaviour
 
 
 
-    public  Coroutine rountine;
+    public Coroutine rountine;
 
     public int target = 32;
     public Generator generator;
@@ -103,8 +103,6 @@ public class GridManager : MonoBehaviour
     //calculates to see if the player is at the target
     void Awake()
     {
-        var script = winBlock.GetComponent<GameEndController>();
-        script.targetScore = target;
         LevelName = LevelsController.LevelName;
         analyticsManager = AnalyticsManager.GetAnalyticsManager();
         analyticsManager.Reset(LevelsController.LevelNumber.ToString());
@@ -123,32 +121,32 @@ public class GridManager : MonoBehaviour
         p_gravityText.gameObject.SetActive(false);
 
         TextAsset levelFile = Resources.Load<TextAsset>("Levels/" + LevelName);
-        
 
-        
+
+
         string fileData = levelFile.text;
         fileData = fileData.Replace("\r", "");
         string[] levelData = fileData.Split("\n");
         fileObject.ReadTextAsset(levelData);
         setFileClassVars(fileObject);
 
-           
+
 
         screenHeight = Camera.main.orthographicSize * 2;
         scale = Mathf.Min(screenWidth, screenHeight) / gridLength;
-       
+
         GenerateWalls();
         foreach (var wall in mazeWallsList)
         {
 
-            
-                if (wall.isWall())
-                {
-                    
-                    GenerateTile(wall.x, wall.y);
-                }
-                
-            
+
+            if (wall.isWall())
+            {
+
+                GenerateTile(wall.x, wall.y);
+            }
+
+
         }
 
         DrawGridLines();
@@ -163,7 +161,7 @@ public class GridManager : MonoBehaviour
         {
             PlaceWinBlock((int)winBlockCoor[0], (int)winBlockCoor[1], target);
         }
-        
+
 
 
 
@@ -174,7 +172,7 @@ public class GridManager : MonoBehaviour
                 GenerateBlock((int)block[0], (int)block[1], (int)block[2]);
             }
         }
-        
+
 
         //placing object (powerups spikes...)
         if (objectList.Count != 0)
@@ -233,10 +231,10 @@ public class GridManager : MonoBehaviour
                 {
                     PlaceBreakableWall((int)obj[0], (int)obj[1]);
                 }
-                
+
             }
         }
-        
+
         //giving gavity to objects
         ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
 
@@ -247,14 +245,14 @@ public class GridManager : MonoBehaviour
         }
         if (LevelName == "breakable_tile_tutorial")
         {
-            
+
             PlaceBreakableWallHint(14, 16);
             //PlaceGravityHint(15, 10);
 
         }
         if (LevelName == "Tutorial_2")
         {
-           
+
             PlaceShieldHint(15, 12);
             PlaceShrinkHint(10, 2);
             PlaceWalkThroughHint(11, 7);
@@ -293,7 +291,7 @@ public class GridManager : MonoBehaviour
 
     }
 
-    
+
 
     void GenerateWalls()
     {
@@ -382,7 +380,7 @@ public class GridManager : MonoBehaviour
         t.transform.localScale = new Vector3(scale, scale, 1);
     }
 
-    
+
 
     void GenerateBlock(int x, int y, int points)
     {
@@ -447,7 +445,8 @@ public class GridManager : MonoBehaviour
 
         warning.gameObject.SetActive(true);
         // Gravity text for a tutorial level
-        if(LevelName == "breakable_tile_tutorial"){
+        if (LevelName == "breakable_tile_tutorial")
+        {
             p_gravityText.gameObject.SetActive(true);
         }
         var whenAreweDone = Time.time + 3;
@@ -455,7 +454,8 @@ public class GridManager : MonoBehaviour
         {
             yield return new WaitForSeconds(0.5f);
             warning.gameObject.SetActive(!warning.gameObject.activeSelf);
-            if(LevelName == "breakable_tile_tutorial"){
+            if (LevelName == "breakable_tile_tutorial")
+            {
                 p_gravityText.gameObject.SetActive(!p_gravityText.gameObject.activeSelf);
             }
 
@@ -557,13 +557,13 @@ public class GridManager : MonoBehaviour
         GameObject t = Instantiate(timeHint, GetCameraCoordinates(x, y), Quaternion.identity);
         t.transform.localScale = new Vector3(scale * 1.2f, scale * 1.2f, 1);
     }
-    
+
 
     void PlacePowerUpWalkThru(int x, int y)
     {
         GameObject t = Instantiate(powerUpWalkThru, GetCameraCoordinates(x, y), Quaternion.identity);
         t.transform.localScale = new Vector3(scale, scale, 1);
-       
+
     }
 
     // dir (1:UP, 2:DOWN, 3:LEFT, 4:RIGHT)
@@ -598,7 +598,7 @@ public class GridManager : MonoBehaviour
         blockList = file.blockList;
         objectList = file.objectList;
     }
-   
+
 }
 
 

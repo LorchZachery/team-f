@@ -10,11 +10,13 @@ using TMPro;
 */
 public class GameOverWon : MonoBehaviour
 {
-    public static int tutorialLevel = 1;
+    public static int scoreTime;
     void Start()
     {
         DisplayLevelCompleteText();
-        GameObject nextLevelButtonObject = gameObject.transform.GetChild(3).gameObject;
+        DisplayScoreTimeText();
+        DisplayBestScoreText();
+        GameObject nextLevelButtonObject = gameObject.transform.GetChild(5).gameObject;
         // Checking whether at last level in order to dispplay next button or not
         if (!LevelsController.levelNumberToName.ContainsKey(LevelsController.LevelNumber + 1))
         {
@@ -31,6 +33,32 @@ public class GameOverWon : MonoBehaviour
         GameObject levelCompleteObject = gameObject.transform.GetChild(0).gameObject;
         TextMeshProUGUI levelCompleteText = levelCompleteObject.GetComponent<TextMeshProUGUI>();
         levelCompleteText.text = "Level " + LevelsController.LevelNumber + " Complete!";
+    }
+
+    void DisplayScoreTimeText()
+    {
+        GameObject scoreObject = gameObject.transform.GetChild(1).gameObject;
+        TextMeshProUGUI scoreText = scoreObject.GetComponent<TextMeshProUGUI>();
+        int minutes = scoreTime / 60;
+        int seconds = scoreTime % 60;
+        scoreText.text = "Score: " + string.Format("{0:00}:{1:00}", minutes, seconds);
+    }
+
+    void DisplayBestScoreText()
+    {
+        GameObject bestScoreObject = gameObject.transform.GetChild(2).gameObject;
+        TextMeshProUGUI bestScoreText = bestScoreObject.GetComponent<TextMeshProUGUI>();
+        int currLevelBestScore = SaveGame.savedData[LevelsController.LevelNumber - 1].timeBestScore;
+        if (scoreTime < currLevelBestScore)
+        {
+            bestScoreText.text = "New best score!";
+            SaveGame.savedData[LevelsController.LevelNumber - 1].timeBestScore = scoreTime;
+            SaveGame.SaveData();
+        }
+        else
+        {
+            bestScoreText.text = "";
+        }
     }
 
     public void RestartButton()

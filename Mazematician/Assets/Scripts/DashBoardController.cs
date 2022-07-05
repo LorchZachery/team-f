@@ -12,6 +12,7 @@ public class DashBoardController : MonoBehaviour
     GameObject player;
     GameObject helpMenu;
     float remainingTime;
+    float runningTime;
     bool timerRunning;
     int target;
     float flashTimer;
@@ -26,7 +27,8 @@ public class DashBoardController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        remainingTime = 60 * 2f;
+        runningTime = 0 * 1f;
+        // remainingTime = 60 * 2f;
         if (LevelsController.LevelNumber == 3)
         {
             remainingTime = 25 * 1f;
@@ -75,6 +77,7 @@ public class DashBoardController : MonoBehaviour
             {
                 //Debug.Log("Time remaining: " + remainingTime);
                 remainingTime -= Time.deltaTime;
+                runningTime += Time.deltaTime;
 
                 if (player != null)
                 {
@@ -257,6 +260,11 @@ public class DashBoardController : MonoBehaviour
     public float GetRemainingTime()
     {
         return remainingTime;
+    }
+
+    public float GetRunningTime()
+    {
+        return runningTime;
     }
     //IEnumerator Freeze()
     //{
