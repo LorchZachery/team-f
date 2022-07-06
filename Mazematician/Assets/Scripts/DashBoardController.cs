@@ -308,11 +308,13 @@ public class DashBoardController : MonoBehaviour
 
     public void HelpButton()
     {
+        Time.timeScale = 0;
         helpMenu.SetActive(true);
     }
 
     public void QuitHelpButton()
     {
+        Time.timeScale = 1;
         helpMenu.SetActive(false);
     }
 
