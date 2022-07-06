@@ -46,14 +46,29 @@ public class GameOverWon : MonoBehaviour
 
     void DisplayBestScoreText()
     {
+        // GameObject bestScoreObject = gameObject.transform.GetChild(2).gameObject;
+        // TextMeshProUGUI bestScoreText = bestScoreObject.GetComponent<TextMeshProUGUI>();
+        // int currLevelBestScore = SaveGame.savedData[LevelsController.LevelNumber - 1].timeBestScore;
+        // if (scoreTime < currLevelBestScore)
+        // {
+        //     bestScoreText.text = "New best score!";
+        //     SaveGame.savedData[LevelsController.LevelNumber - 1].timeBestScore = scoreTime;
+        //     SaveGame.SaveData();
+        // }
+        // else
+        // {
+        //     bestScoreText.text = "";
+        // }
+
         GameObject bestScoreObject = gameObject.transform.GetChild(2).gameObject;
         TextMeshProUGUI bestScoreText = bestScoreObject.GetComponent<TextMeshProUGUI>();
-        int currLevelBestScore = SaveGame.savedData[LevelsController.LevelNumber - 1].timeBestScore;
-        if (scoreTime < currLevelBestScore)
+        int levelNum = LevelsController.LevelNumber;
+        string levelKey = "BestScoreLevel" + levelNum.ToString();
+        int currBestScore = PlayerPrefs.GetInt(levelKey, int.MaxValue);
+        if (scoreTime < currBestScore)
         {
             bestScoreText.text = "New best score!";
-            SaveGame.savedData[LevelsController.LevelNumber - 1].timeBestScore = scoreTime;
-            SaveGame.SaveData();
+            PlayerPrefs.SetInt(levelKey, scoreTime);
         }
         else
         {

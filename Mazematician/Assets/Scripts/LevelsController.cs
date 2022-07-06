@@ -33,17 +33,34 @@ public class LevelsController : MonoBehaviour
 
     void Start()
     {
+        // // Looping through each level to see if there is a best score and displaying such score
+        // for (int i = 0; i < 10; i++)
+        // {
+        //     int levelScoreTime = SaveGame.savedData[i].timeBestScore;
+        //     if (levelScoreTime != int.MaxValue)
+        //     {
+        //         int sceneIndex = i + 11; // Index of game object in unity scene
+        //         GameObject levelScoreObject = gameObject.transform.GetChild(sceneIndex).gameObject;
+        //         TextMeshProUGUI levelScoreText = levelScoreObject.GetComponent<TextMeshProUGUI>();
+        //         int minutes = levelScoreTime / 60;
+        //         int seconds = levelScoreTime % 60;
+        //         levelScoreText.text = "Best Score: " + string.Format("{0:00}:{1:00}", minutes, seconds);
+        //     }
+        // }
+
         // Looping through each level to see if there is a best score and displaying such score
         for (int i = 0; i < 10; i++)
         {
-            int levelScoreTime = SaveGame.savedData[i].timeBestScore;
-            if (levelScoreTime != int.MaxValue)
+            int levelNum = i + 1;
+            string levelKey = "BestScoreLevel" + levelNum.ToString();
+            int currBestScore = PlayerPrefs.GetInt(levelKey, int.MaxValue);
+            if (currBestScore != int.MaxValue)
             {
                 int sceneIndex = i + 11; // Index of game object in unity scene
                 GameObject levelScoreObject = gameObject.transform.GetChild(sceneIndex).gameObject;
                 TextMeshProUGUI levelScoreText = levelScoreObject.GetComponent<TextMeshProUGUI>();
-                int minutes = levelScoreTime / 60;
-                int seconds = levelScoreTime % 60;
+                int minutes = currBestScore / 60;
+                int seconds = currBestScore % 60;
                 levelScoreText.text = "Best Score: " + string.Format("{0:00}:{1:00}", minutes, seconds);
             }
         }
