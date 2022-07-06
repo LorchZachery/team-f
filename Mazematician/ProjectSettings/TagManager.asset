@@ -29,6 +29,9 @@ TagManager:
   - spikeObstacleTwoWide
   - breakableWallHint
   - gravityHint
+  - threeStar
+  - twoStar
+  - oneStar
   layers:
   - Default
   - TransparentFX
