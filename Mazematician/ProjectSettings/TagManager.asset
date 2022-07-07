@@ -36,6 +36,7 @@ TagManager:
   - shrinkTimer
   - shieldTimer
   - Stars
+  - heart
   layers:
   - Default
   - TransparentFX

@@ -367,7 +367,12 @@ public class DashBoardController : MonoBehaviour
         }
     }
 
-
+    public void removeHealth(int currentHealth)
+    {
+        GameObject[] hearts = GameObject.FindGameObjectsWithTag("heart");
+        HeathController heathController = hearts[currentHealth].GetComponent<HeathController>();
+        heathController.removeHealth();
+    }
     //Duplicate code because if the powerups are used simultaneously, then their timers get messed up.
     public IEnumerator BonusCountDown(float timerValue, TextMeshProUGUI textField)
     {
