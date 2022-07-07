@@ -16,6 +16,7 @@ public class GameOverWon : MonoBehaviour
         DisplayLevelCompleteText();
         DisplayScoreTimeText();
         DisplayBestScoreText();
+        DisplayStars();
         GameObject nextLevelButtonObject = gameObject.transform.GetChild(5).gameObject;
         // Checking whether at last level in order to dispplay next button or not
         if (!LevelsController.levelNumberToName.ContainsKey(LevelsController.LevelNumber + 1))
@@ -28,6 +29,36 @@ public class GameOverWon : MonoBehaviour
         }
     }
 
+    void DisplayStars()
+    {
+        GameObject[] stars = new GameObject[0];
+        stars = GameObject.FindGameObjectsWithTag("Stars");
+        stars[0].SetActive(false);
+        stars[1].SetActive(false);
+        stars[2].SetActive(false);
+        int levelNum = LevelsController.LevelNumber;
+        if (scoreTime < 50)
+        {
+            stars[0].SetActive(true);
+            stars[1].SetActive(true);
+            stars[2].SetActive(true);
+        }
+        else if(scoreTime >= 50 && scoreTime < 75)
+        {
+            stars[0].SetActive(true);
+            stars[1].SetActive(true);
+        }
+        else
+        {
+            stars[0].SetActive(true);
+        }
+        //int currStars = PlayerPrefs.GetInt(starKey, int.MinValue);
+        //if (starCount > currStars)
+        //{
+        //    PlayerPrefs.SetInt(starKey, starCount);
+        //}
+
+    }
     void DisplayLevelCompleteText()
     {
         GameObject levelCompleteObject = gameObject.transform.GetChild(0).gameObject;

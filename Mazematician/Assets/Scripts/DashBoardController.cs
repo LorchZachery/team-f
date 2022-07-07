@@ -19,6 +19,7 @@ public class DashBoardController : MonoBehaviour
     float flashDuration = 1f;
     bool bonusTime = false;
     bool shrinkTime = false;
+    bool helpButtonClicked = false;
     int bonusCount = 0;
     AnalyticsManager analyticsManager;
 
@@ -83,6 +84,13 @@ public class DashBoardController : MonoBehaviour
                 {
                     if (player.GetComponent<PlayerController>().coins >= 3)
                     {
+                        if (helpButtonClicked)
+                        {
+                            if (Input.GetKeyDown(KeyCode.B) || Input.GetKeyDown(KeyCode.N) || Input.GetKeyDown(KeyCode.M))
+                            {
+                                return;
+                            }
+                        }
                         //The Bonus Time icon.
                         //Adds 10 seconds to the timer.
                         //Can be activated by pressing the "B" key
@@ -97,6 +105,11 @@ public class DashBoardController : MonoBehaviour
                             analyticsManager.RegisterEvent(GameEvent.TOTAL_TIME, 11f);
                             analyticsManager.RegisterEvent(GameEvent.POWER_UP_USED, "bonusTime");
                             StartCoroutine("BonusTime");
+                            GameObject bonusTimer = GameObject.FindGameObjectWithTag("bonusTimer");
+                            bonusTimer.SetActive(true);
+                            TextMeshProUGUI textField = bonusTimer.GetComponent<TextMeshProUGUI>();
+                            textField.text = "";
+                            StartCoroutine(BonusCountDown(10f, textField));
                             if (!bonusTime)
                             {
                                 player.GetComponent<PlayerController>().coins -= 3;
@@ -111,11 +124,26 @@ public class DashBoardController : MonoBehaviour
                             shrinkTime = false;
                             StartCoroutine("Shrink");
                             analyticsManager.RegisterEvent(GameEvent.POWER_UP_USED, "shrink");
+                            GameObject shrinkTimer = GameObject.FindGameObjectWithTag("shrinkTimer");
+                            shrinkTimer.SetActive(true);
+                            TextMeshProUGUI textField = shrinkTimer.GetComponent<TextMeshProUGUI>();
+                            textField.text = "";
+                            StartCoroutine(ShrinkCountDown(5f, textField));
                             if (!shrinkTime)
                             {
                                 player.GetComponent<PlayerController>().coins -= 3;
                                 shrinkTime = true;
                             }
+                        }
+
+                        //Code only for the shield countdown timer
+                        else if (Input.GetKeyDown(KeyCode.M))
+                        {
+                            GameObject shieldTimer = GameObject.FindGameObjectWithTag("shieldTimer");
+                            shieldTimer.SetActive(true);
+                            TextMeshProUGUI textField = shieldTimer.GetComponent<TextMeshProUGUI>();
+                            textField.text = "";
+                            StartCoroutine(ShieldCountDown(5f, textField));
                         }
                     }
 
@@ -308,12 +336,21 @@ public class DashBoardController : MonoBehaviour
 
     public void HelpButton()
     {
+        helpButtonClicked = true;
+        Time.timeScale = 0;
         helpMenu.SetActive(true);
     }
 
     public void QuitHelpButton()
     {
+        helpButtonClicked = false;
+        Time.timeScale = 1;
         helpMenu.SetActive(false);
+    }
+
+    public bool isHelpButtonClicked()
+    {
+        return helpButtonClicked;
     }
 
 
@@ -328,5 +365,49 @@ public class DashBoardController : MonoBehaviour
         {
             Debug.LogError("Some thing is wrong, player not found");
         }
+    }
+
+
+    //Duplicate code because if the powerups are used simultaneously, then their timers get messed up.
+    public IEnumerator BonusCountDown(float timerValue, TextMeshProUGUI textField)
+    {
+        float localTimer = timerValue;
+        while (localTimer > 0)
+        {
+            int minutes = Mathf.FloorToInt(localTimer / 60);
+            int seconds = Mathf.FloorToInt(localTimer % 60);
+            textField.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+            yield return new WaitForSeconds(1.0f);
+            localTimer--;
+        }
+        textField.text = "";
+    }
+
+    public IEnumerator ShrinkCountDown(float timerValue, TextMeshProUGUI textField)
+    {
+        float localTimer = timerValue;
+        while (localTimer > 0)
+        {
+            int minutes = Mathf.FloorToInt(localTimer / 60);
+            int seconds = Mathf.FloorToInt(localTimer % 60);
+            textField.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+            yield return new WaitForSeconds(1.0f);
+            localTimer--;
+        }
+        textField.text = "";
+    }
+
+    public IEnumerator ShieldCountDown(float timerValue, TextMeshProUGUI textField)
+    {
+        float localTimer = timerValue;
+        while (localTimer > 0)
+        {
+            int minutes = Mathf.FloorToInt(localTimer / 60);
+            int seconds = Mathf.FloorToInt(localTimer % 60);
+            textField.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+            yield return new WaitForSeconds(1.0f);
+            localTimer--;
+        }
+        textField.text = "";
     }
 }
