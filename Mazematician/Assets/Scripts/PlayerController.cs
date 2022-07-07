@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
  * This class deals with below logics:
  * 1. Player movement
  * 2. Updating text on player
- * 3. Collisioㄋn detections and handling accourding to game plan.
+ * 3. Collision detections and handling according to game plan.
  */
 
 public class PlayerController : MonoBehaviour
@@ -38,6 +38,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
         coins = 0;
         UpdateText(this.score.ToString());
         collist = new List<Collider2D>();
@@ -49,6 +50,10 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        Vector3 playerPos = transform.position;
+        Vector2Int playerGrid = grid.GetGridPosition(playerPos);
+        Debug.Log(playerGrid);
+
         x = Input.GetAxisRaw("Horizontal");
         y = Input.GetAxisRaw("Vertical");
         int isDiagonal = x * y != 0 ? 0 : 1;
@@ -260,11 +265,13 @@ public class PlayerController : MonoBehaviour
     }
     void UpdateIntagibleTimer()
     {
+        
         if (intangibleTimer > 0)
         {
             intangibleTimer -= Time.deltaTime;
             if (intangibleTimer <= 0)
             {
+                // Walk Thru Wall Ends
                 isIntangible = false;
                 foreach (Collider2D col in collist)
                 {
@@ -273,8 +280,106 @@ public class PlayerController : MonoBehaviour
                 collist.Clear();
                 CancelInvoke("Flash");
                 GetComponent<SpriteRenderer>().color = defaultColor;
+
+                // get location, check location if is tile, re-spawn player if stuck
+                Vector3 playerPos = transform.position;
+                Vector2Int playerGrid = grid.GetGridPosition(playerPos);
+                int gridLength = (int)grid.gridLength;
+                // correct playerGrid
+                if (playerGrid[0] == 0) playerGrid[0] = 1;
+                if (playerGrid[1] == 0) playerGrid[1] = 1;
+                if (playerGrid[0] == gridLength -1) playerGrid[0] = gridLength - 2;
+                if (playerGrid[1] == gridLength -1) playerGrid[1] = gridLength - 2;
+
+                if (grid.mazeWallGridList.Contains(playerGrid))
+                {
+                    bool free = freeThePlayer(playerGrid, 1);
+                    if (!free) free = freeThePlayer(playerGrid, 2);
+                    if(!free)
+                    {
+                        // reset
+                        transform.position = grid.GetCameraCoordinates((int)grid.playerCoordinates[0], (int)grid.playerCoordinates[1]);
+                    }
+                }
             }
         }
+    }
+
+    bool freeThePlayer(Vector2Int playerGrid, int i)
+    {
+        bool free = false;
+        //check up and down, left and right first
+        // up
+        int x = playerGrid.x - i;
+        int y = playerGrid.y;
+        if (!free)
+        {
+            free = freeThePlayer(x, y);
+        }
+        // down
+        x = playerGrid.x + i;
+        y = playerGrid.y;
+        if (!free)
+        {
+            free = freeThePlayer(x, y);
+        }
+        // left
+        x = playerGrid.x;
+        y = playerGrid.y - i;
+        if (!free)
+        {
+            free = freeThePlayer(x, y);
+        }
+        // right
+        x = playerGrid.x;
+        y = playerGrid.y + i;
+        if (!free)
+        {
+            free = freeThePlayer(x, y);
+        }
+        // top-left
+        x = playerGrid.x - i;
+        y = playerGrid.y - i;
+        if (!free)
+        {
+            free = freeThePlayer(x, y);
+        }
+        // top-right
+        x = playerGrid.x - i;
+        y = playerGrid.y + i;
+        if (!free)
+        {
+            free = freeThePlayer(x, y);
+        }
+        // btm-left
+        x = playerGrid.x + i;
+        y = playerGrid.y - i;
+        if (!free)
+        {
+            free = freeThePlayer(x, y);
+        }
+        // btm-right
+        x = playerGrid.x + i;
+        y = playerGrid.y + i;
+        if (!free)
+        {
+            free = freeThePlayer(x, y);
+        }
+        return free;
+    }
+
+    bool freeThePlayer(int x, int y)
+    {
+        if (x > 0 && y > 0 && x < grid.gridLength-1&& y < grid.gridLength-1)
+        {
+            if (!grid.mazeWallGridList.Contains(new Vector2Int(x, y)))
+            {
+                transform.position = grid.GetCameraCoordinates(x, y);
+                return true;
+            }
+        }
+
+        return false;
     }
 
     void Flash()
