@@ -474,7 +474,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   screenWidth: 15
-  gridLength: 12
+  gridLength: 20
   tile: {fileID: 2483983227542680485, guid: ed7b1c1c964724d7183b701b9faedfc0, type: 3}
   player: {fileID: 2483983227542680485, guid: 9e9aea2a167394a11a5da1040029dcd8, type: 3}
   block: {fileID: 2483983227542680485, guid: dc5534340b8d6492d8d4f4d5d63a4441, type: 3}
@@ -498,5 +498,5 @@ MonoBehaviour:
   blockList: []
   objectList: []
   warningPrefab: {fileID: 3725297818231593299, guid: f4e79fe507a8e174bbd06bda189a76c7, type: 3}
-  LevelName: nic_lvl_4
+  LevelName: tejas_1
   textbox: {fileID: 70108231}
