@@ -31,41 +31,33 @@ public class GameOverWon : MonoBehaviour
 
     void DisplayStars()
     {
-        //GameObject oneStar = GameObject.FindGameObjectWithTag("oneStar");
-        //GameObject twoStars = GameObject.FindGameObjectWithTag("twoStar");
-        //GameObject threeStars = GameObject.FindGameObjectWithTag("threeStar");
         GameObject[] stars = new GameObject[0];
         stars = GameObject.FindGameObjectsWithTag("Stars");
-        //oneStar.SetActive(false);
-        //twoStars.SetActive(false);
-        //threeStars.SetActive(false);
         stars[0].SetActive(false);
         stars[1].SetActive(false);
         stars[2].SetActive(false);
+        int levelNum = LevelsController.LevelNumber;
         if (scoreTime < 50)
         {
             stars[0].SetActive(true);
             stars[1].SetActive(true);
             stars[2].SetActive(true);
-            //threeStars.SetActive(true);
-            //twoStars.SetActive(false);
-            //oneStar.SetActive(false);
         }
         else if(scoreTime >= 50 && scoreTime < 75)
         {
             stars[0].SetActive(true);
             stars[1].SetActive(true);
-            //twoStars.SetActive(true);
-            //oneStar.SetActive(false);
-            //threeStars.SetActive(false);
         }
         else
         {
             stars[0].SetActive(true);
-            //oneStar.SetActive(true);
-            //twoStars.SetActive(false);
-            //threeStars.SetActive(false);
         }
+        //int currStars = PlayerPrefs.GetInt(starKey, int.MinValue);
+        //if (starCount > currStars)
+        //{
+        //    PlayerPrefs.SetInt(starKey, starCount);
+        //}
+
     }
     void DisplayLevelCompleteText()
     {

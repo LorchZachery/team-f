@@ -49,11 +49,18 @@ public class LevelsController : MonoBehaviour
         // }
 
         // Looping through each level to see if there is a best score and displaying such score
+        int starIndex = 21;
         for (int i = 0; i < 10; i++)
         {
             int levelNum = i + 1;
             string levelKey = "BestScoreLevel" + levelNum.ToString();
             int currBestScore = PlayerPrefs.GetInt(levelKey, int.MaxValue);
+            int firstStarIndex = starIndex;
+            int secondStarIndex = firstStarIndex + 1;
+            int thirdStarIndex = secondStarIndex + 1;
+            GameObject firstStar = gameObject.transform.GetChild(firstStarIndex).gameObject;
+            GameObject secondStar = gameObject.transform.GetChild(secondStarIndex).gameObject;
+            GameObject thirdStar = gameObject.transform.GetChild(thirdStarIndex).gameObject;
             if (currBestScore != int.MaxValue)
             {
                 int sceneIndex = i + 11; // Index of game object in unity scene
@@ -62,7 +69,32 @@ public class LevelsController : MonoBehaviour
                 int minutes = currBestScore / 60;
                 int seconds = currBestScore % 60;
                 levelScoreText.text = "Best Score: " + string.Format("{0:00}:{1:00}", minutes, seconds);
+                if (currBestScore < 50)
+                {
+                    firstStar.SetActive(true);
+                    secondStar.SetActive(true);
+                    thirdStar.SetActive(true);
+                }
+                else if (currBestScore >= 50 && currBestScore < 75)
+                {
+                    firstStar.SetActive(true);
+                    secondStar.SetActive(true);
+                    thirdStar.SetActive(false);
+                }
+                else
+                {
+                    firstStar.SetActive(true);
+                    secondStar.SetActive(false);
+                    thirdStar.SetActive(false);
+                }
             }
+            else
+            {
+                firstStar.SetActive(false);
+                secondStar.SetActive(false);
+                thirdStar.SetActive(false);
+            }
+            starIndex = thirdStarIndex + 1;
         }
     }
 
