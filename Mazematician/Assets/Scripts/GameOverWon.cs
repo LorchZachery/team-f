@@ -10,11 +10,14 @@ using TMPro;
 */
 public class GameOverWon : MonoBehaviour
 {
-    public static int tutorialLevel = 1;
+    public static int scoreTime;
     void Start()
     {
         DisplayLevelCompleteText();
-        GameObject nextLevelButtonObject = gameObject.transform.GetChild(3).gameObject;
+        DisplayScoreTimeText();
+        DisplayBestScoreText();
+        DisplayStars();
+        GameObject nextLevelButtonObject = gameObject.transform.GetChild(5).gameObject;
         // Checking whether at last level in order to dispplay next button or not
         if (!LevelsController.levelNumberToName.ContainsKey(LevelsController.LevelNumber + 1))
         {
@@ -26,11 +29,82 @@ public class GameOverWon : MonoBehaviour
         }
     }
 
+    void DisplayStars()
+    {
+        GameObject[] stars = new GameObject[0];
+        stars = GameObject.FindGameObjectsWithTag("Stars");
+        stars[0].SetActive(false);
+        stars[1].SetActive(false);
+        stars[2].SetActive(false);
+        int levelNum = LevelsController.LevelNumber;
+        if (scoreTime < 50)
+        {
+            stars[0].SetActive(true);
+            stars[1].SetActive(true);
+            stars[2].SetActive(true);
+        }
+        else if(scoreTime >= 50 && scoreTime < 75)
+        {
+            stars[0].SetActive(true);
+            stars[1].SetActive(true);
+        }
+        else
+        {
+            stars[0].SetActive(true);
+        }
+        //int currStars = PlayerPrefs.GetInt(starKey, int.MinValue);
+        //if (starCount > currStars)
+        //{
+        //    PlayerPrefs.SetInt(starKey, starCount);
+        //}
+
+    }
     void DisplayLevelCompleteText()
     {
         GameObject levelCompleteObject = gameObject.transform.GetChild(0).gameObject;
         TextMeshProUGUI levelCompleteText = levelCompleteObject.GetComponent<TextMeshProUGUI>();
         levelCompleteText.text = "Level " + LevelsController.LevelNumber + " Complete!";
+    }
+
+    void DisplayScoreTimeText()
+    {
+        GameObject scoreObject = gameObject.transform.GetChild(1).gameObject;
+        TextMeshProUGUI scoreText = scoreObject.GetComponent<TextMeshProUGUI>();
+        int minutes = scoreTime / 60;
+        int seconds = scoreTime % 60;
+        scoreText.text = "Score: " + string.Format("{0:00}:{1:00}", minutes, seconds);
+    }
+
+    void DisplayBestScoreText()
+    {
+        // GameObject bestScoreObject = gameObject.transform.GetChild(2).gameObject;
+        // TextMeshProUGUI bestScoreText = bestScoreObject.GetComponent<TextMeshProUGUI>();
+        // int currLevelBestScore = SaveGame.savedData[LevelsController.LevelNumber - 1].timeBestScore;
+        // if (scoreTime < currLevelBestScore)
+        // {
+        //     bestScoreText.text = "New best score!";
+        //     SaveGame.savedData[LevelsController.LevelNumber - 1].timeBestScore = scoreTime;
+        //     SaveGame.SaveData();
+        // }
+        // else
+        // {
+        //     bestScoreText.text = "";
+        // }
+
+        GameObject bestScoreObject = gameObject.transform.GetChild(2).gameObject;
+        TextMeshProUGUI bestScoreText = bestScoreObject.GetComponent<TextMeshProUGUI>();
+        int levelNum = LevelsController.LevelNumber;
+        string levelKey = "BestScoreLevel" + levelNum.ToString();
+        int currBestScore = PlayerPrefs.GetInt(levelKey, int.MaxValue);
+        if (scoreTime < currBestScore)
+        {
+            bestScoreText.text = "New best score!";
+            PlayerPrefs.SetInt(levelKey, scoreTime);
+        }
+        else
+        {
+            bestScoreText.text = "";
+        }
     }
 
     public void RestartButton()

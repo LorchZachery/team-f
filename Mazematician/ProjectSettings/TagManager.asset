@@ -30,6 +30,13 @@ TagManager:
   - breakableWallHint
   - gravityHint
   - heart
+  - threeStar
+  - twoStar
+  - oneStar
+  - bonusTimer
+  - shrinkTimer
+  - shieldTimer
+  - Stars
   layers:
   - Default
   - TransparentFX
