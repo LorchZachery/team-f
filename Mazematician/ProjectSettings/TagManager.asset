@@ -29,6 +29,14 @@ TagManager:
   - spikeObstacleTwoWide
   - breakableWallHint
   - gravityHint
+  - threeStar
+  - twoStar
+  - oneStar
+  - bonusTimer
+  - shrinkTimer
+  - shieldTimer
+  - Stars
+  - heart
   layers:
   - Default
   - TransparentFX
