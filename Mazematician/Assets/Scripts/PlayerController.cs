@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour
     Color defaultColor;
     public GameObject playerShield;
     private bool isCoroutine = false;
+    public int lives;
 
     AnalyticsManager analyticsManager;
 
@@ -39,6 +40,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         coins = 0;
+        lives = 3;
         UpdateText(this.score.ToString());
         collist = new List<Collider2D>();
         defaultColor = GetComponent<SpriteRenderer>().color;
@@ -109,8 +111,12 @@ public class PlayerController : MonoBehaviour
             else {
                 Debug.Log("HIT TOP");
                 analyticsManager.RegisterEvent(GameEvent.COLLISION, "spike");
-                PublishGameData(false, "obstacle");
-                SceneManager.LoadScene("GameOver");
+                lives--;
+                dashboardController.removeHealth(lives);
+                if(lives == 0) {
+                    PublishGameData(false, "obstacle");
+                    SceneManager.LoadScene("GameOver");
+                }
             }
         }
         else if (collision.gameObject.CompareTag("SpikeBottom"))

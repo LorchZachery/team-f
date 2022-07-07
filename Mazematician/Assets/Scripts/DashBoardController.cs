@@ -321,4 +321,10 @@ public class DashBoardController : MonoBehaviour
             Debug.LogError("Some thing is wrong, player not found");
         }
     }
+
+    public void removeHealth(int currentHealth) {
+        GameObject[] hearts = GameObject.FindGameObjectsWithTag("heart");
+        HeathController heathController = hearts[currentHealth].GetComponent<HeathController>();
+        heathController.removeHealth();
+    }
 }
