@@ -59,7 +59,7 @@ public class PlayerController : MonoBehaviour
         y = (dir1 + dir2).y;
         GetComponent<Rigidbody2D>().velocity = new Vector2(x * ballSpeed * isDiagonal, y * ballSpeed * isDiagonal);
 
-        if (Input.GetKeyDown(KeyCode.M) && coins >= 3f)
+        if (Input.GetKeyDown(KeyCode.M) && coins >= 3f && !dashboardController.isHelpButtonClicked())
         {
             analyticsManager.RegisterEvent(GameEvent.POWER_UP_USED, "shield");
             playerShield.SetActive(true);

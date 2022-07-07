@@ -19,6 +19,7 @@ public class DashBoardController : MonoBehaviour
     float flashDuration = 1f;
     bool bonusTime = false;
     bool shrinkTime = false;
+    bool helpButtonClicked = false;
     int bonusCount = 0;
     AnalyticsManager analyticsManager;
 
@@ -83,6 +84,13 @@ public class DashBoardController : MonoBehaviour
                 {
                     if (player.GetComponent<PlayerController>().coins >= 3)
                     {
+                        if (helpButtonClicked)
+                        {
+                            if (Input.GetKeyDown(KeyCode.B) || Input.GetKeyDown(KeyCode.N) || Input.GetKeyDown(KeyCode.M))
+                            {
+                                return;
+                            }
+                        }
                         //The Bonus Time icon.
                         //Adds 10 seconds to the timer.
                         //Can be activated by pressing the "B" key
@@ -328,14 +336,21 @@ public class DashBoardController : MonoBehaviour
 
     public void HelpButton()
     {
+        helpButtonClicked = true;
         Time.timeScale = 0;
         helpMenu.SetActive(true);
     }
 
     public void QuitHelpButton()
     {
+        helpButtonClicked = false;
         Time.timeScale = 1;
         helpMenu.SetActive(false);
+    }
+
+    public bool isHelpButtonClicked()
+    {
+        return helpButtonClicked;
     }
 
 
