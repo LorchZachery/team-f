@@ -35,6 +35,7 @@ TagManager:
   - bonusTimer
   - shrinkTimer
   - shieldTimer
+  - Stars
   layers:
   - Default
   - TransparentFX
