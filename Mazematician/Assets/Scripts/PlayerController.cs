@@ -116,10 +116,12 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("HIT TOP");
                 analyticsManager.RegisterEvent(GameEvent.COLLISION, "spike");
                 lives--;
-                dashboardController.removeHealth(lives);
                 if(lives == 0) {
                     PublishGameData(false, "obstacle");
                     SceneManager.LoadScene("GameOver");
+                } else
+                {
+                    dashboardController.removeHealth(lives);
                 }
             }
         }
