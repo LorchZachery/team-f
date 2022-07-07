@@ -32,6 +32,9 @@ TagManager:
   - threeStar
   - twoStar
   - oneStar
+  - bonusTimer
+  - shrinkTimer
+  - shieldTimer
   layers:
   - Default
   - TransparentFX
