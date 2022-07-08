@@ -137,19 +137,6 @@ public class PlayerController : MonoBehaviour
                         SceneManager.LoadScene("GameOver");
                     }
                 }
-
-                // Debug.Log("HIT TOP");
-                // analyticsManager.RegisterEvent(GameEvent.COLLISION, "spike");
-                // lives--;
-                // if (lives == 0)
-                // {
-                //     PublishGameData(false, "obstacle");
-                //     SceneManager.LoadScene("GameOver");
-                // }
-                // else
-                // {
-                //     dashboardController.removeHealth(lives);
-                // }
             }
         }
         else if (collision.gameObject.CompareTag("SpikeBottom"))
