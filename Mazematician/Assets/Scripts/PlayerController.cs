@@ -54,10 +54,6 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        Vector3 playerPos = transform.position;
-        Vector2Int playerGrid = grid.GetGridPosition(playerPos);
-        Debug.Log(playerGrid);
-
         x = Input.GetAxisRaw("Horizontal");
         y = Input.GetAxisRaw("Vertical");
         int isDiagonal = x * y != 0 ? 0 : 1;
