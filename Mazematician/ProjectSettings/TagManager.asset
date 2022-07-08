@@ -37,6 +37,7 @@ TagManager:
   - shieldTimer
   - Stars
   - heart
+  - pause
   layers:
   - Default
   - TransparentFX

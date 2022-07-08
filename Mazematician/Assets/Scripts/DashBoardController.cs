@@ -11,6 +11,7 @@ public class DashBoardController : MonoBehaviour
 
     GameObject player;
     GameObject helpMenu;
+    GameObject pauseButton;
     float remainingTime;
     float runningTime;
     bool timerRunning;
@@ -44,8 +45,14 @@ public class DashBoardController : MonoBehaviour
         DisplayLevelText();
         helpMenu = GameObject.FindGameObjectWithTag("help");
         helpMenu.SetActive(false);
+        //pauseButton = GameObject.FindGameObjectWithTag("pause");
+        //pauseButton.SetActive(false);
         analyticsManager = AnalyticsManager.GetAnalyticsManager();
         analyticsManager.RegisterEvent(GameEvent.TOTAL_TIME, remainingTime);
+        if (Time.timeScale == 0)
+        {
+            Time.timeScale = 1;
+        }
     }
 
     // Update is called once per frame
@@ -205,7 +212,7 @@ public class DashBoardController : MonoBehaviour
     {
         GameObject targetObject = gameObject.transform.GetChild(3).gameObject;
         TextMeshProUGUI targetText = targetObject.GetComponent<TextMeshProUGUI>();
-        targetText.text = "Target: " + this.target;
+        targetText.text = "     " + this.target;
     }
 
     void DisplayBonusCount()
@@ -352,6 +359,27 @@ public class DashBoardController : MonoBehaviour
     {
         return helpButtonClicked;
     }
+
+    //public void PauseButtonClicked()
+    //{
+    //    //Time.timeScale = 0;
+    //    //pauseButton.SetActive(true);
+    //    if (Time.timeScale == 1)
+    //    {
+    //        Time.timeScale = 0;
+    //        pauseButton.SetActive(true);
+    //    }
+    //    else if (Time.timeScale == 0)
+    //    {
+    //        ResumeGame();
+    //    }
+    //}
+
+    //public void ResumeGame()
+    //{
+    //    Time.timeScale = 1;
+    //    pauseButton.SetActive(false);
+    //}
 
 
     private void UpdateAnalytics(string reason)
