@@ -33,6 +33,8 @@ public class PlayerController : MonoBehaviour
     private bool isCoroutine = false;
     public int lives;
 
+    bool spikeCollisionReset = false;
+
     AnalyticsManager analyticsManager;
 
 
@@ -94,6 +96,12 @@ public class PlayerController : MonoBehaviour
         collist.Clear();
     }
 
+    private IEnumerator handleSpikeReset()
+    {
+        yield return new WaitForSeconds(1f);
+        spikeCollisionReset = false;
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         /*
@@ -119,15 +127,33 @@ public class PlayerController : MonoBehaviour
             else
             {
                 Debug.Log("HIT TOP");
-                analyticsManager.RegisterEvent(GameEvent.COLLISION, "spike");
-                lives--;
-                if(lives == 0) {
-                    PublishGameData(false, "obstacle");
-                    SceneManager.LoadScene("GameOver");
-                } else
+                if (!spikeCollisionReset)
                 {
+                    Debug.Log("HIT TOP REGISTERED EVENT");
+                    analyticsManager.RegisterEvent(GameEvent.COLLISION, "spike");
+                    lives--;
                     dashboardController.removeHealth(lives);
+                    spikeCollisionReset = true;
+                    StartCoroutine(handleSpikeReset());
+                    if (lives == 0)
+                    {
+                        PublishGameData(false, "obstacle");
+                        SceneManager.LoadScene("GameOver");
+                    }
                 }
+
+                // Debug.Log("HIT TOP");
+                // analyticsManager.RegisterEvent(GameEvent.COLLISION, "spike");
+                // lives--;
+                // if (lives == 0)
+                // {
+                //     PublishGameData(false, "obstacle");
+                //     SceneManager.LoadScene("GameOver");
+                // }
+                // else
+                // {
+                //     dashboardController.removeHealth(lives);
+                // }
             }
         }
         else if (collision.gameObject.CompareTag("SpikeBottom"))
@@ -273,7 +299,7 @@ public class PlayerController : MonoBehaviour
     }
     void UpdateIntagibleTimer()
     {
-        
+
         if (intangibleTimer > 0)
         {
             intangibleTimer -= Time.deltaTime;
@@ -296,14 +322,14 @@ public class PlayerController : MonoBehaviour
                 // correct playerGrid
                 if (playerGrid[0] == 0) playerGrid[0] = 1;
                 if (playerGrid[1] == 0) playerGrid[1] = 1;
-                if (playerGrid[0] == gridLength -1) playerGrid[0] = gridLength - 2;
-                if (playerGrid[1] == gridLength -1) playerGrid[1] = gridLength - 2;
+                if (playerGrid[0] == gridLength - 1) playerGrid[0] = gridLength - 2;
+                if (playerGrid[1] == gridLength - 1) playerGrid[1] = gridLength - 2;
 
                 if (grid.mazeWallGridList.Contains(playerGrid))
                 {
                     bool free = freeThePlayer(playerGrid, 1);
                     if (!free) free = freeThePlayer(playerGrid, 2);
-                    if(!free)
+                    if (!free)
                     {
                         // reset
                         transform.position = grid.GetCameraCoordinates((int)grid.playerCoordinates[0], (int)grid.playerCoordinates[1]);
@@ -378,7 +404,7 @@ public class PlayerController : MonoBehaviour
 
     bool freeThePlayer(int x, int y)
     {
-        if (x > 0 && y > 0 && x < grid.gridLength-1&& y < grid.gridLength-1)
+        if (x > 0 && y > 0 && x < grid.gridLength - 1 && y < grid.gridLength - 1)
         {
             if (!grid.mazeWallGridList.Contains(new Vector2Int(x, y)))
             {
