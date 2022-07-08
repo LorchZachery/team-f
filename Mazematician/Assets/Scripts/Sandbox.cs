@@ -139,6 +139,7 @@ public class Sandbox : MonoBehaviour
     private GameObject winBlockObject;
 
     private FileClass fileObject = new FileClass();
+    private List<Vector2Int> mazeWallGridList = new List<Vector2Int>();
 
     void Start()
     {
@@ -202,6 +203,7 @@ public class Sandbox : MonoBehaviour
             {
                 if (wall.isWall())
                 {
+                    mazeWallGridList.Add(new Vector2Int(wall.x, wall.y));
                     GenerateTile(wall.x, wall.y);
                 }
             }
@@ -1000,6 +1002,12 @@ public class Sandbox : MonoBehaviour
         var cameraController = Camera.main.GetComponent<CameraControllerSandBox>();
         cameraController.SetPlayerSandBox(t);
         playerObject = t;
+
+        // to free player if stuck
+        script.setScale(scale);
+        script.setGridLength(gridLength);
+        script.setMazeWallList(mazeWallGridList);
+        script.setPlayerCoordinates(coordinates);
     }
 
     void GenerateBlock(int x, int y, int points)
