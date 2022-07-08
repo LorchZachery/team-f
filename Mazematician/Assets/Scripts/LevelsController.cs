@@ -19,7 +19,7 @@ public class LevelsController : MonoBehaviour
     public static Dictionary<int, string> levelNumberToName = new Dictionary<int, string>
     {
         {1, "ag_tutorial"},
-        {2, "breakable_tile_tutorial"},
+        {2, "obstacle_tutorial"},
         {3, "Tutorial_2"},
         {4, "lorch_3"},
         {5, "iven_2"},
