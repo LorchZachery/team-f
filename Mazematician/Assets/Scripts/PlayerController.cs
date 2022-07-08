@@ -156,7 +156,8 @@ public class PlayerController : MonoBehaviour
         {
             coins++;
             analyticsManager.RegisterEvent(GameEvent.COINS_COLLECTED, null);
-            Destroy(collision.gameObject);
+            CoinController coinController = collision.gameObject.GetComponent<CoinController>();
+            coinController.DestroyCoin();
         }
         if (collision.gameObject.CompareTag("tile") && isIntangible)
         {
