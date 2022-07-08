@@ -37,6 +37,7 @@ public class PlayerController : MonoBehaviour
     float gridLength;
     List<Vector2Int> mazeWallGridList = new List<Vector2Int>();
     Vector2 playerCoordinates;
+    bool spikeCollisionReset = false;
 
     AnalyticsManager analyticsManager;
 
@@ -95,6 +96,12 @@ public class PlayerController : MonoBehaviour
         collist.Clear();
     }
 
+    private IEnumerator handleSpikeReset()
+    {
+        yield return new WaitForSeconds(1f);
+        spikeCollisionReset = false;
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         /*
@@ -120,14 +127,19 @@ public class PlayerController : MonoBehaviour
             else
             {
                 Debug.Log("HIT TOP");
-                analyticsManager.RegisterEvent(GameEvent.COLLISION, "spike");
-                lives--;
-                if(lives == 0) {
-                    PublishGameData(false, "obstacle");
-                    SceneManager.LoadScene("GameOver");
-                } else
+                if (!spikeCollisionReset)
                 {
+                    Debug.Log("HIT TOP REGISTERED EVENT");
+                    analyticsManager.RegisterEvent(GameEvent.COLLISION, "spike");
+                    lives--;
                     dashboardController.removeHealth(lives);
+                    spikeCollisionReset = true;
+                    StartCoroutine(handleSpikeReset());
+                    if (lives == 0)
+                    {
+                        PublishGameData(false, "obstacle");
+                        SceneManager.LoadScene("GameOver");
+                    }
                 }
             }
         }
@@ -274,7 +286,7 @@ public class PlayerController : MonoBehaviour
     }
     void UpdateIntagibleTimer()
     {
-        
+
         if (intangibleTimer > 0)
         {
             intangibleTimer -= Time.deltaTime;
@@ -304,7 +316,7 @@ public class PlayerController : MonoBehaviour
                 {
                     bool free = freeThePlayer(playerGrid, 1);
                     if (!free) free = freeThePlayer(playerGrid, 2);
-                    if(!free)
+                    if (!free)
                     {
                         // reset
                         transform.position = GetCameraCoordinates((int)playerCoordinates[0], (int)playerCoordinates[1]);
