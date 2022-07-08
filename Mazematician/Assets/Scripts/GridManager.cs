@@ -38,7 +38,7 @@ public class GridManager : MonoBehaviour
     float screenWidth;
     float screenHeight;
 
-    float gridLength;
+    public float gridLength;
     float scale;
 
     public List<MazeWall> mazeWallsList = new List<MazeWall>();
@@ -82,6 +82,8 @@ public class GridManager : MonoBehaviour
     //TODO work for reset of map (blocklist, mazeWallList, winblockcorr)
     public List<Vector3> blockList = new List<Vector3>();
     public List<Vector4> objectList = new List<Vector4>();
+
+    public List<Vector2Int> mazeWallGridList = new List<Vector2Int>();
 
     private FileClass fileObject = new FileClass();
 
@@ -139,10 +141,10 @@ public class GridManager : MonoBehaviour
         foreach (var wall in mazeWallsList)
         {
 
-
+            
             if (wall.isWall())
             {
-
+                mazeWallGridList.Add(new Vector2Int(wall.x, wall.y));
                 GenerateTile(wall.x, wall.y);
             }
 
@@ -350,7 +352,15 @@ public class GridManager : MonoBehaviour
 
     }
 
-    Vector2 GetCameraCoordinates(int x, int y)
+    public Vector2Int GetGridPosition(Vector3 pos)
+    {
+        int y = (int)(pos[0] / scale + (gridLength + 1) / 2 );
+        int x = (int)(-pos[1] / scale + (gridLength + 1) / 2 );
+
+        return new Vector2Int(x, y);
+    }
+
+    public Vector2 GetCameraCoordinates(int x, int y)
     {
         float cartesianX = ((y + 1) - (gridLength + 1) / 2) * scale;
         float cartesianY = (-(x + 1) + (gridLength + 1) / 2) * scale;
