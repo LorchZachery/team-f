@@ -33,6 +33,10 @@ public class PlayerController : MonoBehaviour
     private bool isCoroutine = false;
     public int lives;
 
+    float scale;
+    float gridLength;
+    List<Vector2Int> mazeWallGridList = new List<Vector2Int>();
+    Vector2 playerCoordinates;
     bool spikeCollisionReset = false;
 
     AnalyticsManager analyticsManager;
@@ -300,22 +304,22 @@ public class PlayerController : MonoBehaviour
 
                 // get location, check location if is tile, re-spawn player if stuck
                 Vector3 playerPos = transform.position;
-                Vector2Int playerGrid = grid.GetGridPosition(playerPos);
-                int gridLength = (int)grid.gridLength;
+                Vector2Int playerGrid = GetGridPosition(playerPos);
+                int gridL = (int)gridLength;
                 // correct playerGrid
                 if (playerGrid[0] == 0) playerGrid[0] = 1;
                 if (playerGrid[1] == 0) playerGrid[1] = 1;
-                if (playerGrid[0] == gridLength - 1) playerGrid[0] = gridLength - 2;
-                if (playerGrid[1] == gridLength - 1) playerGrid[1] = gridLength - 2;
+                if (playerGrid[0] == gridL - 1) playerGrid[0] = gridL - 2;
+                if (playerGrid[1] == gridL - 1) playerGrid[1] = gridL - 2;
 
-                if (grid.mazeWallGridList.Contains(playerGrid))
+                if (mazeWallGridList.Contains(playerGrid))
                 {
                     bool free = freeThePlayer(playerGrid, 1);
                     if (!free) free = freeThePlayer(playerGrid, 2);
                     if (!free)
                     {
                         // reset
-                        transform.position = grid.GetCameraCoordinates((int)grid.playerCoordinates[0], (int)grid.playerCoordinates[1]);
+                        transform.position = GetCameraCoordinates((int)playerCoordinates[0], (int)playerCoordinates[1]);
                     }
                 }
             }
@@ -387,11 +391,11 @@ public class PlayerController : MonoBehaviour
 
     bool freeThePlayer(int x, int y)
     {
-        if (x > 0 && y > 0 && x < grid.gridLength - 1 && y < grid.gridLength - 1)
+        if (x > 0 && y > 0 && x < gridLength-1&& y < gridLength-1)
         {
-            if (!grid.mazeWallGridList.Contains(new Vector2Int(x, y)))
+            if (!mazeWallGridList.Contains(new Vector2Int(x, y)))
             {
-                transform.position = grid.GetCameraCoordinates(x, y);
+                transform.position = GetCameraCoordinates(x, y);
                 return true;
             }
         }
@@ -427,4 +431,39 @@ public class PlayerController : MonoBehaviour
         analyticsManager.Publish();
     }
 
+
+    Vector2Int GetGridPosition(Vector3 pos)
+    {
+        int y = (int)(pos[0] / scale + (gridLength + 1) / 2);
+        int x = (int)(-pos[1] / scale + (gridLength + 1) / 2);
+
+        return new Vector2Int(x, y);
+    }
+
+    Vector2 GetCameraCoordinates(int x, int y)
+    {
+        float cartesianX = ((y + 1) - (gridLength + 1) / 2) * scale;
+        float cartesianY = (-(x + 1) + (gridLength + 1) / 2) * scale;
+        return new Vector3(cartesianX, cartesianY);
+    }
+
+    public void setScale(float s) 
+    {
+        this.scale = s;
+    }
+
+    public void setGridLength(float g)
+    {
+        this.gridLength = g;
+    }
+
+    public void setMazeWallList(List<Vector2Int> list)
+    {
+        this.mazeWallGridList = list;
+    }
+
+    public void setPlayerCoordinates(Vector2 pc)
+    {
+        this.playerCoordinates = pc;
+    }
 }
