@@ -141,7 +141,7 @@ public class GridManager : MonoBehaviour
         foreach (var wall in mazeWallsList)
         {
 
-            
+
             if (wall.isWall())
             {
                 mazeWallGridList.Add(new Vector2Int(wall.x, wall.y));
@@ -241,7 +241,7 @@ public class GridManager : MonoBehaviour
         ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
 
         //invoking gravity to switch every 7 seconds, with a red screen flash before
-        if (LevelName != "ag_tutorial" && LevelName != "Tutorial_2")
+        if (LevelName != "ag_tutorial" && LevelName != "Tutorial_2" && LevelName != "obstacle_tutorial")
         {
             InvokeRepeating("rotateGameRoutine", 7.0f, 7.0f);
         }
@@ -360,8 +360,8 @@ public class GridManager : MonoBehaviour
 
     Vector2Int GetGridPosition(Vector3 pos)
     {
-        int y = (int)(pos[0] / scale + (gridLength + 1) / 2 );
-        int x = (int)(-pos[1] / scale + (gridLength + 1) / 2 );
+        int y = (int)(pos[0] / scale + (gridLength + 1) / 2);
+        int x = (int)(-pos[1] / scale + (gridLength + 1) / 2);
 
         return new Vector2Int(x, y);
     }
