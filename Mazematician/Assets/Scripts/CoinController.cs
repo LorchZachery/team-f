@@ -6,11 +6,20 @@ public class CoinController : MonoBehaviour
 {
     public float rotateY;
     public float rotationSpeed;
+    private ParticleSystem particle;
+    private AudioSource audioSource;
+    private SpriteRenderer spriteRenderer;
+    private CircleCollider2D circleCollider2D;
     // Start is called before the first frame update
     void Start()
     {
         rotateY = 0.0f;
         rotationSpeed = 150f;
+        particle = GetComponentInChildren<ParticleSystem>();
+        particle.Pause();
+        audioSource = GetComponent<AudioSource>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        circleCollider2D = GetComponent<CircleCollider2D>();
     }
 
     // Update is called once per frame
@@ -30,4 +39,20 @@ public class CoinController : MonoBehaviour
             Physics2D.IgnoreCollision(collision.gameObject.GetComponent<CircleCollider2D>(), GetComponent<CircleCollider2D>());
         }
     }
+
+    public void DestroyCoin()
+    {
+        StartCoroutine(AnimateDestroy());
+    }
+
+    private IEnumerator AnimateDestroy()
+    {
+        particle.Play();
+        audioSource.Play();
+        spriteRenderer.enabled = false;
+        circleCollider2D.enabled = false;
+        yield return new WaitForSeconds(particle.main.startLifetime.constantMax);
+        Destroy(gameObject);
+    }
+
 }
