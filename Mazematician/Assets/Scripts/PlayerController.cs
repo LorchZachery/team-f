@@ -33,7 +33,12 @@ public class PlayerController : MonoBehaviour
     private bool isCoroutine = false;
 
     AnalyticsManager analyticsManager;
-
+    [SerializeField] private AudioSource collectCoinSound;
+    [SerializeField] private AudioSource mergeBlockSound;
+    [SerializeField] private AudioSource deductCoinSound;
+    [SerializeField] private AudioSource powerUpSound;
+    [SerializeField] private AudioSource eatWakThruSound;
+    [SerializeField] private AudioSource notActivateSound;
 
     // Start is called before the first frame update
     void Start()
@@ -45,6 +50,10 @@ public class PlayerController : MonoBehaviour
         analyticsManager = AnalyticsManager.GetAnalyticsManager();
     }
 
+    private void Awake()
+    {
+        // collectCoinSound = GetComponent<AudioSource>();
+    }
     // Update is called once per frame
 
     void Update()
@@ -58,6 +67,11 @@ public class PlayerController : MonoBehaviour
         x = (dir1 + dir2).x;
         y = (dir1 + dir2).y;
         GetComponent<Rigidbody2D>().velocity = new Vector2(x * ballSpeed * isDiagonal, y * ballSpeed * isDiagonal);
+
+        if((Input.GetKeyDown(KeyCode.B) || Input.GetKeyDown(KeyCode.N) || Input.GetKeyDown(KeyCode.M)) && coins < 3f)
+        {
+            notActivateSound.Play();
+        }
 
         if (Input.GetKeyDown(KeyCode.M) && coins >= 3f)
         {
@@ -75,9 +89,12 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator handleShield()
     {
+        deductCoinSound.Play();
+        powerUpSound.PlayDelayed(0.5f);
         coins -= 3;
         yield return new WaitForSeconds(5.0f);
         playerShield.SetActive(false);
+        powerUpSound.Stop();
         isCoroutine = false;
 
         foreach (Collider2D col in collist)
@@ -98,6 +115,7 @@ public class PlayerController : MonoBehaviour
             var script = collision.gameObject.GetComponent<BlockController>();
             if (this.score == script.points)
             {
+                mergeBlockSound.Play();
                 Destroy(collision.gameObject);
                 SetScore(this.score + script.points);
             }
@@ -129,6 +147,7 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("coin"))
         {
             coins++;
+            collectCoinSound.Play();
             analyticsManager.RegisterEvent(GameEvent.COINS_COLLECTED, null);
             Destroy(collision.gameObject);
         }
@@ -147,6 +166,9 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("powerUpWalkThru"))
         {
             analyticsManager.RegisterEvent(GameEvent.POWER_UP_USED, collision.gameObject.tag);
+            eatWakThruSound.Play();
+            powerUpSound.PlayDelayed(0.5f);
+
             Destroy(collision.gameObject);
             isIntangible = true;
             intangibleTimer = intangibleTime;
@@ -265,6 +287,7 @@ public class PlayerController : MonoBehaviour
             intangibleTimer -= Time.deltaTime;
             if (intangibleTimer <= 0)
             {
+                powerUpSound.Stop();
                 isIntangible = false;
                 foreach (Collider2D col in collist)
                 {

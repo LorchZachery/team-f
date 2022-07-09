@@ -11,11 +11,18 @@ public class BlockController : MonoBehaviour
     public int points;
     public int id;
     public TMP_Text pointsText;
+    [SerializeField] private AudioSource mergeBlockSound;
+
     // Start is called before the first frame update
     void Start()
     {
         id = GetInstanceID();
         UpdateText();
+    }
+
+    private void Awake()
+    {
+        //mergeBlockSound = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -35,6 +42,7 @@ public class BlockController : MonoBehaviour
             if(script.points == points && script.id > id)
             {
                 points += collision.gameObject.GetComponent<BlockController>().points;
+                mergeBlockSound.Play();
                 Destroy(collision.gameObject);
                 UpdateText();
                 UpdateColor();
