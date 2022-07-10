@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
  * This class deals with below logics:
  * 1. Player movement
  * 2. Updating text on player
- * 3. Collisioㄋn detections and handling accourding to game plan.
+ * 3. Collision detections and handling according to game plan.
  */
 
 public class PlayerController : MonoBehaviour
@@ -31,6 +31,13 @@ public class PlayerController : MonoBehaviour
     Color defaultColor;
     public GameObject playerShield;
     private bool isCoroutine = false;
+    public int lives;
+
+    float scale;
+    float gridLength;
+    List<Vector2Int> mazeWallGridList = new List<Vector2Int>();
+    Vector2 playerCoordinates;
+    bool spikeCollisionReset = false;
 
     AnalyticsManager analyticsManager;
     [SerializeField] private AudioSource collectCoinSound;
@@ -43,7 +50,9 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
         coins = 0;
+        lives = 3;
         UpdateText(this.score.ToString());
         collist = new List<Collider2D>();
         defaultColor = GetComponent<SpriteRenderer>().color;
@@ -73,7 +82,7 @@ public class PlayerController : MonoBehaviour
             notActivateSound.Play();
         }
 
-        if (Input.GetKeyDown(KeyCode.M) && coins >= 3f)
+        if (Input.GetKeyDown(KeyCode.M) && coins >= 3f && !dashboardController.isHelpButtonClicked())
         {
             analyticsManager.RegisterEvent(GameEvent.POWER_UP_USED, "shield");
             playerShield.SetActive(true);
@@ -104,6 +113,12 @@ public class PlayerController : MonoBehaviour
         collist.Clear();
     }
 
+    private IEnumerator handleSpikeReset()
+    {
+        yield return new WaitForSeconds(1f);
+        spikeCollisionReset = false;
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         /*
@@ -130,9 +145,20 @@ public class PlayerController : MonoBehaviour
             else
             {
                 Debug.Log("HIT TOP");
-                analyticsManager.RegisterEvent(GameEvent.COLLISION, "spike");
-                PublishGameData(false, "obstacle");
-                SceneManager.LoadScene("GameOver");
+                if (!spikeCollisionReset)
+                {
+                    Debug.Log("HIT TOP REGISTERED EVENT");
+                    analyticsManager.RegisterEvent(GameEvent.COLLISION, "spike");
+                    lives--;
+                    dashboardController.removeHealth(lives);
+                    spikeCollisionReset = true;
+                    StartCoroutine(handleSpikeReset());
+                    if (lives == 0)
+                    {
+                        PublishGameData(false, "obstacle");
+                        SceneManager.LoadScene("GameOver");
+                    }
+                }
             }
         }
         else if (collision.gameObject.CompareTag("SpikeBottom"))
@@ -149,7 +175,8 @@ public class PlayerController : MonoBehaviour
             coins++;
             collectCoinSound.Play();
             analyticsManager.RegisterEvent(GameEvent.COINS_COLLECTED, null);
-            Destroy(collision.gameObject);
+            CoinController coinController = collision.gameObject.GetComponent<CoinController>();
+            coinController.DestroyCoin();
         }
         if (collision.gameObject.CompareTag("tile") && isIntangible)
         {
@@ -282,11 +309,13 @@ public class PlayerController : MonoBehaviour
     }
     void UpdateIntagibleTimer()
     {
+
         if (intangibleTimer > 0)
         {
             intangibleTimer -= Time.deltaTime;
             if (intangibleTimer <= 0)
             {
+                // Walk Thru Wall Ends
                 powerUpSound.Stop();
                 isIntangible = false;
                 foreach (Collider2D col in collist)
@@ -296,8 +325,106 @@ public class PlayerController : MonoBehaviour
                 collist.Clear();
                 CancelInvoke("Flash");
                 GetComponent<SpriteRenderer>().color = defaultColor;
+
+                // get location, check location if is tile, re-spawn player if stuck
+                Vector3 playerPos = transform.position;
+                Vector2Int playerGrid = GetGridPosition(playerPos);
+                int gridL = (int)gridLength;
+                // correct playerGrid
+                if (playerGrid[0] == 0) playerGrid[0] = 1;
+                if (playerGrid[1] == 0) playerGrid[1] = 1;
+                if (playerGrid[0] == gridL - 1) playerGrid[0] = gridL - 2;
+                if (playerGrid[1] == gridL - 1) playerGrid[1] = gridL - 2;
+
+                if (mazeWallGridList.Contains(playerGrid))
+                {
+                    bool free = freeThePlayer(playerGrid, 1);
+                    if (!free) free = freeThePlayer(playerGrid, 2);
+                    if (!free)
+                    {
+                        // reset
+                        transform.position = GetCameraCoordinates((int)playerCoordinates[0], (int)playerCoordinates[1]);
+                    }
+                }
             }
         }
+    }
+
+    bool freeThePlayer(Vector2Int playerGrid, int i)
+    {
+        bool free = false;
+        //check up and down, left and right first
+        // up
+        int x = playerGrid.x - i;
+        int y = playerGrid.y;
+        if (!free)
+        {
+            free = freeThePlayer(x, y);
+        }
+        // down
+        x = playerGrid.x + i;
+        y = playerGrid.y;
+        if (!free)
+        {
+            free = freeThePlayer(x, y);
+        }
+        // left
+        x = playerGrid.x;
+        y = playerGrid.y - i;
+        if (!free)
+        {
+            free = freeThePlayer(x, y);
+        }
+        // right
+        x = playerGrid.x;
+        y = playerGrid.y + i;
+        if (!free)
+        {
+            free = freeThePlayer(x, y);
+        }
+        // top-left
+        x = playerGrid.x - i;
+        y = playerGrid.y - i;
+        if (!free)
+        {
+            free = freeThePlayer(x, y);
+        }
+        // top-right
+        x = playerGrid.x - i;
+        y = playerGrid.y + i;
+        if (!free)
+        {
+            free = freeThePlayer(x, y);
+        }
+        // btm-left
+        x = playerGrid.x + i;
+        y = playerGrid.y - i;
+        if (!free)
+        {
+            free = freeThePlayer(x, y);
+        }
+        // btm-right
+        x = playerGrid.x + i;
+        y = playerGrid.y + i;
+        if (!free)
+        {
+            free = freeThePlayer(x, y);
+        }
+        return free;
+    }
+
+    bool freeThePlayer(int x, int y)
+    {
+        if (x > 0 && y > 0 && x < gridLength-1&& y < gridLength-1)
+        {
+            if (!mazeWallGridList.Contains(new Vector2Int(x, y)))
+            {
+                transform.position = GetCameraCoordinates(x, y);
+                return true;
+            }
+        }
+
+        return false;
     }
 
     void Flash()
@@ -328,4 +455,39 @@ public class PlayerController : MonoBehaviour
         analyticsManager.Publish();
     }
 
+
+    Vector2Int GetGridPosition(Vector3 pos)
+    {
+        int y = (int)(pos[0] / scale + (gridLength + 1) / 2);
+        int x = (int)(-pos[1] / scale + (gridLength + 1) / 2);
+
+        return new Vector2Int(x, y);
+    }
+
+    Vector2 GetCameraCoordinates(int x, int y)
+    {
+        float cartesianX = ((y + 1) - (gridLength + 1) / 2) * scale;
+        float cartesianY = (-(x + 1) + (gridLength + 1) / 2) * scale;
+        return new Vector3(cartesianX, cartesianY);
+    }
+
+    public void setScale(float s) 
+    {
+        this.scale = s;
+    }
+
+    public void setGridLength(float g)
+    {
+        this.gridLength = g;
+    }
+
+    public void setMazeWallList(List<Vector2Int> list)
+    {
+        this.mazeWallGridList = list;
+    }
+
+    public void setPlayerCoordinates(Vector2 pc)
+    {
+        this.playerCoordinates = pc;
+    }
 }

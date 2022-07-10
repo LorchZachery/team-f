@@ -173,11 +173,15 @@ function levelVsTime() {
 		metricsByLevel[level] = levelData
 	}
 	
+
+	for(var i in metricsByLevel) {
+		metricsByLevel[i].timeToReachTarget = metricsByLevel[i].totalTime - metricsByLevel[i].timeToReachTarget
+	}
 	var metricsByName = getMetricsByName(metricsByLevel, ['totalTime', 'timeToReachTarget'], Object.keys(levelWisePlayerData));
 
 	var container = 'timeDiv';
-	var title = 'Time vs Level'
-	var subtitle = 'Time taken by a player to win level'
+	var title = 'Time taken to complete level'
+	var subtitle = ''
 	var seriesData = [{
 		name: 'Total time',
 		data: metricsByName['totalTime'],

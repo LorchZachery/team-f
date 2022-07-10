@@ -38,7 +38,7 @@ public class GridManager : MonoBehaviour
     float screenWidth;
     float screenHeight;
 
-    float gridLength;
+    public float gridLength;
     float scale;
 
     public List<MazeWall> mazeWallsList = new List<MazeWall>();
@@ -82,6 +82,8 @@ public class GridManager : MonoBehaviour
     //TODO work for reset of map (blocklist, mazeWallList, winblockcorr)
     public List<Vector3> blockList = new List<Vector3>();
     public List<Vector4> objectList = new List<Vector4>();
+
+    public List<Vector2Int> mazeWallGridList = new List<Vector2Int>();
 
     private FileClass fileObject = new FileClass();
 
@@ -142,7 +144,7 @@ public class GridManager : MonoBehaviour
 
             if (wall.isWall())
             {
-
+                mazeWallGridList.Add(new Vector2Int(wall.x, wall.y));
                 GenerateTile(wall.x, wall.y);
             }
 
@@ -239,7 +241,7 @@ public class GridManager : MonoBehaviour
         ApplyGravity(GameObject.FindGameObjectsWithTag("block"));
 
         //invoking gravity to switch every 7 seconds, with a red screen flash before
-        if (LevelName != "ag_tutorial" && LevelName != "Tutorial_2")
+        if (LevelName != "ag_tutorial" && LevelName != "Tutorial_2" && LevelName != "obstacle_tutorial" && LevelName != "newtutorial31" )
         {
             InvokeRepeating("rotateGameRoutine", 7.0f, 7.0f);
         }
@@ -332,6 +334,12 @@ public class GridManager : MonoBehaviour
         script.SetScore(2);
         script.setGridManager(gameObject);
 
+        // to free player if stuck
+        script.setScale(scale);
+        script.setGridLength(gridLength);
+        script.setMazeWallList(mazeWallGridList);
+        script.setPlayerCoordinates(playerCoordinates);
+
         var cameraController = Camera.main.GetComponent<CameraController>();
         cameraController.SetPlayer(t);
 
@@ -348,6 +356,14 @@ public class GridManager : MonoBehaviour
         t.transform.localScale = new Vector3(scale, scale, 1);
         t.tag = "outerTile";
 
+    }
+
+    Vector2Int GetGridPosition(Vector3 pos)
+    {
+        int y = (int)(pos[0] / scale + (gridLength + 1) / 2);
+        int x = (int)(-pos[1] / scale + (gridLength + 1) / 2);
+
+        return new Vector2Int(x, y);
     }
 
     Vector2 GetCameraCoordinates(int x, int y)
