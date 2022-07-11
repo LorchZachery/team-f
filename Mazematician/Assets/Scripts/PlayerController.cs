@@ -457,8 +457,8 @@ public class PlayerController : MonoBehaviour
 
     Vector2Int GetGridPosition(Vector3 pos)
     {
-        int y = (int)(pos[0] / scale + (gridLength + 1) / 2);
-        int x = (int)(-pos[1] / scale + (gridLength + 1) / 2);
+        int y = Mathf.RoundToInt(pos[0] / scale + (gridLength + 1) / 2 - 1);
+        int x = Mathf.RoundToInt(-pos[1] / scale + (gridLength + 1) / 2 - 1);
 
         return new Vector2Int(x, y);
     }
