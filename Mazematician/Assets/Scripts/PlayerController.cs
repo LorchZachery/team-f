@@ -40,6 +40,14 @@ public class PlayerController : MonoBehaviour
     bool spikeCollisionReset = false;
 
     AnalyticsManager analyticsManager;
+    // [SerializeField] private AudioSource collectCoinSound;
+    [SerializeField] private AudioSource mergeBlockSound;
+    [SerializeField] private AudioSource deductCoinSound;
+    [SerializeField] private AudioSource powerUpSound;
+    [SerializeField] private AudioSource eatWakThruSound;
+    [SerializeField] private AudioSource notActivateSound;
+    [SerializeField] private AudioSource hitObstacleSound;
+    [SerializeField] private AudioSource deductHealthSound;
 
 
     // Start is called before the first frame update
@@ -68,6 +76,11 @@ public class PlayerController : MonoBehaviour
         y = (dir1 + dir2).y;
         GetComponent<Rigidbody2D>().velocity = new Vector2(x * ballSpeed * isDiagonal, y * ballSpeed * isDiagonal);
 
+        if ((Input.GetKeyDown(KeyCode.B) || Input.GetKeyDown(KeyCode.N) || Input.GetKeyDown(KeyCode.M)) && coins < 3f)
+        {
+            notActivateSound.Play();
+        }
+
         if (Input.GetKeyDown(KeyCode.M) && coins >= 3f && !dashboardController.isHelpButtonClicked())
         {
             analyticsManager.RegisterEvent(GameEvent.POWER_UP_USED, "shield");
@@ -84,8 +97,11 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator handleShield()
     {
+        deductCoinSound.Play();
+        powerUpSound.PlayDelayed(0.5f);
         coins -= 3;
         yield return new WaitForSeconds(5.0f);
+        powerUpSound.Stop();
         playerShield.SetActive(false);
         isCoroutine = false;
 
@@ -113,6 +129,7 @@ public class PlayerController : MonoBehaviour
             var script = collision.gameObject.GetComponent<BlockController>();
             if (this.score == script.points)
             {
+                mergeBlockSound.Play();
                 Destroy(collision.gameObject);
                 SetScore(this.score + script.points);
             }
@@ -131,6 +148,8 @@ public class PlayerController : MonoBehaviour
                 {
                     Debug.Log("HIT TOP REGISTERED EVENT");
                     analyticsManager.RegisterEvent(GameEvent.COLLISION, "spike");
+                    hitObstacleSound.Play();
+                    deductHealthSound.PlayDelayed(0.5f);
                     lives--;
                     dashboardController.removeHealth(lives);
                     spikeCollisionReset = true;
@@ -174,6 +193,8 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("powerUpWalkThru"))
         {
             analyticsManager.RegisterEvent(GameEvent.POWER_UP_USED, collision.gameObject.tag);
+            eatWakThruSound.Play();
+            powerUpSound.PlayDelayed(0.5f);
             Destroy(collision.gameObject);
             isIntangible = true;
             intangibleTimer = intangibleTime;
@@ -294,6 +315,7 @@ public class PlayerController : MonoBehaviour
             if (intangibleTimer <= 0)
             {
                 // Walk Thru Wall Ends
+                powerUpSound.Stop();
                 isIntangible = false;
                 foreach (Collider2D col in collist)
                 {

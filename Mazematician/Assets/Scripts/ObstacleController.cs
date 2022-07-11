@@ -8,6 +8,7 @@ public class ObstacleController : MonoBehaviour
     AnalyticsManager analyticsManager;
     List<Collider2D> collist;
     private bool isCoroutine = false;
+    [SerializeField] private AudioSource hitObstacleSound;
 
     // Start is called before the first frame update
     void Start()
@@ -38,10 +39,12 @@ public class ObstacleController : MonoBehaviour
                 TextMeshPro penaltyText = penaltyObj.GetComponent<TextMeshPro>();
                 if (penaltyText.text == "X 0.5")
                 {
+                    hitObstacleSound.Play();
                     script.SetScore((int)(script.score * 0.5));
                 }
                 else if (penaltyText.text == "X 0.25")
                 {
+                    hitObstacleSound.Play();
                     script.SetScore((int)(script.score * 0.25));
                 }
                 analyticsManager.RegisterEvent(GameEvent.COLLISION, penaltyText.text);
