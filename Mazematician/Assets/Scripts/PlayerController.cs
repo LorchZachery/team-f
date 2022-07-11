@@ -95,13 +95,6 @@ public class PlayerController : MonoBehaviour
         UpdateIntagibleTimer();
     }
 
-    private void FixedUpdate()
-    {
-        Vector3 playerPos = transform.position;
-        Vector2Int playerGrid = GetGridPosition(playerPos);
-        Debug.Log(playerGrid);
-    }
-
     private IEnumerator handleShield()
     {
         deductCoinSound.Play();
