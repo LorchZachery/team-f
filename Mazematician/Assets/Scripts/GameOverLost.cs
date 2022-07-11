@@ -17,4 +17,9 @@ public class GameOverLost : MonoBehaviour
     {
         SceneManager.LoadScene("MainMenu");
     }
+
+    public void LoadCredits()
+    {
+        SceneManager.LoadScene("Credits");
+    }
 }
