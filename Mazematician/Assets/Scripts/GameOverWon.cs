@@ -11,6 +11,8 @@ using TMPro;
 public class GameOverWon : MonoBehaviour
 {
     public static int scoreTime;
+    [SerializeField] private AudioSource gameWinSound;
+
     void Start()
     {
         DisplayLevelCompleteText();

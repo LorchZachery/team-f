@@ -8,6 +8,8 @@ using UnityEngine.SceneManagement;
 */
 public class GameOverLost : MonoBehaviour
 {
+    [SerializeField] private AudioSource gameLostSound;
+
     public void RestartButton()
     {
         SceneManager.LoadScene("SampleGrid");
@@ -16,5 +18,10 @@ public class GameOverLost : MonoBehaviour
     public void MainMenuButton()
     {
         SceneManager.LoadScene("MainMenu");
+    }
+
+    public void LoadCredits()
+    {
+        SceneManager.LoadScene("Credits");
     }
 }

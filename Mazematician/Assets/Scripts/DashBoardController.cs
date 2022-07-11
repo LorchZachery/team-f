@@ -23,6 +23,11 @@ public class DashBoardController : MonoBehaviour
     bool helpButtonClicked = false;
     int bonusCount = 0;
     AnalyticsManager analyticsManager;
+    [SerializeField] private AudioSource countDownSound;
+    bool playCountDownSound = true;
+    [SerializeField] private AudioSource deductCoinSound;
+    [SerializeField] private AudioSource powerUpSound;
+    [SerializeField] private AudioSource addTimeSound;
 
     public TextMeshProUGUI rewardsText;
     public TextMeshProUGUI timerText;
@@ -119,13 +124,15 @@ public class DashBoardController : MonoBehaviour
                             StartCoroutine(BonusCountDown(10f, textField));
                             if (!bonusTime)
                             {
+                                deductCoinSound.Play();
+                                addTimeSound.PlayDelayed(0.5f);
                                 player.GetComponent<PlayerController>().coins -= 3;
                                 bonusTime = true;
                             }
                         }
                         //The Shrink Player icon.
                         //Shrinks the size of the player for 5 seconds.
-                        //Can be activated by pressing the "B" key
+                        //Can be activated by pressing the "N" key
                         else if (Input.GetKeyDown(KeyCode.N))
                         {
                             shrinkTime = false;
@@ -138,6 +145,8 @@ public class DashBoardController : MonoBehaviour
                             StartCoroutine(ShrinkCountDown(5f, textField));
                             if (!shrinkTime)
                             {
+                                deductCoinSound.Play();
+                                powerUpSound.PlayDelayed(0.5f);
                                 player.GetComponent<PlayerController>().coins -= 3;
                                 shrinkTime = true;
                             }
@@ -158,7 +167,17 @@ public class DashBoardController : MonoBehaviour
                 DisplayTime(remainingTime);
                 if (remainingTime < 5)
                 {
+                    if (playCountDownSound == true)
+                    {
+                        countDownSound.Play();
+                        playCountDownSound = false;
+                    }
                     Flash();
+                }
+                if (Input.GetKeyDown(KeyCode.B) && remainingTime >= 5)
+                {
+                    countDownSound.Stop();
+                    playCountDownSound = true;
                 }
                 //if (player.GetComponent<PlayerController>().coins == 3)
                 //{
@@ -281,6 +300,7 @@ public class DashBoardController : MonoBehaviour
         player.transform.localScale = new Vector3(myScale, myScale, 1.0f);
         Debug.Log("Local Scale after shrinking: " + player.transform.localScale);
         yield return new WaitForSeconds(5f);
+        powerUpSound.Stop();
         player.transform.localScale = originalScale;
         Debug.Log("Local Scale before shrinking: " + player.transform.localScale);
     }
