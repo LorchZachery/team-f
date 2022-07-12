@@ -11,7 +11,7 @@ public class DashBoardController : MonoBehaviour
 
     GameObject player;
     GameObject helpMenu;
-    GameObject pauseButton;
+    GameObject pauseMenu;
     float remainingTime;
     float runningTime;
     bool timerRunning;
@@ -21,6 +21,7 @@ public class DashBoardController : MonoBehaviour
     bool bonusTime = false;
     bool shrinkTime = false;
     bool helpButtonClicked = false;
+    bool pauseButtonClicked = false;
     int bonusCount = 0;
     AnalyticsManager analyticsManager;
     [SerializeField] private AudioSource countDownSound;
@@ -50,6 +51,8 @@ public class DashBoardController : MonoBehaviour
         DisplayLevelText();
         helpMenu = GameObject.FindGameObjectWithTag("help");
         helpMenu.SetActive(false);
+        pauseMenu = GameObject.FindGameObjectWithTag("pause");
+        pauseMenu.SetActive(false);
         //pauseButton = GameObject.FindGameObjectWithTag("pause");
         //pauseButton.SetActive(false);
         analyticsManager = AnalyticsManager.GetAnalyticsManager();
@@ -366,6 +369,10 @@ public class DashBoardController : MonoBehaviour
         helpButtonClicked = true;
         Time.timeScale = 0;
         helpMenu.SetActive(true);
+        if (pauseButtonClicked)
+        {
+            pauseMenu.SetActive(false);
+        }
     }
 
     public void QuitHelpButton()
@@ -378,6 +385,24 @@ public class DashBoardController : MonoBehaviour
     public bool isHelpButtonClicked()
     {
         return helpButtonClicked;
+    }
+
+    public void PauseMenuClicked()
+    {
+        pauseButtonClicked = true;
+        Time.timeScale = 0;
+        pauseMenu.SetActive(true);
+        if (helpButtonClicked)
+        {
+            helpMenu.SetActive(false);
+        }
+    }
+
+    public void ResumeButtonClicked()
+    {
+        pauseButtonClicked = false;
+        pauseMenu.SetActive(false);
+        Time.timeScale = 1;
     }
 
     //public void PauseButtonClicked()
