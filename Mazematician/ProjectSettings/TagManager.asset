@@ -38,6 +38,9 @@ TagManager:
   - Stars
   - heart
   - pause
+  - walkThruTimer
+  - walkThruIndicator
+  - walkThruIcon
   layers:
   - Default
   - TransparentFX

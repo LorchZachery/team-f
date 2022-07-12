@@ -32,6 +32,8 @@ public class PlayerController : MonoBehaviour
     public GameObject playerShield;
     private bool isCoroutine = false;
     public int lives;
+    public GameObject walkThruIcon;
+    public GameObject walkThruIndicator;
 
     float scale;
     float gridLength;
@@ -200,6 +202,7 @@ public class PlayerController : MonoBehaviour
             intangibleTimer = intangibleTime;
             GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.5f);
             InvokeRepeating("Flash", intangibleTime - 2, 0.2f);
+            displayWalkThruIcon();
         }
         // Once reach target, get running time and send score to GameOverWon scene
         if (collision.gameObject.CompareTag("target"))
@@ -489,4 +492,35 @@ public class PlayerController : MonoBehaviour
     {
         this.playerCoordinates = pc;
     }
+
+    public void displayWalkThruIcon()
+    {
+        walkThruIcon = dashboardController.getWalkThruIcon();
+        walkThruIndicator = dashboardController.getWalkThruIndicator();
+        walkThruIcon.SetActive(true);
+        walkThruIndicator.SetActive(true);
+        GameObject walkThruTimer = GameObject.FindGameObjectWithTag("walkThruTimer");
+        walkThruTimer.SetActive(true);
+        TextMeshProUGUI textField = walkThruTimer.GetComponent<TextMeshProUGUI>();
+        textField.text = "";
+        StartCoroutine(WalkThruWallCountDown(5f, textField));
+    }
+
+    public IEnumerator WalkThruWallCountDown(float timerValue, TextMeshProUGUI textField)
+    {
+        float localTimer = timerValue;
+        while (localTimer > 0)
+        {
+            int minutes = Mathf.FloorToInt(localTimer / 60);
+            int seconds = Mathf.FloorToInt(localTimer % 60);
+            textField.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+            yield return new WaitForSeconds(1.0f);
+            localTimer--;
+        }
+        textField.text = "";
+        walkThruIcon.SetActive(false);
+        walkThruIndicator.SetActive(false);
+    }
+
+    
 }
