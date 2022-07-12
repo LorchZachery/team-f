@@ -38,6 +38,7 @@ public class PlayerController : MonoBehaviour
     List<Vector2Int> mazeWallGridList = new List<Vector2Int>();
     Vector2 playerCoordinates;
     bool spikeCollisionReset = false;
+    private ParticleSystem particle;
 
     AnalyticsManager analyticsManager;
     // [SerializeField] private AudioSource collectCoinSound;
@@ -118,6 +119,12 @@ public class PlayerController : MonoBehaviour
         spikeCollisionReset = false;
     }
 
+
+    private void Awake()
+    {
+        particle = GetComponentInChildren<ParticleSystem>();
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         /*
@@ -147,6 +154,7 @@ public class PlayerController : MonoBehaviour
                 if (!spikeCollisionReset)
                 {
                     Debug.Log("HIT TOP REGISTERED EVENT");
+                    StartCoroutine(Hurt());
                     analyticsManager.RegisterEvent(GameEvent.COLLISION, "spike");
                     hitObstacleSound.Play();
                     deductHealthSound.PlayDelayed(0.5f);
@@ -154,11 +162,13 @@ public class PlayerController : MonoBehaviour
                     dashboardController.removeHealth(lives);
                     spikeCollisionReset = true;
                     StartCoroutine(handleSpikeReset());
+                    /*
                     if (lives == 0)
                     {
                         PublishGameData(false, "obstacle");
                         SceneManager.LoadScene("GameOver");
                     }
+                    */
                 }
             }
         }
@@ -186,6 +196,17 @@ public class PlayerController : MonoBehaviour
         }
 
 
+    }
+
+    private IEnumerator Hurt()
+    {
+        particle.Play();
+        yield return new WaitForSeconds(particle.main.startLifetime.constantMax);
+        if (lives == 0)
+        {
+            PublishGameData(false, "obstacle");
+            SceneManager.LoadScene("GameOver");
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
