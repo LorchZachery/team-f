@@ -10,6 +10,10 @@ using System.IO;
 */
 public class MainMenu : MonoBehaviour
 {
+    public static bool mute = false;
+    public Sprite muteImage;
+    public Sprite unmuteImage;
+
     void Start()
     {
         // // Filling array with best scores from JSON if file exists
@@ -30,10 +34,43 @@ public class MainMenu : MonoBehaviour
         //         SaveGame.savedData[i] = new GameData(i + 1, int.MaxValue);
         //     }
         // }
+        GameObject muteButtonObject = gameObject.transform.GetChild(3).gameObject;
+        Image muteButtonImage = muteButtonObject.GetComponent<Image>();
+        if (!mute)
+        {
+            muteButtonImage.sprite = unmuteImage;
+        }
+        else
+        {
+            muteButtonImage.sprite = muteImage;
+        }
     }
 
     public void PlayButton()
     {
         SceneManager.LoadScene("Levels");
+    }
+
+    public void MuteButton()
+    {
+        GameObject muteButtonObject = gameObject.transform.GetChild(3).gameObject;
+        Image muteButtonImage = muteButtonObject.GetComponent<Image>();
+        if (!mute)
+        {
+            AudioListener.volume = 0;
+            muteButtonImage.sprite = muteImage;
+            mute = true;
+        }
+        else
+        {
+            AudioListener.volume = 1;
+            muteButtonImage.sprite = unmuteImage;
+            mute = false;
+        }
+    }
+
+    public void LoadCredits()
+    {
+        SceneManager.LoadScene("Credits");
     }
 }
