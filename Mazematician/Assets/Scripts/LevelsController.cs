@@ -14,6 +14,7 @@ public class LevelsController : MonoBehaviour
     // Variables to store level inforamation
     public static int LevelNumber;
     public static string LevelName;
+    public int LevelTimeStart;
 
     // Initializing dictionary storing level numbers and level names
     public static Dictionary<int, string> levelNumberToName = new Dictionary<int, string>
@@ -98,6 +99,16 @@ public class LevelsController : MonoBehaviour
         }
     }
 
+    public void SetTime(int seconds)
+    {
+        this.LevelTimeStart = seconds;
+    }
+
+    public int GetTime()
+    {
+        return this.LevelTimeStart;
+    }
+
     public void BackButton()
     {
         SceneManager.LoadScene("MainMenu");
@@ -108,6 +119,7 @@ public class LevelsController : MonoBehaviour
         LevelNumber = 1;
         LevelName = levelNumberToName[LevelNumber];
         SceneManager.LoadScene("SampleGrid");
+        SetTime(60);
     }
 
     public void Level2Button()
@@ -115,6 +127,7 @@ public class LevelsController : MonoBehaviour
         LevelNumber = 2;
         LevelName = levelNumberToName[LevelNumber];
         SceneManager.LoadScene("SampleGrid");
+        SetTime(60);
     }
 
     public void Level3Button()
@@ -122,6 +135,7 @@ public class LevelsController : MonoBehaviour
         LevelNumber = 3;
         LevelName = levelNumberToName[LevelNumber];
         SceneManager.LoadScene("SampleGrid");
+        SetTime(60);
     }
 
     public void Level4Button()
@@ -129,6 +143,7 @@ public class LevelsController : MonoBehaviour
         LevelNumber = 4;
         LevelName = levelNumberToName[LevelNumber];
         SceneManager.LoadScene("SampleGrid");
+        SetTime(120);
     }
 
     public void Level5Button()
@@ -136,6 +151,7 @@ public class LevelsController : MonoBehaviour
         LevelNumber = 5;
         LevelName = levelNumberToName[LevelNumber];
         SceneManager.LoadScene("SampleGrid");
+        SetTime(120);
     }
 
     public void Level6Button()
@@ -143,6 +159,7 @@ public class LevelsController : MonoBehaviour
         LevelNumber = 6;
         LevelName = levelNumberToName[LevelNumber];
         SceneManager.LoadScene("SampleGrid");
+        SetTime(120);
     }
 
     public void Level7Button()
@@ -150,6 +167,7 @@ public class LevelsController : MonoBehaviour
         LevelNumber = 7;
         LevelName = levelNumberToName[LevelNumber];
         SceneManager.LoadScene("SampleGrid");
+        SetTime(120);
     }
 
     public void Level8Button()
@@ -157,6 +175,7 @@ public class LevelsController : MonoBehaviour
         LevelNumber = 8;
         LevelName = levelNumberToName[LevelNumber];
         SceneManager.LoadScene("SampleGrid");
+        SetTime(120);
     }
 
     public void Level9Button()
@@ -164,6 +183,7 @@ public class LevelsController : MonoBehaviour
         LevelNumber = 9;
         LevelName = levelNumberToName[LevelNumber];
         SceneManager.LoadScene("SampleGrid");
+        SetTime(120);
     }
 
     public void Level10Button()
@@ -171,5 +191,6 @@ public class LevelsController : MonoBehaviour
         LevelNumber = 10;
         LevelName = levelNumberToName[LevelNumber];
         SceneManager.LoadScene("SampleGrid");
+        SetTime(120);
     }
 }
