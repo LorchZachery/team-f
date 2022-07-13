@@ -39,7 +39,7 @@ public class DashBoardController : MonoBehaviour
     {
         runningTime = 0 * 1f;
         // remainingTime = 60 * 2f;
-        if (LevelsController.LevelNumber == 3)
+        if (LevelsController.LevelNumber == 1 || LevelsController.LevelNumber == 2 || LevelsController.LevelNumber == 3)
         {
             remainingTime = 60 * 1f;
         }
