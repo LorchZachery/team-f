@@ -1,0 +1,44 @@
+{
+    "Items": [
+        {
+            "levelNumber": 1,
+            "timeBestScore": 6
+        },
+        {
+            "levelNumber": 2,
+            "timeBestScore": 2147483647
+        },
+        {
+            "levelNumber": 3,
+            "timeBestScore": 12
+        },
+        {
+            "levelNumber": 4,
+            "timeBestScore": 19
+        },
+        {
+            "levelNumber": 5,
+            "timeBestScore": 2147483647
+        },
+        {
+            "levelNumber": 6,
+            "timeBestScore": 2147483647
+        },
+        {
+            "levelNumber": 7,
+            "timeBestScore": 2147483647
+        },
+        {
+            "levelNumber": 8,
+            "timeBestScore": 2147483647
+        },
+        {
+            "levelNumber": 9,
+            "timeBestScore": 2147483647
+        },
+        {
+            "levelNumber": 10,
+            "timeBestScore": 2147483647
+        }
+    ]
+}
