@@ -39,13 +39,14 @@ public class GameOverWon : MonoBehaviour
         stars[1].SetActive(false);
         stars[2].SetActive(false);
         int levelNum = LevelsController.LevelNumber;
-        if (scoreTime < 50)
+        int time = LevelsController.timeForEachLevel[LevelsController.LevelNumber];
+        if (scoreTime < 0.5 * time)
         {
             stars[0].SetActive(true);
             stars[1].SetActive(true);
             stars[2].SetActive(true);
         }
-        else if(scoreTime >= 50 && scoreTime < 75)
+        else if(scoreTime >= 0.5 * time && scoreTime < 0.75 * time)
         {
             stars[0].SetActive(true);
             stars[1].SetActive(true);

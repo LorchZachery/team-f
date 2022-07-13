@@ -32,6 +32,20 @@ public class LevelsController : MonoBehaviour
 
     };
 
+    public static Dictionary<int, int> timeForEachLevel = new Dictionary<int, int>
+    {
+        {1, 60},
+        {2, 60},
+        {3, 60},
+        {4, 120},
+        {5, 120},
+        {6, 120},
+        {7, 120},
+        {8, 120},
+        {9, 120},
+        {10, 120}
+    };
+
     void Start()
     {
         // // Looping through each level to see if there is a best score and displaying such score
@@ -70,13 +84,14 @@ public class LevelsController : MonoBehaviour
                 int minutes = currBestScore / 60;
                 int seconds = currBestScore % 60;
                 levelScoreText.text = "Best Score: " + string.Format("{0:00}:{1:00}", minutes, seconds);
-                if (currBestScore < 50)
+                int time = timeForEachLevel[i+1];
+                if (currBestScore < 0.5 * time)
                 {
                     firstStar.SetActive(true);
                     secondStar.SetActive(true);
                     thirdStar.SetActive(true);
                 }
-                else if (currBestScore >= 50 && currBestScore < 75)
+                else if (currBestScore >= 0.5 * time && currBestScore < 0.75 * time)
                 {
                     firstStar.SetActive(true);
                     secondStar.SetActive(true);
@@ -99,16 +114,6 @@ public class LevelsController : MonoBehaviour
         }
     }
 
-    public void SetTime(int seconds)
-    {
-        this.LevelTimeStart = seconds;
-    }
-
-    public int GetTime()
-    {
-        return this.LevelTimeStart;
-    }
-
     public void BackButton()
     {
         SceneManager.LoadScene("MainMenu");
@@ -119,7 +124,6 @@ public class LevelsController : MonoBehaviour
         LevelNumber = 1;
         LevelName = levelNumberToName[LevelNumber];
         SceneManager.LoadScene("SampleGrid");
-        SetTime(60);
     }
 
     public void Level2Button()
@@ -127,7 +131,6 @@ public class LevelsController : MonoBehaviour
         LevelNumber = 2;
         LevelName = levelNumberToName[LevelNumber];
         SceneManager.LoadScene("SampleGrid");
-        SetTime(60);
     }
 
     public void Level3Button()
@@ -135,7 +138,6 @@ public class LevelsController : MonoBehaviour
         LevelNumber = 3;
         LevelName = levelNumberToName[LevelNumber];
         SceneManager.LoadScene("SampleGrid");
-        SetTime(60);
     }
 
     public void Level4Button()
@@ -143,7 +145,6 @@ public class LevelsController : MonoBehaviour
         LevelNumber = 4;
         LevelName = levelNumberToName[LevelNumber];
         SceneManager.LoadScene("SampleGrid");
-        SetTime(120);
     }
 
     public void Level5Button()
@@ -151,7 +152,6 @@ public class LevelsController : MonoBehaviour
         LevelNumber = 5;
         LevelName = levelNumberToName[LevelNumber];
         SceneManager.LoadScene("SampleGrid");
-        SetTime(120);
     }
 
     public void Level6Button()
@@ -159,7 +159,6 @@ public class LevelsController : MonoBehaviour
         LevelNumber = 6;
         LevelName = levelNumberToName[LevelNumber];
         SceneManager.LoadScene("SampleGrid");
-        SetTime(120);
     }
 
     public void Level7Button()
@@ -167,7 +166,6 @@ public class LevelsController : MonoBehaviour
         LevelNumber = 7;
         LevelName = levelNumberToName[LevelNumber];
         SceneManager.LoadScene("SampleGrid");
-        SetTime(120);
     }
 
     public void Level8Button()
@@ -175,7 +173,6 @@ public class LevelsController : MonoBehaviour
         LevelNumber = 8;
         LevelName = levelNumberToName[LevelNumber];
         SceneManager.LoadScene("SampleGrid");
-        SetTime(120);
     }
 
     public void Level9Button()
@@ -183,7 +180,6 @@ public class LevelsController : MonoBehaviour
         LevelNumber = 9;
         LevelName = levelNumberToName[LevelNumber];
         SceneManager.LoadScene("SampleGrid");
-        SetTime(120);
     }
 
     public void Level10Button()
@@ -191,6 +187,5 @@ public class LevelsController : MonoBehaviour
         LevelNumber = 10;
         LevelName = levelNumberToName[LevelNumber];
         SceneManager.LoadScene("SampleGrid");
-        SetTime(120);
     }
 }
