@@ -29,6 +29,7 @@ public class DashBoardController : MonoBehaviour
     [SerializeField] private AudioSource deductCoinSound;
     [SerializeField] private AudioSource powerUpSound;
     [SerializeField] private AudioSource addTimeSound;
+    [SerializeField] private AudioSource levelBGM;
     public GameObject walkThruIcon;
     public GameObject walkThruIndicator;
 

@@ -408,6 +408,8 @@ MonoBehaviour:
   scoreText: {fileID: 646721742207440632}
   playerShield: {fileID: 1953561992155497574}
   lives: 0
+  walkThruIcon: {fileID: 0}
+  walkThruIndicator: {fileID: 0}
   mergeBlockSound: {fileID: -9121719756180369804}
   deductCoinSound: {fileID: 2555839908859705704}
   powerUpSound: {fileID: 6801227774741727489}
@@ -619,7 +621,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 0c008ee3ee72a4362a35be25fa5de043, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.5
+  m_Volume: 0.4
   m_Pitch: 0.5
   Loop: 1
   Mute: 0
