@@ -29,6 +29,8 @@ public class DashBoardController : MonoBehaviour
     [SerializeField] private AudioSource deductCoinSound;
     [SerializeField] private AudioSource powerUpSound;
     [SerializeField] private AudioSource addTimeSound;
+    public GameObject walkThruIcon;
+    public GameObject walkThruIndicator;
 
     public TextMeshProUGUI rewardsText;
     public TextMeshProUGUI timerText;
@@ -53,6 +55,10 @@ public class DashBoardController : MonoBehaviour
         helpMenu.SetActive(false);
         pauseMenu = GameObject.FindGameObjectWithTag("pause");
         pauseMenu.SetActive(false);
+        walkThruIcon = GameObject.FindGameObjectWithTag("walkThruIcon");
+        walkThruIndicator = GameObject.FindGameObjectWithTag("walkThruIndicator");
+        walkThruIcon.SetActive(false);
+        walkThruIndicator.SetActive(false);
         //pauseButton = GameObject.FindGameObjectWithTag("pause");
         //pauseButton.SetActive(false);
         analyticsManager = AnalyticsManager.GetAnalyticsManager();
@@ -487,5 +493,15 @@ public class DashBoardController : MonoBehaviour
             localTimer--;
         }
         textField.text = "";
+    }
+
+    public GameObject getWalkThruIcon()
+    {
+        return walkThruIcon;
+    }
+
+    public GameObject getWalkThruIndicator()
+    {
+        return walkThruIndicator;
     }
 }

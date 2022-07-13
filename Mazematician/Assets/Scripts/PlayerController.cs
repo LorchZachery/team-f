@@ -32,12 +32,15 @@ public class PlayerController : MonoBehaviour
     public GameObject playerShield;
     private bool isCoroutine = false;
     public int lives;
+    public GameObject walkThruIcon;
+    public GameObject walkThruIndicator;
 
     float scale;
     float gridLength;
     List<Vector2Int> mazeWallGridList = new List<Vector2Int>();
     Vector2 playerCoordinates;
     bool spikeCollisionReset = false;
+    private ParticleSystem particle;
 
     AnalyticsManager analyticsManager;
     // [SerializeField] private AudioSource collectCoinSound;
@@ -118,6 +121,12 @@ public class PlayerController : MonoBehaviour
         spikeCollisionReset = false;
     }
 
+
+    private void Awake()
+    {
+        particle = GetComponentInChildren<ParticleSystem>();
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         /*
@@ -147,6 +156,7 @@ public class PlayerController : MonoBehaviour
                 if (!spikeCollisionReset)
                 {
                     Debug.Log("HIT TOP REGISTERED EVENT");
+                    StartCoroutine(Hurt());
                     analyticsManager.RegisterEvent(GameEvent.COLLISION, "spike");
                     hitObstacleSound.Play();
                     deductHealthSound.PlayDelayed(0.5f);
@@ -154,11 +164,13 @@ public class PlayerController : MonoBehaviour
                     dashboardController.removeHealth(lives);
                     spikeCollisionReset = true;
                     StartCoroutine(handleSpikeReset());
+                    /*
                     if (lives == 0)
                     {
                         PublishGameData(false, "obstacle");
                         SceneManager.LoadScene("GameOver");
                     }
+                    */
                 }
             }
         }
@@ -188,6 +200,17 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    private IEnumerator Hurt()
+    {
+        particle.Play();
+        yield return new WaitForSeconds(particle.main.startLifetime.constantMax);
+        if (lives == 0)
+        {
+            PublishGameData(false, "obstacle");
+            SceneManager.LoadScene("GameOver");
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("powerUpWalkThru"))
@@ -200,6 +223,7 @@ public class PlayerController : MonoBehaviour
             intangibleTimer = intangibleTime;
             GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.5f);
             InvokeRepeating("Flash", intangibleTime - 2, 0.2f);
+            displayWalkThruIcon();
         }
         // Once reach target, get running time and send score to GameOverWon scene
         if (collision.gameObject.CompareTag("target"))
@@ -489,4 +513,35 @@ public class PlayerController : MonoBehaviour
     {
         this.playerCoordinates = pc;
     }
+
+    public void displayWalkThruIcon()
+    {
+        walkThruIcon = dashboardController.getWalkThruIcon();
+        walkThruIndicator = dashboardController.getWalkThruIndicator();
+        walkThruIcon.SetActive(true);
+        walkThruIndicator.SetActive(true);
+        GameObject walkThruTimer = GameObject.FindGameObjectWithTag("walkThruTimer");
+        walkThruTimer.SetActive(true);
+        TextMeshProUGUI textField = walkThruTimer.GetComponent<TextMeshProUGUI>();
+        textField.text = "";
+        StartCoroutine(WalkThruWallCountDown(5f, textField));
+    }
+
+    public IEnumerator WalkThruWallCountDown(float timerValue, TextMeshProUGUI textField)
+    {
+        float localTimer = timerValue;
+        while (localTimer > 0)
+        {
+            int minutes = Mathf.FloorToInt(localTimer / 60);
+            int seconds = Mathf.FloorToInt(localTimer % 60);
+            textField.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+            yield return new WaitForSeconds(1.0f);
+            localTimer--;
+        }
+        textField.text = "";
+        walkThruIcon.SetActive(false);
+        walkThruIndicator.SetActive(false);
+    }
+
+    
 }
