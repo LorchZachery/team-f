@@ -39,15 +39,7 @@ public class DashBoardController : MonoBehaviour
     void Start()
     {
         runningTime = 0 * 1f;
-        // remainingTime = 60 * 2f;
-        if (LevelsController.LevelNumber == 1 || LevelsController.LevelNumber == 2 || LevelsController.LevelNumber == 3)
-        {
-            remainingTime = 60 * 1f;
-        }
-        else
-        {
-            remainingTime = 60 * 2f;
-        }
+        remainingTime = LevelsController.timeForEachLevel[LevelsController.LevelNumber];
         timerRunning = true;
         UpdateScore(0);
         DisplayTargetText();

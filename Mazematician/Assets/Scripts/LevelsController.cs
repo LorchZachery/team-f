@@ -37,11 +37,11 @@ public class LevelsController : MonoBehaviour
         {1, 60},
         {2, 60},
         {3, 60},
-        {4, 120},
-        {5, 120},
-        {6, 120},
-        {7, 120},
-        {8, 120},
+        {4, 60},
+        {5, 60},
+        {6, 60},
+        {7, 60},
+        {8, 90},
         {9, 120},
         {10, 120}
     };
@@ -84,7 +84,7 @@ public class LevelsController : MonoBehaviour
                 int minutes = currBestScore / 60;
                 int seconds = currBestScore % 60;
                 levelScoreText.text = "Best Score: " + string.Format("{0:00}:{1:00}", minutes, seconds);
-                int time = timeForEachLevel[i+1];
+                int time = timeForEachLevel[i + 1];
                 if (currBestScore < 0.5 * time)
                 {
                     firstStar.SetActive(true);
