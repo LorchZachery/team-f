@@ -57,7 +57,11 @@ public class DialogueBox : MonoBehaviour
                         if (wallPrompt)
                         {
                             wallPrompt.SetActive(true);
-                            StartCoroutine(closePrompt(wallPrompt));
+                            if (Input.GetKeyDown(KeyCode.Space))
+                            {
+                                wallPrompt.SetActive(false);
+                                Destroy(wallPrompt);
+                            }
                         }    
                         break;
                     case 32:
@@ -84,14 +88,22 @@ public class DialogueBox : MonoBehaviour
                         if (shieldPrompt) 
                         {
                             shieldPrompt.SetActive(true);
-                            StartCoroutine(closePrompt(shieldPrompt));
+                            if (Input.GetKeyDown(KeyCode.M))
+                            {
+                                shieldPrompt.SetActive(false);
+                                Destroy(shieldPrompt);
+                            }
                         }
                         break;
                     case 16:
                         if (shrinkPrompt) 
                         {
                             shrinkPrompt.SetActive(true);
-                            StartCoroutine(closePrompt(shrinkPrompt));
+                            if (Input.GetKeyDown(KeyCode.N))
+                            {
+                                shrinkPrompt.SetActive(false);
+                                Destroy(shrinkPrompt);
+                            }
                         }
                         break;
                     case 128:
