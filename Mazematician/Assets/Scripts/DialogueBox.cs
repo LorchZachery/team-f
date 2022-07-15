@@ -56,7 +56,7 @@ public class DialogueBox : MonoBehaviour
                     case 8:
                         if (wallPrompt)
                         {
-                            disableAllPrompts();                            
+                            // disableAllPrompts();                            
                             wallPrompt.SetActive(true);
                             if (Input.GetKeyDown(KeyCode.Space))
                             {
@@ -68,7 +68,7 @@ public class DialogueBox : MonoBehaviour
                     case 32:
                         if (hexPrompt)
                         {
-                            disableAllPrompts();
+                            // disableAllPrompts();
                             hexPrompt.SetActive(true);
                             StartCoroutine(closePrompt(hexPrompt));
                         }    
@@ -89,7 +89,7 @@ public class DialogueBox : MonoBehaviour
                     case 8:
                         if (shieldPrompt) 
                         {
-                            disableAllPrompts();
+                            // disableAllPrompts();
                             shieldPrompt.SetActive(true);
                             if (Input.GetKeyDown(KeyCode.M))
                             {
@@ -101,7 +101,7 @@ public class DialogueBox : MonoBehaviour
                     case 16:
                         if (shrinkPrompt) 
                         {
-                            disableAllPrompts();
+                            // disableAllPrompts();
                             shrinkPrompt.SetActive(true);
                             if (Input.GetKeyDown(KeyCode.N))
                             {
@@ -113,7 +113,7 @@ public class DialogueBox : MonoBehaviour
                     case 128:
                         if (walkThruPrompt) 
                         {
-                            disableAllPrompts();    
+                            // disableAllPrompts();    
                             walkThruPrompt.SetActive(true);
                             StartCoroutine(closePrompt(walkThruPrompt));
                         }
