@@ -12,7 +12,11 @@ public class SwapScenesBGM : MonoBehaviour
     }
     private void OnDestroy()
     {
-        NotDestroyBGM.instance.GetComponent<AudioSource>().Play();
+        if (NotDestroyBGM.instance != null)
+        {
+            NotDestroyBGM.instance.GetComponent<AudioSource>().Play();
+        }
+
     }
-    
+
 }
