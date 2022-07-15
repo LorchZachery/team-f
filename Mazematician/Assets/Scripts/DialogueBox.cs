@@ -37,7 +37,7 @@ public class DialogueBox : MonoBehaviour
             LevelName = LevelsController.LevelName;
             var script = player.GetComponent<PlayerController>();
 
-            if (LevelName == "newtutorial31")
+            if (LevelName == "obstacle_tutorial")
             {
                 switch(script.score)
                 {
@@ -56,6 +56,41 @@ public class DialogueBox : MonoBehaviour
                     case 128:
                         walkThruPrompt.SetActive(true);
                         StartCoroutine(closePrompt(walkThruPrompt));
+                        break;
+                }
+            }
+            else if (LevelName == "newtutorial31")
+            {
+                switch(script.score)
+                {
+                    case 4:
+                        if (coinPrompt) 
+                        {
+                            coinPrompt.SetActive(true);
+                            StartCoroutine(closePrompt(coinPrompt));
+                        }
+                        break;
+                    case 8:
+                        if (shieldPrompt) 
+                        {
+                            shieldPrompt.SetActive(true);
+                            StartCoroutine(closePrompt(shieldPrompt));
+                        }
+                        break;
+                    case 16:
+                        if (shrinkPrompt) 
+                        {
+                            shrinkPrompt.SetActive(true);
+                            StartCoroutine(closePrompt(shrinkPrompt));
+                        }
+                        break;
+                    case 128:
+                    case 32:
+                        if (walkThruPrompt) 
+                        {
+                            walkThruPrompt.SetActive(true);
+                            StartCoroutine(closePrompt(walkThruPrompt));
+                        }
                         break;
                 }
             }
