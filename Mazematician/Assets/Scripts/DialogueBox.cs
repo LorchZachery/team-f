@@ -5,6 +5,8 @@ using TMPro;
 
 public class DialogueBox : MonoBehaviour
 {
+    public GameObject gravityPrompt;
+
     public GameObject obstaclePrompt;
     public GameObject wallPrompt;
     public GameObject hexPrompt;
@@ -13,7 +15,7 @@ public class DialogueBox : MonoBehaviour
     public GameObject shieldPrompt;
     public GameObject shrinkPrompt;
     public GameObject walkThruPrompt;
-    
+
     GameObject player;
     string LevelName;
 
@@ -36,6 +38,10 @@ public class DialogueBox : MonoBehaviour
             LevelName = LevelsController.LevelName;
             var script = player.GetComponent<PlayerController>();
 
+            if (LevelName == "gravity_tutorial")
+            {
+                StartCoroutine(handleGravityPrompt());
+            }
             if (LevelName == "obstacle_tutorial")
             {
                 switch(script.score)
@@ -102,6 +108,8 @@ public class DialogueBox : MonoBehaviour
 
     void disableAllPrompts()
     {
+        gravityPrompt.SetActive(false);
+
         obstaclePrompt.SetActive(false);
         wallPrompt.SetActive(false);
         hexPrompt.SetActive(false);
@@ -112,9 +120,16 @@ public class DialogueBox : MonoBehaviour
         walkThruPrompt.SetActive(false);
     }
 
+    IEnumerator handleGravityPrompt()
+    {
+        yield return new WaitForSeconds(13.0f);
+        gravityPrompt.SetActive(true);
+        StartCoroutine(closePrompt(gravityPrompt));
+    }
+
     IEnumerator closePrompt(GameObject obj)
     {
-        yield return new WaitForSeconds(3.0f);
+        yield return new WaitForSeconds(4.0f);
         Destroy(obj);
     }
 }
