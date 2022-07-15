@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-
-// Collect coins
-// For spike - back side 
-
-
 public class DialogueBox : MonoBehaviour
 {
+    public GameObject obstaclePrompt;
+    public GameObject wallPrompt;
+    public GameObject hexPrompt;
+
     public GameObject coinPrompt;
     public GameObject shieldPrompt;
     public GameObject shrinkPrompt;
@@ -42,20 +41,25 @@ public class DialogueBox : MonoBehaviour
                 switch(script.score)
                 {
                     case 4:
-                        coinPrompt.SetActive(true);
-                        StartCoroutine(closePrompt(coinPrompt));
+                        if (obstaclePrompt)
+                        {
+                            obstaclePrompt.SetActive(true);
+                            StartCoroutine(closePrompt(obstaclePrompt));
+                        }    
                         break;
                     case 8:
-                        shieldPrompt.SetActive(true);
-                        StartCoroutine(closePrompt(shieldPrompt));
+                        if (wallPrompt)
+                        {
+                            wallPrompt.SetActive(true);
+                            StartCoroutine(closePrompt(wallPrompt));
+                        }    
                         break;
-                    case 16:
-                        shrinkPrompt.SetActive(true);
-                        StartCoroutine(closePrompt(shrinkPrompt));
-                        break;
-                    case 128:
-                        walkThruPrompt.SetActive(true);
-                        StartCoroutine(closePrompt(walkThruPrompt));
+                    case 32:
+                        if (hexPrompt)
+                        {
+                            hexPrompt.SetActive(true);
+                            StartCoroutine(closePrompt(hexPrompt));
+                        }    
                         break;
                 }
             }
@@ -85,7 +89,6 @@ public class DialogueBox : MonoBehaviour
                         }
                         break;
                     case 128:
-                    case 32:
                         if (walkThruPrompt) 
                         {
                             walkThruPrompt.SetActive(true);
@@ -99,6 +102,10 @@ public class DialogueBox : MonoBehaviour
 
     void disableAllPrompts()
     {
+        obstaclePrompt.SetActive(false);
+        wallPrompt.SetActive(false);
+        hexPrompt.SetActive(false);
+
         coinPrompt.SetActive(false);
         shieldPrompt.SetActive(false);
         shrinkPrompt.SetActive(false);
