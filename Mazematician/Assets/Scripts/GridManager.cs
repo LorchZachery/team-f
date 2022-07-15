@@ -348,6 +348,10 @@ public class GridManager : MonoBehaviour
         dashBoardController.SetPlayer(t);
         dashBoardController.SetTarget(this.target);
         script.setDashboardController(dashboard);
+
+        GameObject dialogue = GameObject.Find("Dialogue");
+        var dialogueController = dialogue.GetComponent<DialogueBox>();
+        dialogueController.SetPlayer(t);
     }
 
     void GenerateOuterTile(int x, int y)
