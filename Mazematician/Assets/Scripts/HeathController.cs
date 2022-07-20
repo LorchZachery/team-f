@@ -38,6 +38,6 @@ public class HeathController : MonoBehaviour
 
     public void Flash()
     {
-        gameObject.SetActive(!gameObject.active);
+        gameObject.SetActive(!gameObject.activeInHierarchy);
     }
 }

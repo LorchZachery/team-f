@@ -10,6 +10,7 @@ public class DialogueBox : MonoBehaviour
     public GameObject obstaclePrompt;
     public GameObject wallPrompt;
     public GameObject hexPrompt;
+    public GameObject timePrompt;
 
     public GameObject coinPrompt;
     public GameObject shieldPrompt;
@@ -74,6 +75,13 @@ public class DialogueBox : MonoBehaviour
                         }    
                         break;
                 }
+
+                GameObject dashboard = GameObject.Find("Dashboard");
+                var dashboardController = dashboard.GetComponent<DashBoardController>();
+                if (dashboardController.GetRemainingTime() <= 15.0f && timePrompt) {
+                    timePrompt.SetActive(true);
+                    StartCoroutine(closePrompt(timePrompt));
+                }
             }
             else if (LevelName == "newtutorial31")
             {
@@ -130,6 +138,7 @@ public class DialogueBox : MonoBehaviour
         obstaclePrompt.SetActive(false);
         wallPrompt.SetActive(false);
         hexPrompt.SetActive(false);
+        timePrompt.SetActive(false);
 
         coinPrompt.SetActive(false);
         shieldPrompt.SetActive(false);
