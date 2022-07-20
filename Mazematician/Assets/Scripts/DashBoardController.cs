@@ -323,6 +323,7 @@ public class DashBoardController : MonoBehaviour
     {
         return runningTime;
     }
+    
     //IEnumerator Freeze()
     //{
     //    {
